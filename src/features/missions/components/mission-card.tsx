@@ -109,7 +109,9 @@ export default function Mission({
               <Button
                 variant="default"
                 className={clsx(
-                  "w-full rounded-full py-6 text-base font-bold text-white border-none",
+                  // bg-primary と対になる前景色を使う。text-white を直書きすると
+                  // プライマリ色を変えたときに読めなくなる
+                  "w-full rounded-full py-6 text-base font-bold text-primary-foreground border-none",
                   hasReachedMaxAchievements
                     ? "bg-yellow-300 hover:bg-yellow-300/90 text-black"
                     : userAchievementCount === 0

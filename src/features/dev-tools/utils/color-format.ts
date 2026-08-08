@@ -110,6 +110,42 @@ export function hexToHslTriplet(value: string): string | null {
   return `${Math.round(h)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 }
 
+/**
+ * WCAG 2.1 の相対輝度。
+ * https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
+ */
+export function relativeLuminance(hexColor: string): number | null {
+  const rgb = parseHex(hexColor);
+  if (!rgb) return null;
+
+  const channel = (value: number) => {
+    const c = value / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+
+  return (
+    0.2126 * channel(rgb.r) + 0.7152 * channel(rgb.g) + 0.0722 * channel(rgb.b)
+  );
+}
+
+/**
+ * 2色のコントラスト比（1〜21）。
+ *
+ * WCAG AA の目安は本文テキストが 4.5:1、大きい文字と UI 部品が 3:1。
+ * カラープリセットが可読性を壊していないかの検証に使う。
+ */
+export function contrastRatio(
+  foreground: string,
+  background: string,
+): number | null {
+  const l1 = relativeLuminance(foreground);
+  const l2 = relativeLuminance(background);
+  if (l1 === null || l2 === null) return null;
+
+  const [lighter, darker] = l1 >= l2 ? [l1, l2] : [l2, l1];
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 /** `rgb(1 2 3)` / `rgba(1, 2, 3, 0.5)` をパースする。不正な入力は null */
 export function parseRgbFunction(
   value: string,

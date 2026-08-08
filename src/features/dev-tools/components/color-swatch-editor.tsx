@@ -9,7 +9,12 @@ import {
   SEMANTIC_TOKEN_GROUP,
   USED_TAILWIND_PALETTE,
 } from "@/lib/design/color-tokens";
-import { DEV_COLOR_OVERRIDES_STORAGE_KEY } from "../constants/storage";
+import { cn } from "@/lib/utils";
+import { COLOR_PRESETS, type ColorPreset } from "../constants/color-presets";
+import {
+  DEV_COLOR_OVERRIDES_STORAGE_KEY,
+  DEV_COLOR_PRESET_STORAGE_KEY,
+} from "../constants/storage";
 import { hexToHslTriplet, toPickerHex } from "../utils/color-format";
 
 type Overrides = Record<string, string>;
@@ -128,6 +133,7 @@ export function ColorSwatchEditor() {
   const [currentHexes, setCurrentHexes] = useState<Record<string, string>>({});
   const [isReady, setIsReady] = useState(false);
   const [showTailwind, setShowTailwind] = useState(false);
+  const [appliedPresetId, setAppliedPresetId] = useState<string | null>(null);
 
   const tailwindGroups = useMemo(buildTailwindGroups, []);
 
@@ -172,6 +178,7 @@ export function ColorSwatchEditor() {
     }
 
     setOverrides(stored);
+    setAppliedPresetId(localStorage.getItem(DEV_COLOR_PRESET_STORAGE_KEY));
     refreshCurrentHexes();
     setIsReady(true);
   }, [refreshCurrentHexes]);
@@ -192,6 +199,9 @@ export function ColorSwatchEditor() {
       document.documentElement.style.setProperty(cssVar, value);
       setCurrentHexes((prev) => ({ ...prev, [cssVar]: hex }));
       persist({ ...overrides, [cssVar]: value });
+      // 個別に触った時点でプリセットそのままではなくなる
+      setAppliedPresetId(null);
+      localStorage.removeItem(DEV_COLOR_PRESET_STORAGE_KEY);
     },
     [overrides, persist],
   );
@@ -203,6 +213,8 @@ export function ColorSwatchEditor() {
       const next = { ...overrides };
       delete next[cssVar];
       persist(next);
+      setAppliedPresetId(null);
+      localStorage.removeItem(DEV_COLOR_PRESET_STORAGE_KEY);
 
       const resolved = resolveWithBrowser(readCurrentValue(cssVar));
       if (resolved) {
@@ -217,8 +229,38 @@ export function ColorSwatchEditor() {
       document.documentElement.style.removeProperty(cssVar);
     }
     persist({});
+    setAppliedPresetId(null);
+    localStorage.removeItem(DEV_COLOR_PRESET_STORAGE_KEY);
     refreshCurrentHexes();
   }, [overrides, persist, refreshCurrentHexes]);
+
+  const handleApplyPreset = useCallback(
+    (preset: ColorPreset) => {
+      // 既存の上書きを一旦全て外してから当てる。
+      // 前のプリセットの残りが混ざらないようにするため。
+      for (const cssVar of Object.keys(overrides)) {
+        document.documentElement.style.removeProperty(cssVar);
+      }
+
+      const next: Overrides = {};
+      for (const [cssVar, hex] of Object.entries(preset.values)) {
+        // プリセットは全て hex で持つので、トークンの形式に合わせて変換する
+        const isSemantic = SEMANTIC_TOKEN_GROUP.tokens.some(
+          (token) => token.cssVar === cssVar,
+        );
+        const value = isSemantic ? (hexToHslTriplet(hex) ?? hex) : hex;
+
+        document.documentElement.style.setProperty(cssVar, value);
+        next[cssVar] = value;
+      }
+
+      persist(next);
+      setAppliedPresetId(preset.id);
+      localStorage.setItem(DEV_COLOR_PRESET_STORAGE_KEY, preset.id);
+      refreshCurrentHexes();
+    },
+    [overrides, persist, refreshCurrentHexes],
+  );
 
   const overrideCount = Object.keys(overrides).length;
 
@@ -271,6 +313,71 @@ export function ColorSwatchEditor() {
           すべて元に戻す
         </button>
       </div>
+
+      <section className="rounded-lg border border-gray-200 p-4">
+        <h3 className="text-sm font-bold">プリセット</h3>
+        <p className="mt-1 text-xs text-gray-600">
+          ブランド色とセマンティックトークンを一括で差し替えます。地図のステータス色・都道府県ランキング配色・破壊的操作の赤は、色そのものが意味を持つため変わりません。
+        </p>
+
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          {COLOR_PRESETS.map((preset) => {
+            const isApplied = appliedPresetId === preset.id;
+
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                data-preset-id={preset.id}
+                onClick={() => handleApplyPreset(preset)}
+                aria-pressed={isApplied}
+                className={cn(
+                  "rounded-lg border p-3 text-left transition-colors",
+                  isApplied
+                    ? "border-primary bg-primary/5 ring-1 ring-primary"
+                    : "border-gray-200 hover:border-gray-300 hover:bg-gray-50",
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold">{preset.label}</span>
+                  {isApplied && (
+                    <span className="rounded bg-primary px-1.5 py-0.5 text-xs font-bold text-primary-foreground">
+                      適用中
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-2 flex gap-1">
+                  {preset.swatches.map((swatch) => (
+                    <span
+                      key={swatch}
+                      title={swatch}
+                      style={{ backgroundColor: swatch }}
+                      className="h-6 w-8 rounded border border-gray-300"
+                    />
+                  ))}
+                </div>
+
+                <p className="mt-2 text-xs text-gray-600">
+                  {preset.description}
+                </p>
+
+                {preset.source && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    出典: {preset.source.label}
+                  </p>
+                )}
+
+                {preset.knownContrastIssues?.length ? (
+                  <p className="mt-1 text-xs text-amber-700">
+                    ⚠ コントラスト未達 {preset.knownContrastIssues.length} 件
+                  </p>
+                ) : null}
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
       {allGroups.map(renderGroup)}
 

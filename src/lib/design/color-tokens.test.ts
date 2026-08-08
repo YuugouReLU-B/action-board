@@ -101,18 +101,19 @@ describe("listTailwindPaletteVars", () => {
     const vars = listTailwindPaletteVars();
 
     expect(vars).toContain("--color-gray-500");
-    expect(vars).toContain("--color-emerald-100");
+    // emerald / teal は palette-remap グループ側で管理しているため含まれない
+    expect(vars).not.toContain("--color-emerald-100");
     expect(vars.every((name) => /^--color-[a-z]+-\d+$/.test(name))).toBe(true);
   });
 });
 
 describe("getTokenDefault", () => {
   it("アプリ固有トークンの既定値を返す", () => {
-    expect(getTokenDefault("--app-brand-primary")).toBe("#30baa7");
+    expect(getTokenDefault("--app-brand-primary")).toBe("#ffea00");
   });
 
   it("セマンティックトークンの既定値を返す", () => {
-    expect(getTokenDefault("--primary")).toBe("168 59% 41%");
+    expect(getTokenDefault("--primary")).toBe("55 100% 50%");
   });
 
   it("未知の変数には undefined を返す", () => {
@@ -126,7 +127,7 @@ describe("readTokenColor", () => {
   });
 
   it("CSS 変数が未設定ならカタログの既定値を返す", () => {
-    expect(readTokenColor("--app-brand-primary")).toBe("#30baa7");
+    expect(readTokenColor("--app-brand-primary")).toBe("#ffea00");
   });
 
   it("CSS 変数が設定されていればその値を返す", () => {

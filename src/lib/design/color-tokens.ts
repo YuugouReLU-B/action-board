@@ -64,25 +64,25 @@ export const SEMANTIC_TOKEN_GROUP: ColorTokenGroup = {
   description:
     "shadcn/ui のデザイントークン。bg-primary / text-muted-foreground などのクラスがこれを参照する。UI 全体の基調色はここで決まる。",
   tokens: [
-    hsl("--background", "背景", "40 27% 95%"),
-    hsl("--foreground", "前景（本文）", "0 0% 4%"),
+    hsl("--background", "背景", "48 38% 97%"),
+    hsl("--foreground", "前景（本文）", "13 25% 11%"),
     hsl("--card", "カード背景", "0 0% 100%"),
-    hsl("--card-foreground", "カード前景", "0 0% 4%"),
+    hsl("--card-foreground", "カード前景", "13 25% 11%"),
     hsl("--popover", "ポップオーバー背景", "0 0% 100%"),
-    hsl("--popover-foreground", "ポップオーバー前景", "0 0% 4%"),
-    hsl("--primary", "プライマリ", "168 59% 41%"),
-    hsl("--primary-foreground", "プライマリ前景", "0 0% 98%"),
-    hsl("--secondary", "セカンダリ", "0 0% 96%"),
-    hsl("--secondary-foreground", "セカンダリ前景", "0 0% 9%"),
-    hsl("--muted", "ミュート", "0 0% 96%"),
-    hsl("--muted-foreground", "ミュート前景", "0 0% 45%"),
-    hsl("--accent", "アクセント", "0 0% 96%"),
-    hsl("--accent-foreground", "アクセント前景", "0 0% 9%"),
+    hsl("--popover-foreground", "ポップオーバー前景", "13 25% 11%"),
+    hsl("--primary", "プライマリ", "55 100% 50%"),
+    hsl("--primary-foreground", "プライマリ前景", "13 25% 11%"),
+    hsl("--secondary", "セカンダリ", "48 20% 95%"),
+    hsl("--secondary-foreground", "セカンダリ前景", "13 25% 11%"),
+    hsl("--muted", "ミュート", "48 20% 95%"),
+    hsl("--muted-foreground", "ミュート前景", "0 0% 40%"),
+    hsl("--accent", "アクセント", "55 100% 82%"),
+    hsl("--accent-foreground", "アクセント前景", "13 25% 11%"),
     hsl("--destructive", "破壊的操作", "0 84% 60%"),
     hsl("--destructive-foreground", "破壊的操作の前景", "0 0% 98%"),
     hsl("--border", "境界線", "0 0% 90%"),
     hsl("--input", "入力欄の枠", "0 0% 90%"),
-    hsl("--ring", "フォーカスリング", "0 0% 63%"),
+    hsl("--ring", "フォーカスリング", "13 25% 11%"),
     hsl("--chart-1", "グラフ 1", "12 76% 61%"),
     hsl("--chart-2", "グラフ 2", "173 58% 39%"),
     hsl("--chart-3", "グラフ 3", "197 37% 24%"),
@@ -99,25 +99,25 @@ export const APP_COLOR_TOKEN_GROUPS: ColorTokenGroup[] = [
     description:
       "ヒーロー・フッターのグラデーション、レベルバー、リンクなどに使う基幹色。見た目の印象を最も左右する。",
     tokens: [
-      hex("--app-brand-primary", "プライマリ", "#30baa7"),
-      hex("--app-brand-ink", "インク（リンク・強調文字）", "#2aa88f", {
+      hex("--app-brand-primary", "プライマリ", "#ffea00"),
+      hex("--app-brand-ink", "インク（リンク・強調文字）", "#736000", {
         note: "text-brand-ink。--primary はボタンの塗りも兼ねるため文字用途を分離している",
       }),
-      hex("--app-brand-primary-strong", "プライマリ（濃）", "#2aa693", {
+      hex("--app-brand-primary-strong", "プライマリ（濃）", "#b38f00", {
         note: "ページ遷移時のトップローダー",
       }),
-      hex("--app-brand-deep", "ディープ", "#0d9488", {
+      hex("--app-brand-deep", "ディープ", "#8a7300", {
         note: "カレンダーのアクセント、OG画像の見出し",
       }),
-      hex("--app-brand-link-hover", "リンクホバー", "#0d6b5e"),
-      hex("--app-brand-light", "ライト", "#64d8c6", {
+      hex("--app-brand-link-hover", "リンクホバー", "#6b5900"),
+      hex("--app-brand-light", "ライト", "#ffea00", {
         note: "グラデーション開始色",
       }),
-      hex("--app-brand-pale", "ペール", "#bcecd3", {
+      hex("--app-brand-pale", "ペール", "#fffbe6", {
         note: "グラデーション終了色",
       }),
-      hex("--app-brand-level-end", "レベルバー終端", "#47c991"),
-      hex("--app-brand-surface", "サーフェス", "#e2f6f3", {
+      hex("--app-brand-level-end", "レベルバー終端", "#ffd400"),
+      hex("--app-brand-surface", "サーフェス", "#fff8a3", {
         note: "進捗サークルの下地",
       }),
     ],
@@ -127,8 +127,8 @@ export const APP_COLOR_TOKEN_GROUPS: ColorTokenGroup[] = [
     label: "オンボーディング",
     description: "初回チュートリアルのモーダル背景グラデーション。",
     tokens: [
-      hex("--app-onboarding-from", "グラデーション開始", "#a8e6cf"),
-      hex("--app-onboarding-to", "グラデーション終了", "#7fcdcd"),
+      hex("--app-onboarding-from", "グラデーション開始", "#ffea00"),
+      hex("--app-onboarding-to", "グラデーション終了", "#fffbe6"),
     ],
   },
   {
@@ -263,6 +263,28 @@ export const APP_COLOR_TOKEN_GROUPS: ColorTokenGroup[] = [
     ],
   },
   {
+    id: "palette-remap",
+    label: "Tailwind パレットの写像",
+    description:
+      "コード中でブランドトークンを経由せず text-emerald-700 のように Tailwind パレットを直接指定した約180箇所のための色。元のティールと同じ相対輝度の金系に置き換えているため、既存のコントラスト比はほぼ保たれる。成功表示の green 系は意味を持つ色なので対象外。",
+    tokens: [
+      hex("--color-emerald-50", "emerald-50", "#fdfae8"),
+      hex("--color-emerald-100", "emerald-100", "#faf2c5"),
+      hex("--color-emerald-200", "emerald-200", "#f6e58e"),
+      hex("--color-emerald-500", "emerald-500", "#c2a100"),
+      hex("--color-emerald-600", "emerald-600", "#9c8200"),
+      hex("--color-emerald-700", "emerald-700", "#7d6900"),
+      hex("--color-emerald-800", "emerald-800", "#625100"),
+      hex("--color-teal-50", "teal-50", "#fdfbec"),
+      hex("--color-teal-200", "teal-200", "#f7e796"),
+      hex("--color-teal-400", "teal-400", "#deb900"),
+      hex("--color-teal-500", "teal-500", "#c3a300"),
+      hex("--color-teal-600", "teal-600", "#9d8200"),
+      hex("--color-teal-700", "teal-700", "#7d6900"),
+      hex("--color-teal-800", "teal-800", "#645400"),
+    ],
+  },
+  {
     id: "vendor",
     label: "外部サービスのブランド色",
     description:
@@ -300,8 +322,8 @@ export const APP_COLOR_TOKEN_GROUPS: ColorTokenGroup[] = [
  */
 export const USED_TAILWIND_PALETTE: Record<string, string[]> = {
   gray: ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  emerald: ["50", "100", "200", "500", "600", "700", "800"],
-  teal: ["50", "200", "400", "500", "600", "700", "800"],
+  // emerald / teal は「Tailwind パレットの写像」グループで管理しているため
+  // ここには載せない（同じ変数のピッカーが2つ出るのを避ける）
   green: ["50", "200", "500", "600", "700", "800"],
   blue: ["50", "200", "500", "600", "700", "800"],
   red: ["50", "200", "400", "500", "600", "700", "800"],

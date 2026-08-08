@@ -21,8 +21,8 @@ describe("カラープリセット", () => {
   it("プリセットが3件ある", () => {
     expect(COLOR_PRESETS.map((preset) => preset.id)).toEqual([
       "default",
-      "hamadoori-circle",
-      "hamadoori-circle-white",
+      "hamadoori-circle-vivid",
+      "team-mirai",
     ]);
   });
 
@@ -115,20 +115,20 @@ describe("カラープリセット", () => {
     });
   });
 
-  it("新規プリセット（既定以外）に既知の未達ペアがない", () => {
+  it("既知の未達ペアを持つのは派生元プリセットだけ", () => {
+    // 派生元の配色は「引き継いだ状態の保存」が目的なので値を直さない。
+    // 自分たちで作るプリセットは AA を満たすこと。
     const offenders = COLOR_PRESETS.filter(
-      (preset) =>
-        preset.id !== "default" &&
-        (preset.knownContrastIssues?.length ?? 0) > 0,
+      (preset) => (preset.knownContrastIssues?.length ?? 0) > 0,
     );
 
-    expect(offenders.map((preset) => preset.id)).toEqual([]);
+    expect(offenders.map((preset) => preset.id)).toEqual(["team-mirai"]);
   });
 });
 
-describe("浜通りサークルのプリセット固有の検証", () => {
+describe("浜通りサークル（黄色ベタ）の検証", () => {
   const preset = COLOR_PRESETS.find(
-    (item) => item.id === "hamadoori-circle",
+    (item) => item.id === "hamadoori-circle-vivid",
   ) as (typeof COLOR_PRESETS)[number];
 
   it("実サイトの基調色を使っている", () => {
@@ -183,5 +183,18 @@ describe("既定プリセット", () => {
     expect(preset.values["--app-brand-primary"]).toBe(
       brandPrimary?.defaultValue,
     );
+  });
+
+  it("黄色ベースになっている", () => {
+    expect(preset.values["--app-brand-primary"]).toBe("#ffea00");
+    // セマンティックトークンは globals.css に HSL 三つ組で書かれており、
+    // hex へ戻すと整数丸めで ±1 ずれる（#fbfaf6 -> 48 38% 97% -> #faf9f4）。
+    // 見た目は同一なので、この値をそのまま期待値にしている。
+    expect(preset.values["--background"]).toBe("#faf9f4");
+  });
+
+  it("Tailwind パレットの緑系が金系へ写像されている", () => {
+    expect(preset.values["--color-emerald-700"]).toBe("#7d6900");
+    expect(preset.values["--color-teal-600"]).toBe("#9d8200");
   });
 });

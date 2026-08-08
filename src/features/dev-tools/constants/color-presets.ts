@@ -36,7 +36,11 @@ export interface ColorPreset {
 }
 
 /** プリセットが触ってよいトークンかどうか */
-const PRESET_TARGET_GROUP_IDS = new Set(["brand", "onboarding"]);
+const PRESET_TARGET_GROUP_IDS = new Set([
+  "brand",
+  "onboarding",
+  "palette-remap",
+]);
 
 /**
  * セマンティックトークンのうちプリセットで扱わないもの。
@@ -79,80 +83,51 @@ function buildDefaultPreset(): ColorPreset {
 
   return {
     id: "default",
-    label: "既定（浜通りクエスト）",
+    label: "既定（黄色・白基調）",
     description:
-      "派生元から引き継いだティール系の配色。globals.css に書かれている値そのもの。",
-    swatches: ["#30baa7", "#64d8c6", "#bcecd3", "#f5f1ea", "#ffffff"],
+      "浜通りサークル由来の黄色を主役にし、大面積を白へ振り替えた配色。globals.css に書かれている値そのもので、リロード直後の状態。",
+    swatches: ["#ffea00", "#fffbe6", "#fbfaf6", "#ffffff", "#231815"],
     values,
-    knownContrastIssues: [
-      {
-        pair: "プライマリ前景 / プライマリ",
-        ratio: 2.89,
-        reason:
-          "ティールのボタン上のほぼ白い文字。派生元から引き継いだ状態で AA 未達。修正すると全ボタンの文字色が変わるため据え置いている。",
-      },
-      {
-        pair: "ミュート前景 / ミュート",
-        ratio: 4.34,
-        reason:
-          "補足テキスト。AA まで 0.16 足りない。派生元から引き継いだ状態。",
-      },
-      {
-        pair: "ミュート前景 / 背景",
-        ratio: 4.28,
-        reason:
-          "ページ背景に直接載る補足テキスト（区切り線の「または」やフッターの著作権表示）。派生元から引き継いだ状態。",
-      },
-      {
-        pair: "インク / 背景",
-        ratio: 2.67,
-        reason:
-          "ティールのリンク文字。派生元から引き継いだ状態で AA 未達。色を変えると全リンクの印象が変わるため据え置いている。",
-      },
-      {
-        pair: "インク / カード",
-        ratio: 2.95,
-        reason: "同上。カード内のリンク文字。",
-      },
-    ],
   };
 }
 
+/** カタログに載っているパレット写像（金系）の既定値 */
+function goldPaletteValues(): Record<string, string> {
+  const group = APP_COLOR_TOKEN_GROUPS.find(
+    (item) => item.id === "palette-remap",
+  );
+  return Object.fromEntries(
+    (group?.tokens ?? []).map((token) => [token.cssVar, token.defaultValue]),
+  );
+}
+
 /**
- * 浜通りサークルの配色。
+ * 浜通りサークルの配色をそのまま再現した版。
  *
- * 実サイトを描画して計測した値をもとにしている:
- * body 背景 #ffea00 / カード #ffffff / 本文 #231815 / 補足 #777777 /
- * 淡い黄 #fff8a3 / 微背景 #f9f9f9
+ * 実サイトを描画して計測した値（body 背景 #ffea00 / カード #ffffff /
+ * 本文 #231815 / 淡黄 #fff8a3）をそのまま使う。既定はこれを白基調へ
+ * 寄せたものなので、こちらは「元サイトに忠実な、黄色が支配的な版」。
  *
- * そのままでは破綻する点を2つ調整している。
- * 1. 既定の `--primary-foreground`（ほぼ白）を黄色に載せると 1.18:1 で
- *    判読できないため #231815（14.03:1）に置き換える
- * 2. 実サイトの補足色 #777777 は AA 未達のため #666666 へ寄せる。
- *    補足テキストは黄色の背景に直接載る箇所（区切り線の「または」や
- *    フッターの著作権表示）があり、そこが最も条件が厳しい
- *    （#777777 は黄背景で 3.63:1、#666666 なら 4.65:1）
- * また白背景で見えない純黄色は、トップローダー・カレンダー・リンクなど
- * 「白の上に置く」用途に限って濃い金色へ落としている。
+ * 実サイトの補足色 #777777 は黄背景で 3.63:1 と AA 未達のため #666666 に、
+ * 黄色に載る文字は #231815 に置き換えている。
  */
-const HAMADOORI_CIRCLE_PRESET: ColorPreset = {
-  id: "hamadoori-circle",
-  label: "浜通りサークル",
+const HAMADOORI_CIRCLE_VIVID_PRESET: ColorPreset = {
+  id: "hamadoori-circle-vivid",
+  label: "浜通りサークル（黄色ベタ）",
   description:
-    "黄色（#ffea00）と白を基調にした配色。本文は暖かみのある黒 #231815。白地に置く要素は視認性のため濃い金色に落としている。",
+    "ページ背景まで #ffea00 にした、元サイトに忠実な版。カードの少ないページは黄色一色になる。",
   source: {
     label: "hamadoori-circle.com",
     url: "https://hamadoori-circle.com/",
   },
   swatches: ["#ffea00", "#fff8a3", "#ffffff", "#231815", "#666666"],
   values: {
+    ...goldPaletteValues(),
+
     // --- ブランド ---
     "--app-brand-primary": "#ffea00",
-    // リンクや強調文字。鮮やかな黄色のままだと白地で 1.18:1 になり読めない
     "--app-brand-ink": "#736000",
-    // 白背景のトップローダー。純黄色だと 1.23:1 で見えないため濃い金に
     "--app-brand-primary-strong": "#b38f00",
-    // カレンダーのアクセントと OG 画像の見出し。白地に文字として載る
     "--app-brand-deep": "#8a7300",
     "--app-brand-link-hover": "#6b5900",
     "--app-brand-light": "#ffea00",
@@ -184,55 +159,102 @@ const HAMADOORI_CIRCLE_PRESET: ColorPreset = {
 };
 
 /**
- * 浜通りサークルの配色を白基調に寄せた調整版。
+ * 派生元 team-mirai-volunteer/action-board のティール配色。
  *
- * `hamadoori-circle` をそのまま当てるとページ背景が飽和した黄色一色になり、
- * ランキングやサインインのようにカードが少ないページが「黄色の壁」になる。
- * 黄色は主役として残しつつ、大面積を白へ振り替えたもの。
+ * 黄色へ切り替える前の状態を復元できるように残している。
+ * Tailwind パレットの emerald / teal も元の緑に戻す。
  *
- * 変更点は3つ。
- * 1. `--background` を黄色から温かみのある白（#fbfaf6）へ。カード（#ffffff）
- *    との差はわずかだが、境界線があるので分離は保てる
- * 2. グラデーションの終端 `--app-brand-pale` を #fff8a3 から #fffbe6 へ。
- *    ヒーローとフッターが上端の黄色から白い背景へ自然に溶ける
- * 3. `--secondary` / `--muted` を黄味のない灰白へ
- *
- * `--primary`（ボタン・タブ）と `--accent` は黄色のまま残す。
- * ここまで白くするとブランドの手掛かりが消えるため。
- *
- * なお `--app-brand-light` / `--app-brand-pale` はヒーロー・フッターの大面積と
- * 既定ボタン（bg-mirai-gradient）の両方が参照している。開始色の黄色を薄めると
- * ボタンの押せる感じまで失われるため、開始色は #ffea00 のまま終端だけ白へ寄せた。
+ * この配色は WCAG AA を満たさない組み合わせを3つ含む。派生元から
+ * 引き継いだ状態をそのまま保存する目的なので、値は変更していない。
  */
-const HAMADOORI_CIRCLE_WHITE_PRESET: ColorPreset = {
-  id: "hamadoori-circle-white",
-  label: "浜通りサークル（白基調）",
+const TEAM_MIRAI_PRESET: ColorPreset = {
+  id: "team-mirai",
+  label: "派生元（ティール）",
   description:
-    "黄色を主役に残したまま、ページ背景とグラデーションの終端を白へ振り替えた調整版。黄色一色になりがちなランキングやサインインが落ち着く。",
-  source: {
-    label: "hamadoori-circle.com",
-    url: "https://hamadoori-circle.com/",
-  },
-  swatches: ["#ffea00", "#fffbe6", "#fbfaf6", "#ffffff", "#231815"],
+    "team-mirai-volunteer/action-board から引き継いだ元の配色。黄色へ切り替える前の状態を確認したいときに使う。",
+  swatches: ["#30baa7", "#64d8c6", "#bcecd3", "#f6f3ef", "#ffffff"],
   values: {
-    ...HAMADOORI_CIRCLE_PRESET.values,
+    // Tailwind パレットを元の緑系へ戻す
+    "--color-emerald-50": "#ecfdf5",
+    "--color-emerald-100": "#d0fae5",
+    "--color-emerald-200": "#a4f4cf",
+    "--color-emerald-500": "#00bb7f",
+    "--color-emerald-600": "#009767",
+    "--color-emerald-700": "#007956",
+    "--color-emerald-800": "#005f46",
+    "--color-teal-50": "#f0fdfa",
+    "--color-teal-200": "#96f7e4",
+    "--color-teal-400": "#00d3bd",
+    "--color-teal-500": "#00baa7",
+    "--color-teal-600": "#009588",
+    "--color-teal-700": "#00776e",
+    "--color-teal-800": "#005f5a",
 
-    // グラデーションの終端を白へ寄せて、ヒーローが背景に溶けるようにする
-    "--app-brand-pale": "#fffbe6",
-    "--app-onboarding-to": "#fffbe6",
-    "--app-brand-surface": "#fff8a3",
+    // --- ブランド ---
+    "--app-brand-primary": "#30baa7",
+    "--app-brand-ink": "#2aa88f",
+    "--app-brand-primary-strong": "#2aa693",
+    "--app-brand-deep": "#0d9488",
+    "--app-brand-link-hover": "#0d6b5e",
+    "--app-brand-light": "#64d8c6",
+    "--app-brand-pale": "#bcecd3",
+    "--app-brand-level-end": "#47c991",
+    "--app-brand-surface": "#e2f6f3",
 
-    // 大面積を白へ
-    "--background": "#fbfaf6",
-    "--secondary": "#f5f4f0",
-    "--muted": "#f5f4f0",
+    // --- オンボーディング ---
+    "--app-onboarding-from": "#a8e6cf",
+    "--app-onboarding-to": "#7fcdcd",
+
+    // --- セマンティック ---
+    "--background": "#f6f3ef",
+    "--foreground": "#0a0a0a",
+    "--card": "#ffffff",
+    "--card-foreground": "#0a0a0a",
+    "--popover": "#ffffff",
+    "--popover-foreground": "#0a0a0a",
+    "--primary": "#2ba68e",
+    "--primary-foreground": "#fafafa",
+    "--secondary": "#f5f5f5",
+    "--secondary-foreground": "#171717",
+    "--muted": "#f5f5f5",
+    "--muted-foreground": "#737373",
+    "--accent": "#f5f5f5",
+    "--accent-foreground": "#171717",
+    "--ring": "#a1a1a1",
   },
+  knownContrastIssues: [
+    {
+      pair: "プライマリ前景 / プライマリ",
+      ratio: 2.89,
+      reason: "ティールのボタン上のほぼ白い文字。派生元から引き継いだ状態。",
+    },
+    {
+      pair: "ミュート前景 / ミュート",
+      ratio: 4.34,
+      reason: "補足テキスト。AA まで 0.16 足りない。派生元から引き継いだ状態。",
+    },
+    {
+      pair: "ミュート前景 / 背景",
+      ratio: 4.28,
+      reason: "ページ背景に直接載る補足テキスト。派生元から引き継いだ状態。",
+    },
+    {
+      pair: "インク / 背景",
+      ratio: 2.67,
+      reason: "ティールのリンク文字。派生元から引き継いだ状態。",
+    },
+    {
+      pair: "インク / カード",
+      ratio: 2.95,
+      reason: "同上。カード内のリンク文字。",
+    },
+  ],
 };
 
 export const COLOR_PRESETS: ColorPreset[] = [
   buildDefaultPreset(),
-  HAMADOORI_CIRCLE_PRESET,
-  HAMADOORI_CIRCLE_WHITE_PRESET,
+  HAMADOORI_CIRCLE_VIVID_PRESET,
+  TEAM_MIRAI_PRESET,
 ];
 
 /**

@@ -2,28 +2,6 @@ import { render, screen } from "@testing-library/react";
 import type { Tables } from "@/lib/types/supabase";
 import { MissionDetails } from "./mission-details";
 
-jest.mock(
-  "@/features/mission-detail/components/youtube-subscribe-button",
-  () => ({
-    YouTubeSubscribeButton: function MockYouTubeSubscribeButton({
-      channelId,
-    }: {
-      channelId: string;
-    }) {
-      return (
-        <div data-testid="youtube-button">YouTube Button: {channelId}</div>
-      );
-    },
-  }),
-);
-
-jest.mock("@/lib/constants/mission-config", () => ({
-  YOUTUBE_MISSION_CONFIG: {
-    SLUG: "youtube-subscribe",
-    CHANNEL_ID: "test-channel-id",
-  },
-}));
-
 jest.mock("@/lib/utils/date-formatters", () => ({
   dateFormatter: jest.fn(
     (date: Date) =>
@@ -90,23 +68,6 @@ describe("MissionDetails", () => {
     expect(contentElement?.innerHTML).toBe(
       "<p>テストミッションの<strong>詳細</strong>内容</p>",
     );
-  });
-
-  it("YouTubeミッションの場合はYouTubeボタンが表示される", () => {
-    const youtubeMission = { ...mockMission, slug: "youtube-subscribe" };
-
-    render(<MissionDetails mission={youtubeMission} />);
-
-    expect(screen.getByTestId("youtube-button")).toBeInTheDocument();
-    expect(
-      screen.getByText("YouTube Button: test-channel-id"),
-    ).toBeInTheDocument();
-  });
-
-  it("通常のミッションの場合はYouTubeボタンが表示されない", () => {
-    render(<MissionDetails mission={mockMission} />);
-
-    expect(screen.queryByTestId("youtube-button")).not.toBeInTheDocument();
   });
 
   it("ミッション内容がnullの場合でもエラーにならない", () => {

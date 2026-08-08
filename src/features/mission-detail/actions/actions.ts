@@ -219,25 +219,6 @@ const linkAccessArtifactSchema = baseMissionFormSchema.extend({
   requiredArtifactType: z.literal(ARTIFACT_TYPES.LINK_ACCESS.key),
 });
 
-// YOUTUBEタイプ用スキーマ
-const youtubeArtifactSchema = baseMissionFormSchema.extend({
-  requiredArtifactType: z.literal(ARTIFACT_TYPES.YOUTUBE.key),
-  artifactLink: z
-    .string()
-    .nonempty({ message: "YouTube動画のURLが必要です" })
-    .regex(ARTIFACT_TYPES.YOUTUBE.validationRegex, {
-      message: "有効なYouTube動画のURLを入力してください",
-    }),
-});
-
-// YOUTUBE_COMMENTタイプ用スキーマ
-const youtubeCommentArtifactSchema = baseMissionFormSchema.extend({
-  requiredArtifactType: z.literal(ARTIFACT_TYPES.YOUTUBE_COMMENT.key),
-  artifactLink: z
-    .string()
-    .nonempty({ message: "YouTubeコメントのURLが必要です" }),
-});
-
 // 統合スキーマ
 const achieveMissionFormSchema = z.discriminatedUnion("requiredArtifactType", [
   linkArtifactSchema,
@@ -251,8 +232,6 @@ const achieveMissionFormSchema = z.discriminatedUnion("requiredArtifactType", [
   residentialPosterArtifactSchema,
   quizArtifactSchema,
   linkAccessArtifactSchema,
-  youtubeArtifactSchema,
-  youtubeCommentArtifactSchema,
 ]);
 
 export type AchieveMissionFormData = z.infer<typeof achieveMissionFormSchema>;
@@ -351,145 +330,6 @@ export const achieveMissionAction = async (formData: FormData) => {
     };
   }
 
-  // YouTube重複バリデーション（同じ動画へのいいねは1回のみ）
-  if (
-    validatedRequiredArtifactType === ARTIFACT_TYPES.YOUTUBE.key &&
-    validatedData.requiredArtifactType === ARTIFACT_TYPES.YOUTUBE.key
-  ) {
-    const { extractVideoIdFromUrl } = await import(
-      "@/features/youtube/services/youtube-like-service"
-    );
-    const videoId = extractVideoIdFromUrl(validatedData.artifactLink);
-
-    if (videoId) {
-      const { data: existingLike, error: likeCheckError } = await supabase
-        .from("youtube_video_likes")
-        .select("id")
-        .eq("user_id", authUser.id)
-        .eq("video_id", videoId)
-        .maybeSingle();
-
-      if (likeCheckError) {
-        return {
-          success: false as const,
-          error: "重複チェック中にエラーが発生しました。",
-        };
-      }
-
-      if (existingLike) {
-        return {
-          success: false as const,
-          error: "この動画へのいいねは既に記録されています。",
-        };
-      }
-    }
-  }
-
-  // YOUTUBE_COMMENT重複バリデーション（同じコメントは1回のみ）
-  let validatedYouTubeCommentInfo: {
-    videoId: string;
-    commentId: string | null;
-  } | null = null;
-  if (
-    validatedRequiredArtifactType === ARTIFACT_TYPES.YOUTUBE_COMMENT.key &&
-    validatedData.requiredArtifactType === ARTIFACT_TYPES.YOUTUBE_COMMENT.key
-  ) {
-    const { extractVideoIdFromUrl, extractCommentIdFromUrl } = await import(
-      "@/features/youtube/services/youtube-comment-service"
-    );
-
-    const videoId = extractVideoIdFromUrl(validatedData.artifactLink);
-    const commentId = extractCommentIdFromUrl(validatedData.artifactLink);
-
-    if (!videoId) {
-      return {
-        success: false as const,
-        error: "YouTube動画のURLを正しく入力してください。",
-      };
-    }
-
-    const { data: video, error: videoError } = await supabase
-      .from("youtube_videos")
-      .select("video_id")
-      .eq("video_id", videoId)
-      .eq("is_active", true)
-      .maybeSingle();
-
-    if (videoError) {
-      return {
-        success: false as const,
-        error: "動画の確認中にエラーが発生しました。",
-      };
-    }
-
-    if (!video) {
-      return {
-        success: false as const,
-        error: "この動画はチームみらいの動画ではありません。",
-      };
-    }
-
-    if (commentId) {
-      const adminClient = await createAdminClient();
-      const { data: existingComment, error: commentCheckError } =
-        await adminClient
-          .from("youtube_user_comments")
-          .select("id")
-          .eq("user_id", authUser.id)
-          .eq("comment_id", commentId)
-          .maybeSingle();
-
-      if (commentCheckError) {
-        return {
-          success: false as const,
-          error: "重複チェック中にエラーが発生しました。",
-        };
-      }
-
-      if (existingComment) {
-        return {
-          success: false as const,
-          error: "このコメントは既に記録されています。",
-        };
-      }
-    }
-
-    validatedYouTubeCommentInfo = { videoId, commentId };
-  }
-
-  // YouTubeミッション: チームみらい動画の検証（DB書き込み前に実行）
-  let validatedYouTubeVideoId: string | null = null;
-  if (
-    validatedRequiredArtifactType === ARTIFACT_TYPES.YOUTUBE.key &&
-    validatedData.requiredArtifactType === ARTIFACT_TYPES.YOUTUBE.key
-  ) {
-    const { validateAndRegisterTeamMiraiVideo } = await import(
-      "@/features/youtube/services/youtube-like-service"
-    );
-
-    const validateResult = await validateAndRegisterTeamMiraiVideo(
-      validatedData.artifactLink,
-    );
-
-    if (!validateResult.success) {
-      return {
-        success: false as const,
-        error: validateResult.error || "YouTube動画の検証に失敗しました。",
-      };
-    }
-
-    if (!validateResult.isTeamMirai) {
-      return {
-        success: false as const,
-        error:
-          validateResult.error ||
-          "この動画はチームみらいの動画ではありません。",
-      };
-    }
-
-    validatedYouTubeVideoId = validateResult.videoId ?? null;
-  }
-
   // ユースケースに委譲（ミッション達成コアロジック）
   const adminClient = await createAdminClient();
   const result = await achieveMission(adminClient, supabase, {
@@ -504,51 +344,6 @@ export const achieveMissionAction = async (formData: FormData) => {
 
   if (!result.success) {
     return result;
-  }
-
-  // YouTube固有の後処理（ユースケース外）
-  if (validatedYouTubeVideoId && result.artifactId) {
-    const { createYouTubeLikeRecord } = await import(
-      "@/features/youtube/services/youtube-like-service"
-    );
-
-    const likeResult = await createYouTubeLikeRecord(
-      authUser.id,
-      validatedYouTubeVideoId,
-      result.artifactId,
-    );
-
-    if (!likeResult.success) {
-      return {
-        success: false as const,
-        error: likeResult.error || "YouTubeいいね記録の保存に失敗しました。",
-      };
-    }
-  }
-
-  if (validatedYouTubeCommentInfo?.commentId && result.artifactId) {
-    const { data: cachedComment } = await supabase
-      .from("youtube_video_comments")
-      .select("comment_id")
-      .eq("comment_id", validatedYouTubeCommentInfo.commentId)
-      .maybeSingle();
-
-    if (cachedComment) {
-      const { createYouTubeCommentRecord } = await import(
-        "@/features/youtube/services/youtube-comment-service"
-      );
-
-      const commentResult = await createYouTubeCommentRecord(
-        authUser.id,
-        validatedYouTubeCommentInfo.videoId,
-        validatedYouTubeCommentInfo.commentId,
-        result.artifactId,
-      );
-
-      if (!commentResult.success) {
-        console.error("YouTubeコメント記録の保存に失敗:", commentResult.error);
-      }
-    }
   }
 
   return result;

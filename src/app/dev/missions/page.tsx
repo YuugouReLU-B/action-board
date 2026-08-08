@@ -17,8 +17,6 @@ const ARTIFACT_TYPE_LABELS: Record<string, string> = {
   POSTING: "ポスティング",
   POSTER: "ポスター",
   RESIDENTIAL_POSTER: "戸別ポスター",
-  YOUTUBE: "YouTube",
-  YOUTUBE_COMMENT: "YouTubeコメント",
 };
 
 export default async function DevMissionsPage() {

@@ -2,10 +2,8 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { YouTubeSubscribeButton } from "@/features/mission-detail/components/youtube-subscribe-button";
 import { DifficultyBadge } from "@/features/missions/components/difficulty-badge";
 import { MissionIcon } from "@/features/missions/components/mission-icon";
-import { YOUTUBE_MISSION_CONFIG } from "@/lib/constants/mission-config";
 import type { Tables } from "@/lib/types/supabase";
 import { dateFormatter } from "@/lib/utils/date-formatters";
 
@@ -43,15 +41,6 @@ export function MissionDetails({ mission }: MissionDetailsProps) {
             }
           }}
         />
-
-        {/* YouTubeチャンネル登録ミッションの場合のみ、YouTube登録ボタンを表示 */}
-        {mission.slug === YOUTUBE_MISSION_CONFIG.SLUG && (
-          <div className="flex justify-center mt-6">
-            <YouTubeSubscribeButton
-              channelId={YOUTUBE_MISSION_CONFIG.CHANNEL_ID}
-            />
-          </div>
-        )}
       </CardContent>
     </Card>
   );

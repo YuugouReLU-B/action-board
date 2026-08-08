@@ -1,6 +1,6 @@
 /**
  * Format chart data items by converting date strings to Japanese short format (e.g. "1月5日").
- * Used across action-stats, tiktok-stats chart components.
+ * Used across action-stats chart components.
  */
 export function formatChartDates<T extends { date: string }>(
   data: T[],

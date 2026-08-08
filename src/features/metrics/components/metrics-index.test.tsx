@@ -6,22 +6,10 @@ jest.mock("../services/get-metrics", () => ({
   fetchAchievementData: jest.fn(),
 }));
 
-// YouTube統計サービスのモック
-jest.mock("@/features/youtube-stats/services/youtube-stats-service", () => ({
-  getYouTubeStatsSummary: jest.fn(),
-}));
-
-// TikTok統計サービスのモック
-jest.mock("@/features/tiktok-stats/services/tiktok-stats-service", () => ({
-  getTikTokStatsSummary: jest.fn(),
-}));
-
 import {
   fetchAchievementData,
   fetchSupporterData,
 } from "@/features/metrics/services/get-metrics";
-import { getTikTokStatsSummary } from "@/features/tiktok-stats/services/tiktok-stats-service";
-import { getYouTubeStatsSummary } from "@/features/youtube-stats/services/youtube-stats-service";
 import { Metrics } from "./metrics-index";
 
 // モック関数の型アサーション
@@ -30,11 +18,6 @@ const mockFetchSupporterData = fetchSupporterData as jest.MockedFunction<
 >;
 const mockFetchAchievementData = fetchAchievementData as jest.MockedFunction<
   typeof fetchAchievementData
->;
-const mockGetYouTubeStatsSummary =
-  getYouTubeStatsSummary as jest.MockedFunction<typeof getYouTubeStatsSummary>;
-const mockGetTikTokStatsSummary = getTikTokStatsSummary as jest.MockedFunction<
-  typeof getTikTokStatsSummary
 >;
 
 // テスト用のデフォルトデータ
@@ -47,25 +30,6 @@ const defaultSupporterData = {
 const defaultAchievementData = {
   totalCount: 18605,
   todayCount: 245,
-};
-
-const defaultYouTubeMockData = {
-  totalVideos: 150,
-  totalViews: 250000,
-  totalLikes: 5000,
-  totalComments: 1200,
-  dailyViewsIncrease: 3500,
-  dailyVideosIncrease: 5,
-};
-
-const defaultTikTokMockData = {
-  totalVideos: 50,
-  totalViews: 100000,
-  totalLikes: 2000,
-  totalComments: 500,
-  totalShares: 300,
-  dailyViewsIncrease: 1500,
-  dailyVideosIncrease: 2,
 };
 
 jest.mock("@/components/ui/separator", () => ({
@@ -83,8 +47,6 @@ describe("Metrics", () => {
     // 各テスト前にモックデータをリセット
     mockFetchSupporterData.mockResolvedValue(defaultSupporterData);
     mockFetchAchievementData.mockResolvedValue(defaultAchievementData);
-    mockGetYouTubeStatsSummary.mockResolvedValue(defaultYouTubeMockData);
-    mockGetTikTokStatsSummary.mockResolvedValue(defaultTikTokMockData);
   });
 
   afterEach(() => {
@@ -96,23 +58,26 @@ describe("Metrics", () => {
       render(await Metrics());
 
       expect(screen.getByText("チームみらいの活動状況🚀")).toBeInTheDocument();
-      expect(screen.getByText("動画再生回数")).toBeInTheDocument();
-      expect(screen.getByText("動画本数")).toBeInTheDocument();
       expect(screen.getByText("サポーター数")).toBeInTheDocument();
+      expect(screen.getByText("達成アクション数")).toBeInTheDocument();
     });
 
-    it("メトリクス数値が正しく表示される（YouTube + TikTok合算）", async () => {
+    it("動画関連のメトリクスは表示されない", async () => {
+      render(await Metrics());
+
+      expect(screen.queryByText("動画再生回数")).not.toBeInTheDocument();
+      expect(screen.queryByText("動画本数")).not.toBeInTheDocument();
+    });
+
+    it("メトリクス数値が正しく表示される", async () => {
       render(await Metrics());
 
       await waitFor(() => {
         // サポーター数の確認
         expect(screen.getByText("75,982")).toBeInTheDocument();
 
-        // 動画再生回数の確認（250,000 + 100,000 = 350,000）
-        expect(screen.getByText("350,000")).toBeInTheDocument();
-
-        // 動画本数の確認（150 + 50 = 200）
-        expect(screen.getByText("200")).toBeInTheDocument();
+        // 達成アクション数の確認
+        expect(screen.getByText("18,605")).toBeInTheDocument();
       });
     });
 
@@ -208,11 +173,11 @@ describe("Metrics", () => {
     it("メトリクスの順序が正しい", async () => {
       render(await Metrics());
 
-      const metrics = screen.getAllByText(/動画再生回数|サポーター数/);
+      const metrics = screen.getAllByText(/サポーター数|達成アクション数/);
 
-      // 期待される順序: サポーター数 → 動画再生回数
+      // 期待される順序: サポーター数 → 達成アクション数
       expect(metrics[0]).toHaveTextContent("サポーター数");
-      expect(metrics[1]).toHaveTextContent("動画再生回数");
+      expect(metrics[1]).toHaveTextContent("達成アクション数");
     });
   });
 
@@ -231,14 +196,10 @@ describe("Metrics", () => {
     it("内部リンクには適切な属性が設定されていない", async () => {
       render(await Metrics());
 
-      // 内部リンク（/youtube_stats, /tiktok_stats）はtarget="_blank"を持たない
-      const youtubeLink = document.querySelector('a[href="/youtube_stats"]');
-      expect(youtubeLink).toBeInTheDocument();
-      expect(youtubeLink).not.toHaveAttribute("target", "_blank");
-
-      const tiktokLink = document.querySelector('a[href="/tiktok_stats"]');
-      expect(tiktokLink).toBeInTheDocument();
-      expect(tiktokLink).not.toHaveAttribute("target", "_blank");
+      // 内部リンク（/stats）はtarget="_blank"を持たない
+      const statsLink = document.querySelector('a[href="/stats"]');
+      expect(statsLink).toBeInTheDocument();
+      expect(statsLink).not.toHaveAttribute("target", "_blank");
     });
   });
 });

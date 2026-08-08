@@ -18,10 +18,11 @@ const catalogVars = new Set([
 ]);
 
 describe("カラープリセット", () => {
-  it("既定と浜通りサークルの2件がある", () => {
+  it("プリセットが3件ある", () => {
     expect(COLOR_PRESETS.map((preset) => preset.id)).toEqual([
       "default",
       "hamadoori-circle",
+      "hamadoori-circle-white",
     ]);
   });
 

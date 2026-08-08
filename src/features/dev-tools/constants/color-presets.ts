@@ -170,9 +170,56 @@ const HAMADOORI_CIRCLE_PRESET: ColorPreset = {
   },
 };
 
+/**
+ * 浜通りサークルの配色を白基調に寄せた調整版。
+ *
+ * `hamadoori-circle` をそのまま当てるとページ背景が飽和した黄色一色になり、
+ * ランキングやサインインのようにカードが少ないページが「黄色の壁」になる。
+ * 黄色は主役として残しつつ、大面積を白へ振り替えたもの。
+ *
+ * 変更点は3つ。
+ * 1. `--background` を黄色から温かみのある白（#fbfaf6）へ。カード（#ffffff）
+ *    との差はわずかだが、境界線があるので分離は保てる
+ * 2. グラデーションの終端 `--app-brand-pale` を #fff8a3 から #fffbe6 へ。
+ *    ヒーローとフッターが上端の黄色から白い背景へ自然に溶ける
+ * 3. `--secondary` / `--muted` を黄味のない灰白へ
+ *
+ * `--primary`（ボタン・タブ）と `--accent` は黄色のまま残す。
+ * ここまで白くするとブランドの手掛かりが消えるため。
+ *
+ * なお `--app-brand-light` / `--app-brand-pale` はヒーロー・フッターの大面積と
+ * 既定ボタン（bg-mirai-gradient）の両方が参照している。開始色の黄色を薄めると
+ * ボタンの押せる感じまで失われるため、開始色は #ffea00 のまま終端だけ白へ寄せた。
+ */
+const HAMADOORI_CIRCLE_WHITE_PRESET: ColorPreset = {
+  id: "hamadoori-circle-white",
+  label: "浜通りサークル（白基調）",
+  description:
+    "黄色を主役に残したまま、ページ背景とグラデーションの終端を白へ振り替えた調整版。黄色一色になりがちなランキングやサインインが落ち着く。",
+  source: {
+    label: "hamadoori-circle.com",
+    url: "https://hamadoori-circle.com/",
+  },
+  swatches: ["#ffea00", "#fffbe6", "#fbfaf6", "#ffffff", "#231815"],
+  values: {
+    ...HAMADOORI_CIRCLE_PRESET.values,
+
+    // グラデーションの終端を白へ寄せて、ヒーローが背景に溶けるようにする
+    "--app-brand-pale": "#fffbe6",
+    "--app-onboarding-to": "#fffbe6",
+    "--app-brand-surface": "#fff8a3",
+
+    // 大面積を白へ
+    "--background": "#fbfaf6",
+    "--secondary": "#f5f4f0",
+    "--muted": "#f5f4f0",
+  },
+};
+
 export const COLOR_PRESETS: ColorPreset[] = [
   buildDefaultPreset(),
   HAMADOORI_CIRCLE_PRESET,
+  HAMADOORI_CIRCLE_WHITE_PRESET,
 ];
 
 /**

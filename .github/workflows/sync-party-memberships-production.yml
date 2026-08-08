@@ -1,9 +1,9 @@
 name: Daily Party Membership Sync
 
 on:
-  schedule:
-    # 毎日 日本時間 00:30 (UTC 15:30) に実行
-    - cron: "30 15 * * *"
+  # NOTE: 派生元(team-mirai-volunteer/action-board)の運用ジョブ。
+  # 本プロジェクト用に Secrets と接続先を再設定するまで定期実行を停止している。
+  # 元の設定: schedule / cron "30 15 * * *"（毎日 日本時間 0:30）
   workflow_dispatch:
 
 jobs:

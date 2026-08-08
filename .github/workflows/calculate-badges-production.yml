@@ -1,10 +1,10 @@
 name: Daily Badge Calculation
 
 on:
-  schedule:
-    # 毎日日本時間0:05 (UTC 15:05)に実行
-    - cron: '5 15 * * *'
-  workflow_dispatch: # 手動実行も可能
+  # NOTE: 派生元(team-mirai-volunteer/action-board)の運用ジョブ。
+  # 本プロジェクト用に Secrets と接続先を再設定するまで定期実行を停止している。
+  # 元の設定: schedule / cron '5 15 * * *'（毎日 日本時間 0:05）
+  workflow_dispatch: # 手動実行のみ
 
 jobs:
   calculate-badges:

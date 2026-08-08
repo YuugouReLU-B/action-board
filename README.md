@@ -1,9 +1,23 @@
 # アクションボード
 
-[![Check code with Biome and tsc](https://github.com/team-mirai/action-board/actions/workflows/check_code.yaml/badge.svg)](https://github.com/team-mirai/action-board/actions/workflows/check_code.yaml)
-[![Build & Test E2E/RLS](https://github.com/team-mirai/action-board/actions/workflows/e2e_test.yaml/badge.svg)](https://github.com/team-mirai/action-board/actions/workflows/e2e_test.yaml)
-[![codecov](https://codecov.io/gh/team-mirai-volunteer/action-board/graph/badge.svg)](https://codecov.io/gh/team-mirai-volunteer/action-board)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/team-mirai-volunteer/action-board)
+## 本リポジトリについて
+
+本リポジトリは [team-mirai-volunteer/action-board](https://github.com/team-mirai-volunteer/action-board) から派生した独立プロジェクトです。
+
+- **ライセンス**: 派生元と同じ [GNU Affero General Public License v3.0](./LICENSE)（AGPL-3.0）
+- **派生元**: team-mirai-volunteer/action-board — Copyright (c) チームみらい およびコントリビューターの皆さま
+- **派生時点**: commit [`8f5cd6c0`](https://github.com/team-mirai-volunteer/action-board/commit/8f5cd6c022d877b872969f9ec5eba674ca72a19d)（2026-08-08）
+- 本リポジトリでの変更点は、派生時点以降のコミット履歴（`git log 8f5cd6c0..`）をご参照ください。
+
+AGPL-3.0 第13条に基づき、本ソフトウェアの改変版をネットワーク経由で提供する場合は、利用者に対して改変版の完全なソースコードを提供する必要があります。
+
+### 派生元の名称・ロゴ・コンテンツについて
+
+AGPL-3.0 が許諾するのはソースコードの利用であり、商標権は含まれません（AGPL-3.0 第7条）。
+「チームみらい」の名称・ロゴ・アイコン類・ミッションコンテンツ等は派生元に帰属するものであり、
+本リポジトリを利用したサービスを公開する際は、これらを自身のものへ差し替える必要があります。
+
+---
 
 ## コントリビュートについて
 

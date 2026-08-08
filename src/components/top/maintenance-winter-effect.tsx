@@ -818,7 +818,7 @@ function SpringLogo({
     // biome-ignore lint/performance/noImgElement: 軽量表示のためimgタグを使用
     <img
       src={LOGO_SRC}
-      alt="チームみらいロゴ"
+      alt="浜通りクエスト"
       style={{
         width: `${sizePx}px`,
         height: "auto",

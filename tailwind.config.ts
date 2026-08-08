@@ -55,7 +55,8 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "tm-teal": "#30BAA7",
+        // 定義元は src/app/globals.css の --app-brand-primary
+        "tm-teal": "var(--app-brand-primary)",
       },
       borderRadius: {
         lg: "var(--radius)",

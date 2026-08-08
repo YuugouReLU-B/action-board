@@ -27,15 +27,19 @@ const statusConfig: {
   label: string;
   color: string;
 }[] = [
-  { status: "not_yet", label: "未貼付", color: "#6B7280" },
-  { status: "not_yet_dangerous", label: "未貼付（危険）", color: "#6B7280" },
-  { status: "done", label: "完了", color: "#10B981" },
+  { status: "not_yet", label: "未貼付", color: "var(--app-poster-not-yet)" },
+  {
+    status: "not_yet_dangerous",
+    label: "未貼付（危険）",
+    color: "var(--app-poster-not-yet)",
+  },
+  { status: "done", label: "完了", color: "var(--app-poster-done)" },
 ];
 
 const reservedConfig = {
   status: "reserved" as BoardStatus,
   label: "予約済み",
-  color: "#F59E0B",
+  color: "var(--app-poster-reserved)",
 };
 
 const errorConfig: {
@@ -43,13 +47,17 @@ const errorConfig: {
   label: string;
   color: string;
 }[] = [
-  { status: "error_wrong_poster", label: "ポスター違い", color: "#EF4444" },
+  {
+    status: "error_wrong_poster",
+    label: "ポスター違い",
+    color: "var(--app-poster-error)",
+  },
 ];
 
 const otherConfig = {
   status: "other" as BoardStatus,
   label: "その他",
-  color: "#8B5CF6",
+  color: "var(--app-poster-other)",
 };
 
 export function PosterBoardFilter({

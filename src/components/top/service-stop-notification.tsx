@@ -31,7 +31,7 @@ export default function ServiceStopNotification() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#0A0A1A] overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[var(--app-service-stop-bg)] overflow-hidden">
       <div
         className="relative h-full w-full"
         style={{

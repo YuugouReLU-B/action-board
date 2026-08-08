@@ -251,7 +251,7 @@ function LoginSelectionPhase({
         type="button"
         onClick={handleLINELogin}
         disabled={isLoading}
-        className="w-full h-12 bg-[#00B900] hover:bg-[#00A000] text-white"
+        className="w-full h-12 bg-[var(--app-vendor-line-green)] hover:bg-[var(--app-vendor-line-green-hover)] text-white"
       >
         {isLoading ? "LINE連携中..." : "LINEでアカウント作成"}
       </Button>

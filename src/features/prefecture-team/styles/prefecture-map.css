@@ -35,16 +35,16 @@
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 4px;
-  color: #1f2937;
+  color: var(--app-prefecture-title);
 }
 
 .prefecture-tooltip .tooltip-rank {
-  color: #059669;
+  color: var(--app-prefecture-value);
   font-weight: bold;
 }
 
 .prefecture-tooltip .tooltip-stats {
-  color: #6b7280;
+  color: var(--app-prefecture-muted);
   font-size: 13px;
 }
 
@@ -62,7 +62,7 @@
   font-weight: bold;
   margin: 0 0 8px 0;
   font-size: 13px;
-  color: #374151;
+  color: var(--app-prefecture-label);
 }
 
 .prefecture-map-legend .legend-item {
@@ -80,7 +80,7 @@
 }
 
 .prefecture-map-legend .legend-label {
-  color: #6b7280;
+  color: var(--app-prefecture-muted);
   font-size: 11px;
 }
 
@@ -99,8 +99,8 @@
 .prefecture-map-loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #e5e7eb;
-  border-top-color: #3b82f6;
+  border: 4px solid var(--app-prefecture-spinner-track);
+  border-top-color: var(--app-prefecture-spinner-head);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

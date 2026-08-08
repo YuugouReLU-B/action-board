@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { readTokenColor } from "@/lib/design/color-tokens";
 import {
   type ContributorData,
   getContributorNames,
@@ -268,7 +269,13 @@ function createLogoPoints(
 
 // --- Canvas drawing helpers ---
 
-const PETAL_COLORS = ["#F5A0B8", "#E87DA0", "#FCDCE8"];
+// canvas の fillStyle は var() を解釈しないため、描画時に解決する
+const PETAL_COLOR_VARS = [
+  "--app-winter-petal-1",
+  "--app-winter-petal-2",
+  "--app-winter-petal-3",
+];
+const PETAL_COLORS = PETAL_COLOR_VARS.map((cssVar) => readTokenColor(cssVar));
 
 function drawPlumBlossom(
   ctx: CanvasRenderingContext2D,
@@ -300,7 +307,7 @@ function drawPlumBlossom(
   }
 
   // 雌しべ
-  ctx.fillStyle = "#FFF3B0";
+  ctx.fillStyle = readTokenColor("--app-winter-star");
   for (let i = 0; i < 3; i++) {
     const angle = (i * Math.PI * 2) / 3;
     ctx.beginPath();
@@ -880,7 +887,7 @@ const EndCredits = ({
         inset: 0,
         overflow: "hidden",
         pointerEvents: "none",
-        color: "#fff",
+        color: "var(--app-winter-text)",
         zIndex: 20,
       }}
     >
@@ -1128,7 +1135,7 @@ export default function MaintenanceWinterEffect() {
           position: absolute;
           top: -8%;
           border-radius: 9999px;
-          background: #ffffff;
+          background: var(--app-winter-surface);
           box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
           animation-name: snowFall;
           animation-timing-function: linear;

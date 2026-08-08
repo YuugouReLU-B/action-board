@@ -43,7 +43,7 @@ export default function SignInForm({ returnUrl }: SignInFormProps) {
         type="button"
         onClick={handleLINELogin}
         disabled={isLineLoading}
-        className="w-full h-12 bg-[#00B900] hover:bg-[#00A000] text-white"
+        className="w-full h-12 bg-[var(--app-vendor-line-green)] hover:bg-[var(--app-vendor-line-green-hover)] text-white"
       >
         {isLineLoading ? "LINE連携中..." : "LINEでログイン"}
       </Button>

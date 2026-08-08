@@ -62,7 +62,7 @@ const EndCredits = ({
         inset: 0,
         overflow: "hidden",
         pointerEvents: "none",
-        color: "#fff",
+        color: "var(--app-fireworks-text)",
         fontFamily: "serif",
         zIndex: 15,
       }}

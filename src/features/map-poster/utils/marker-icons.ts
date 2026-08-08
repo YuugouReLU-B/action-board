@@ -4,14 +4,14 @@ type BoardStatus = Database["public"]["Enums"]["poster_board_status"];
 
 /** Status colors for poster board markers */
 export const statusColors: Record<BoardStatus, string> = {
-  not_yet: "#6B7280", // gray
-  not_yet_dangerous: "#6B7280", // gray
-  reserved: "#F59E0B", // yellow/orange
-  done: "#10B981", // green
-  error_wrong_place: "#EF4444", // red
-  error_damaged: "#EF4444", // red
-  error_wrong_poster: "#EF4444", // red
-  other: "#8B5CF6", // purple
+  not_yet: "var(--app-poster-not-yet)", // gray
+  not_yet_dangerous: "var(--app-poster-not-yet)", // gray
+  reserved: "var(--app-poster-reserved)", // yellow/orange
+  done: "var(--app-poster-done)", // green
+  error_wrong_place: "var(--app-poster-error)", // red
+  error_damaged: "var(--app-poster-error)", // red
+  error_wrong_poster: "var(--app-poster-error)", // red
+  other: "var(--app-poster-other)", // purple
 };
 
 /**

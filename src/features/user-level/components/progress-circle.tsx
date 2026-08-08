@@ -29,8 +29,8 @@ export function ProgressCircle({
   max,
   size = 160,
   strokeWidth = 8,
-  progressColor = "#30BAA7",
-  backgroundColor = "#E2F6F3",
+  progressColor = "var(--app-brand-primary)",
+  backgroundColor = "var(--app-brand-surface)",
   centerText,
   centerTextClassName = "",
   animationDelay = 300,
@@ -74,9 +74,9 @@ export function ProgressCircle({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={backgroundColor}
           strokeWidth={strokeWidth}
           fill="transparent"
+          style={{ stroke: backgroundColor }}
         />
 
         {/* 進捗の円 */}
@@ -84,7 +84,6 @@ export function ProgressCircle({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={progressColor}
           strokeWidth={strokeWidth}
           fill="transparent"
           strokeDasharray={circumference}
@@ -92,6 +91,7 @@ export function ProgressCircle({
           strokeLinecap="butt"
           className="transition-all duration-1000 ease-out"
           style={{
+            stroke: progressColor,
             transitionProperty: "stroke-dashoffset",
           }}
         />

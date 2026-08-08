@@ -76,7 +76,7 @@ export function PostingControlPanel({
           style={{
             fontSize: "14px",
             fontWeight: "bold",
-            color: "#333",
+            color: "var(--app-panel-text)",
             background: "none",
             border: "none",
             cursor: events.length > 1 ? "pointer" : "default",
@@ -91,7 +91,7 @@ export function PostingControlPanel({
             <span
               style={{
                 fontSize: "11px",
-                color: "#666",
+                color: "var(--app-panel-text-muted)",
                 fontWeight: "normal",
               }}
             >
@@ -126,8 +126,8 @@ export function PostingControlPanel({
               style={{
                 padding: "8px 12px",
                 fontSize: "11px",
-                color: "#666",
-                borderBottom: "1px solid #eee",
+                color: "var(--app-panel-text-muted)",
+                borderBottom: "1px solid var(--app-panel-divider)",
               }}
             >
               表示するポスティングイベントを切り替える
@@ -145,14 +145,19 @@ export function PostingControlPanel({
                     padding: "8px 12px",
                     fontSize: "13px",
                     textAlign: "left",
-                    background: isCurrent ? "#f3f4f6" : "none",
+                    background: isCurrent
+                      ? "var(--app-panel-hover-bg)"
+                      : "none",
                     border: "none",
                     cursor: isCurrent ? "default" : "pointer",
-                    color: isCurrent ? "#999" : "#333",
+                    color: isCurrent
+                      ? "var(--app-panel-text-disabled)"
+                      : "var(--app-panel-text)",
                   }}
                   onMouseEnter={(e) => {
                     if (!isCurrent) {
-                      e.currentTarget.style.background = "#f3f4f6";
+                      e.currentTarget.style.background =
+                        "var(--app-panel-hover-bg)";
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -167,7 +172,7 @@ export function PostingControlPanel({
                       style={{
                         marginLeft: "4px",
                         fontSize: "11px",
-                        color: "#999",
+                        color: "var(--app-panel-text-disabled)",
                       }}
                     >
                       (終了)
@@ -211,7 +216,9 @@ export function PostingControlPanel({
           alignItems: "center",
           gap: "6px",
           cursor: "pointer",
-          color: showOnlyMine ? "#2563eb" : "#666",
+          color: showOnlyMine
+            ? "var(--app-panel-active)"
+            : "var(--app-panel-text-muted)",
           fontWeight: showOnlyMine ? "bold" : "normal",
         }}
       >

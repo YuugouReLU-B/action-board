@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import "../styles/poster-map.css";
 import "../styles/poster-map-filter.css";
 import { Expand, Minimize } from "lucide-react";
+import { readTokenColor } from "@/lib/design/color-tokens";
 import type { Database } from "@/lib/types/supabase";
 import {
   getPrefectureDefaultZoom,
@@ -36,14 +37,14 @@ interface PosterMapProps {
 
 // Status colors for markers
 const statusColors: Record<BoardStatus, string> = {
-  not_yet: "#6B7280", // gray
-  not_yet_dangerous: "#6B7280", // gray
-  reserved: "#F59E0B", // yellow/orange
-  done: "#10B981", // green
-  error_wrong_place: "#EF4444", // red
-  error_damaged: "#EF4444", // red
-  error_wrong_poster: "#EF4444", // red
-  other: "#8B5CF6", // purple
+  not_yet: "var(--app-poster-not-yet)", // gray
+  not_yet_dangerous: "var(--app-poster-not-yet)", // gray
+  reserved: "var(--app-poster-reserved)", // yellow/orange
+  done: "var(--app-poster-done)", // green
+  error_wrong_place: "var(--app-poster-error)", // red
+  error_damaged: "var(--app-poster-error)", // red
+  error_wrong_poster: "var(--app-poster-error)", // red
+  other: "var(--app-poster-other)", // purple
 };
 
 // Create custom marker icon with status color
@@ -204,8 +205,8 @@ export default function PosterMap({
     if (currentPos) {
       const marker = L.circleMarker(currentPos, {
         radius: 12,
-        color: "#2563eb",
-        fillColor: "#60a5fa",
+        color: readTokenColor("--app-map-location-stroke"),
+        fillColor: readTokenColor("--app-map-location-fill"),
         fillOpacity: 0.7,
         weight: 3,
       })

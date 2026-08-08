@@ -11,7 +11,7 @@ export default function Footer() {
         <FeedbackSection />
       </div>
 
-      <div className="relative w-full bg-linear-to-b from-[#64d8c6] to-[#bcecd3] overflow-hidden">
+      <div className="relative w-full bg-linear-to-b from-[var(--app-brand-light)] to-[var(--app-brand-pale)] overflow-hidden">
         <LogoSection />
         <div className="relative h-[280px]">
           <div className="absolute bottom-0 left-0 right-0 w-full flex justify-center">

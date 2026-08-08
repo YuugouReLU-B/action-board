@@ -56,7 +56,7 @@ export function OnboardingModal({ open, onOpenChange }: OnboardingModalProps) {
             <DialogPrimitive.Title>オンボーディング</DialogPrimitive.Title>
           </VisuallyHidden.Root>
 
-          <div className="relative w-full h-full bg-linear-to-b from-[#A8E6CF] to-[#7FCDCD] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+          <div className="relative w-full h-full bg-linear-to-b from-[var(--app-onboarding-from)] to-[var(--app-onboarding-to)] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
             {/* 閉じるボタン */}
             <CloseButton onClose={() => handleOpenChange(false)} />
 

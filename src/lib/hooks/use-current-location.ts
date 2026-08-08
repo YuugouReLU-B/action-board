@@ -2,6 +2,7 @@
 
 import type { CircleMarker, Map as LeafletMap } from "leaflet";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { readTokenColor } from "@/lib/design/color-tokens";
 
 type LeafletWindow = Window & { L: typeof import("leaflet") };
 
@@ -73,8 +74,8 @@ export function useCurrentLocation(
     if (currentPos) {
       const marker = L.circleMarker(currentPos, {
         radius: 12,
-        color: "#2563eb",
-        fillColor: "#60a5fa",
+        color: readTokenColor("--app-map-location-stroke"),
+        fillColor: readTokenColor("--app-map-location-fill"),
         fillOpacity: 0.7,
         weight: 3,
       })

@@ -1,4 +1,4 @@
-import { getColorForRank, LEGEND_COLORS, NO_DATA_COLOR } from "./color-scale";
+import { getColorForRank, getNoDataColor, LEGEND_COLORS } from "./color-scale";
 
 describe("getColorForRank", () => {
   describe("有効な順位の場合", () => {
@@ -47,19 +47,26 @@ describe("getColorForRank", () => {
   });
 });
 
-describe("NO_DATA_COLOR", () => {
-  it("グレー色が定義されている", () => {
-    expect(NO_DATA_COLOR).toBe("#e5e7eb");
+describe("getNoDataColor", () => {
+  it("グレー色を返す", () => {
+    expect(getNoDataColor()).toBe("#e5e7eb");
   });
 
   it("無効な順位の戻り値と一致する", () => {
-    expect(getColorForRank(0)).toBe(NO_DATA_COLOR);
+    expect(getColorForRank(0)).toBe(getNoDataColor());
   });
 });
 
 describe("LEGEND_COLORS", () => {
   it("9個の色が定義されている", () => {
     expect(LEGEND_COLORS).toHaveLength(9);
+  });
+
+  it("CSS 変数参照として公開される", () => {
+    expect(LEGEND_COLORS[0]).toMatchObject({
+      cssVar: "--app-rank-scale-1",
+      color: "var(--app-rank-scale-1)",
+    });
   });
 
   it("最初の色にラベルがある", () => {

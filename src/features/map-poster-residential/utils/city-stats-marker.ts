@@ -14,10 +14,10 @@ function getMarkerSize(totalCount: number): number {
  * 枚数が多いほど暖色に変化
  */
 function getMarkerColor(totalCount: number): string {
-  if (totalCount < 5) return "#60A5FA"; // blue-400（少）
-  if (totalCount < 20) return "#34D399"; // emerald-400（中）
-  if (totalCount < 100) return "#FBBF24"; // amber-400（多）
-  return "#F87171"; // red-400（非常に多）
+  if (totalCount < 5) return "var(--app-density-low)"; // blue-400（少）
+  if (totalCount < 20) return "var(--app-density-mid)"; // emerald-400（中）
+  if (totalCount < 100) return "var(--app-density-high)"; // amber-400（多）
+  return "var(--app-density-very-high)"; // red-400（非常に多）
 }
 
 /**

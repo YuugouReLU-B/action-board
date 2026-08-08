@@ -21,7 +21,7 @@ export default async function Hero() {
   }
 
   return (
-    <section className="relative w-full h-[740px] bg-linear-to-b from-[#64d8c6] to-[#bcecd3] overflow-hidden mt-[-96px] pt-24">
+    <section className="relative w-full h-[740px] bg-linear-to-b from-[var(--app-brand-light)] to-[var(--app-brand-pale)] overflow-hidden mt-[-96px] pt-24">
       <div className="absolute inset-0 w-full h-full flex justify-center items-end">
         <div className="relative w-[1080px] min-w-[1080px] h-[560px]">
           <Image
@@ -70,7 +70,7 @@ export default async function Hero() {
 
               <OnboardingButton
                 variant="link"
-                className="text-sm hover:text-[#0d6b5e] underline font-medium transition-colors duration-200"
+                className="text-sm hover:text-[var(--app-brand-link-hover)] underline font-medium transition-colors duration-200"
               >
                 浜通りクエストとは？
               </OnboardingButton>

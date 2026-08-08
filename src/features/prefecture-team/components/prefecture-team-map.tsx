@@ -6,8 +6,9 @@ import { useEffect, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import { createLookupMap } from "@/lib/utils/chart-transforms";
 import "../styles/prefecture-map.css";
+import { readTokenColor } from "@/lib/design/color-tokens";
 import type { PrefectureTeamRanking } from "../types/prefecture-team-types";
-import { getColorForRank, NO_DATA_COLOR } from "../utils/color-scale";
+import { getColorForRank, getNoDataColor } from "../utils/color-scale";
 
 interface PrefectureTeamMapProps {
   rankings: PrefectureTeamRanking[];
@@ -121,10 +122,10 @@ export default function PrefectureTeamMap({
     return {
       fillColor: rankingData
         ? getColorForRank(rankingData.rank)
-        : NO_DATA_COLOR,
+        : getNoDataColor(),
       weight: 1,
       opacity: 1,
-      color: "#666",
+      color: readTokenColor("--app-panel-text-muted"),
       fillOpacity: 1,
     };
   };
@@ -223,7 +224,7 @@ export default function PrefectureTeamMap({
             <div className="legend-item">
               <div
                 className="legend-color"
-                style={{ backgroundColor: "#08306b" }}
+                style={{ backgroundColor: "var(--app-rank-scale-1)" }}
               />
               <span className="legend-label">高</span>
             </div>
@@ -231,7 +232,8 @@ export default function PrefectureTeamMap({
               <div
                 className="legend-color"
                 style={{
-                  background: "linear-gradient(to bottom, #4292c6, #c6dbef)",
+                  background:
+                    "linear-gradient(to bottom, var(--app-rank-scale-4), var(--app-rank-scale-7))",
                 }}
               />
               <span className="legend-label" />
@@ -239,7 +241,7 @@ export default function PrefectureTeamMap({
             <div className="legend-item">
               <div
                 className="legend-color"
-                style={{ backgroundColor: "#f7fbff" }}
+                style={{ backgroundColor: "var(--app-rank-scale-9)" }}
               />
               <span className="legend-label">低</span>
             </div>

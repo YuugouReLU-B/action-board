@@ -33,15 +33,27 @@
 }
 
 @utility bg-mirai-gradient {
-  background: linear-gradient(135deg, #64d8c6, #bcecd3);
+  background: linear-gradient(
+    135deg,
+    var(--app-brand-light),
+    var(--app-brand-pale)
+  );
 }
 
 @utility bg-gradient-hero {
-  background: linear-gradient(90deg, #64d8c6, #bcecd3);
+  background: linear-gradient(
+    90deg,
+    var(--app-brand-light),
+    var(--app-brand-pale)
+  );
 }
 
 @utility bg-gradient-level {
-  background: linear-gradient(90deg, #30baa7, #47c991);
+  background: linear-gradient(
+    90deg,
+    var(--app-brand-primary),
+    var(--app-brand-level-end)
+  );
 }
 
 @utility bg-gradient-radial {
@@ -98,9 +110,124 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --TM-accent-light: #64d8c6;
-    --TM-gradient-end: #bcecd3;
-    --TM-secondary: #e2f6f3;
+
+    /* ==========================================================
+       アプリ固有のカラートークン
+       ----------------------------------------------------------
+       ここが全ハードコード色の唯一の定義元。
+       メタデータ（表示名・グループ・変更可否）は
+       src/lib/design/color-tokens.ts が持ち、
+       color-tokens.test.ts がこのファイルとの同期を検証する。
+       /dev の「デザイン差し替え」タブはこの変数を上書きする。
+       ========================================================== */
+
+    /* --- ブランド ------------------------------------------- */
+    --app-brand-primary: #30baa7;
+    --app-brand-primary-strong: #2aa693;
+    --app-brand-deep: #0d9488;
+    --app-brand-link-hover: #0d6b5e;
+    --app-brand-light: #64d8c6;
+    --app-brand-pale: #bcecd3;
+    --app-brand-level-end: #47c991;
+    --app-brand-surface: #e2f6f3;
+
+    /* --- オンボーディング ------------------------------------ */
+    --app-onboarding-from: #a8e6cf;
+    --app-onboarding-to: #7fcdcd;
+
+    /* --- 地図: 現在地マーカー -------------------------------- */
+    --app-map-location-stroke: #2563eb;
+    --app-map-location-fill: #60a5fa;
+    --app-map-spider-leg: #222222;
+
+    /* --- 地図: ポスター掲示板ステータス ---------------------- */
+    --app-poster-not-yet: #6b7280;
+    --app-poster-reserved: #f59e0b;
+    --app-poster-done: #10b981;
+    --app-poster-error: #ef4444;
+    --app-poster-other: #8b5cf6;
+
+    /* --- 地図: ポスティングステータス ------------------------ */
+    --app-posting-planned: #3b82f6;
+    --app-posting-planned-fill: #93c5fd;
+    --app-posting-completed: #10b981;
+    --app-posting-completed-fill: #6ee7b7;
+    --app-posting-unavailable: #ef4444;
+    --app-posting-unavailable-fill: #fca5a5;
+    --app-posting-other: #8b5cf6;
+    --app-posting-other-fill: #c4b5fd;
+
+    /* --- 地図: 戸別ポスター密度 ------------------------------ */
+    --app-density-low: #60a5fa;
+    --app-density-mid: #34d399;
+    --app-density-high: #fbbf24;
+    --app-density-very-high: #f87171;
+
+    /* --- 都道府県ランキング配色（濃い順の9段階） ------------- */
+    --app-rank-scale-1: #08306b;
+    --app-rank-scale-2: #08519c;
+    --app-rank-scale-3: #2171b5;
+    --app-rank-scale-4: #4292c6;
+    --app-rank-scale-5: #6baed6;
+    --app-rank-scale-6: #9ecae1;
+    --app-rank-scale-7: #c6dbef;
+    --app-rank-scale-8: #deebf7;
+    --app-rank-scale-9: #f7fbff;
+    --app-rank-no-data: #e5e7eb;
+
+    /* --- 都道府県マップUI ------------------------------------ */
+    --app-prefecture-title: #1f2937;
+    --app-prefecture-value: #059669;
+    --app-prefecture-muted: #6b7280;
+    --app-prefecture-label: #374151;
+    --app-prefecture-spinner-track: #e5e7eb;
+    --app-prefecture-spinner-head: #3b82f6;
+
+    /* --- 地図操作パネル -------------------------------------- */
+    --app-panel-text: #333333;
+    --app-panel-text-muted: #666666;
+    --app-panel-text-disabled: #999999;
+    --app-panel-divider: #eeeeee;
+    --app-panel-hover-bg: #f3f4f6;
+    --app-panel-active: #2563eb;
+
+    /* --- 印刷用 ---------------------------------------------- */
+    --app-print-text: #000000;
+    --app-print-border: #cccccc;
+    --app-print-label: #333333;
+
+    /* --- スクロールバー -------------------------------------- */
+    --app-scrollbar-track: #f1f1f1;
+    --app-scrollbar-thumb: #888888;
+    --app-scrollbar-thumb-hover: #555555;
+
+    /* --- 冬季エフェクト -------------------------------------- */
+    --app-winter-petal-1: #f5a0b8;
+    --app-winter-petal-2: #e87da0;
+    --app-winter-petal-3: #fcdce8;
+    --app-winter-star: #fff3b0;
+    --app-winter-text: #ffffff;
+    --app-winter-surface: #ffffff;
+
+    /* --- 花火エフェクト -------------------------------------- */
+    --app-fireworks-text: #ffffff;
+
+    /* --- サービス停止オーバーレイ ---------------------------- */
+    --app-service-stop-bg: #0a0a1a;
+
+    /* --- 外部サービスのブランド色（変更不可） -----------------
+       Google / LINE のブランドガイドライン上、色の改変は認めら
+       れていない。定義元を一元化する目的でのみ変数化しており、
+       /dev の差し替えUIではロック表示にすること。
+       -------------------------------------------------------- */
+    --app-vendor-google-blue: #4285f4;
+    --app-vendor-google-green: #34a853;
+    --app-vendor-google-yellow: #fbbc05;
+    --app-vendor-google-red: #ea4335;
+    --app-vendor-google-border: #747775;
+    --app-vendor-google-text: #1f1f1f;
+    --app-vendor-line-green: #00b900;
+    --app-vendor-line-green-hover: #00a000;
   }
 
   .dark-unused {
@@ -155,5 +282,5 @@
 }
 
 .rdp-root {
-  --rdp-accent-color: #0d9488 !important;
+  --rdp-accent-color: var(--app-brand-deep) !important;
 }

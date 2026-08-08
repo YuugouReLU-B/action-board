@@ -54,7 +54,10 @@ export default function RootLayout({
             </Script>
           </>
         )}
-        <NextTopLoader showSpinner={false} color="#2aa693" />
+        <NextTopLoader
+          showSpinner={false}
+          color="var(--app-brand-primary-strong)"
+        />
         {GA_ID && (
           <>
             <Script

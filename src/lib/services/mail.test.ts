@@ -90,8 +90,7 @@ describe("mail service", () => {
         "example.com",
         expect.objectContaining({
           to: "new@example.com",
-          subject:
-            "浜通りクエストに登録いただきありがとうございます",
+          subject: "浜通りクエストに登録いただきありがとうございます",
           html: "<html>welcome</html>",
         }),
       );

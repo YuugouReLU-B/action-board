@@ -60,8 +60,7 @@ export async function sendWelcomeMail(to: string) {
 
   await sendMail({
     to,
-    subject:
-      "浜通りクエストに登録いただきありがとうございます",
+    subject: "浜通りクエストに登録いただきありがとうございます",
     html,
   });
 }

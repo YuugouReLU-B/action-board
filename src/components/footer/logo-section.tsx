@@ -20,7 +20,7 @@ export function LogoSection() {
             className="text-black text-center font-bold text-lg leading-5 tracking-[0.24px]"
             style={{ fontFamily: "Noto Sans JP" }}
           >
-            アクションボード
+            浜通りクエスト
           </div>
         </div>
       </div>

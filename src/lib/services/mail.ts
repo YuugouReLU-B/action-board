@@ -61,7 +61,7 @@ export async function sendWelcomeMail(to: string) {
   await sendMail({
     to,
     subject:
-      "「チームみらい」アクションボードに登録いただきありがとうございます",
+      "浜通りクエストに登録いただきありがとうございます",
     html,
   });
 }

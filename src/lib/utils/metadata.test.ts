@@ -22,7 +22,7 @@ describe("defaultUrl", () => {
 
 describe("config", () => {
   test("タイトルが正しく設定されている", () => {
-    expect(config.title).toBe("チームみらい アクションボード");
+    expect(config.title).toBe("浜通りクエスト");
   });
 
   test("説明が正しく設定されている", () => {

@@ -14,7 +14,7 @@ export const onboardingDialogues: OnboardingDialogue[] = [
   },
   {
     id: 2,
-    text: "ここは、アクションボード。\nチームみらいを応援する者たちが集いし場所。\n\nわしは、このアクションボードの主、アクション仙人じゃ。",
+    text: "ここは、浜通りクエスト。\nチームみらいを応援する者たちが集いし場所。\n\nわしは、この浜通りクエストの主、アクション仙人じゃ。",
     isWelcome: false,
   },
   {
@@ -40,7 +40,7 @@ export const onboardingDialogues: OnboardingDialogue[] = [
   },
   {
     id: 7,
-    text: "うむ、上出来じゃ！\n\n実際のミッションでは、提出すると経験値がもらえて、レベルアップもできるぞい。\nさあ、アクションボードでみらいを切り開くのじゃ！",
+    text: "うむ、上出来じゃ！\n\n実際のミッションでは、提出すると経験値がもらえて、レベルアップもできるぞい。\nさあ、浜通りクエストでみらいを切り開くのじゃ！",
     isWelcome: false,
   },
 ];

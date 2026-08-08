@@ -195,7 +195,7 @@ function ConsentPhase({
             <div className="text-sm text-gray-600">
               {/* <p className="font-medium mb-1">チームみらいサポーターへの参加</p> */}
               <p className="text-gray-600">
-                アクションボードに登録することで、サポーターとしてチームみらいを応援することができます。義務や費用は一切発生しません。
+                浜通りクエストに登録することで、サポーターとしてチームみらいを応援することができます。義務や費用は一切発生しません。
               </p>
             </div>
           </div>
@@ -353,7 +353,7 @@ export default function TwoStepSignUpForm({
   return (
     <div className="flex flex-col min-w-72 max-w-72 mx-auto">
       <h1 className="text-2xl font-medium text-center mb-2">
-        アクションボードに登録
+        浜通りクエストに登録
       </h1>
       <p className="text-sm text-foreground text-center mb-4">
         すでに登録済みの方は{" "}

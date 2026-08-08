@@ -27,7 +27,7 @@ import { OnboardingButton } from "./components/onboarding/onboarding-button";
 function Hero() {
   return (
     <OnboardingButton variant="link">
-      アクションボードとは？
+      浜通りクエストとは？
     </OnboardingButton>
   );
 }

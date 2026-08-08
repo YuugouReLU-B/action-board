@@ -27,7 +27,7 @@ export default async function Navbar() {
               width={48}
               height={48}
             />
-            <div className="text-lg">アクションボード</div>
+            <div className="text-lg">浜通りクエスト</div>
           </Link>
         </div>
         {user ? (
@@ -77,7 +77,7 @@ export default async function Navbar() {
                         variant="link"
                         className="w-full justify-start p-0 h-auto text-sm"
                       >
-                        アクションボードとは？
+                        浜通りクエストとは？
                       </OnboardingButton>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>

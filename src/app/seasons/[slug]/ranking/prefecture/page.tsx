@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${season.name} 都道府県別ランキング - アクションボード`,
+    title: `${season.name} 都道府県別ランキング - 浜通りクエスト`,
   };
 }
 

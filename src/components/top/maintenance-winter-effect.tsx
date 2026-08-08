@@ -917,7 +917,7 @@ const EndCredits = ({
               fontFamily: "'Noto Sans JP', sans-serif",
             }}
           >
-            アクションボードチーム
+            浜通りクエストチーム
           </div>
         </div>
 

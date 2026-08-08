@@ -7,7 +7,7 @@ import {
 } from "@/features/user-activity/loaders/timeline-loaders";
 
 export const metadata: Metadata = {
-  title: "活動タイムライン | アクションボード",
+  title: "活動タイムライン | 浜通りクエスト",
   description: "リアルタイムで更新される活動記録",
 };
 

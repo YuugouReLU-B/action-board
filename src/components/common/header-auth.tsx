@@ -51,7 +51,7 @@ export default async function AuthButton() {
               variant="link"
               className="w-full justify-start p-0 h-auto text-sm"
             >
-              アクションボードとは？
+              浜通りクエストとは？
             </OnboardingButton>
           </DropdownMenuItem>
           {/*

@@ -50,7 +50,7 @@ export default async function Hero() {
           </div>
 
           <h1 className="text-4xl md:text-4xl font-bold text-gray-800 mb-4">
-            アクションボード
+            浜通りクエスト
           </h1>
           <p className="text-sm font-bold mb-8 px-3">
             テクノロジーで政治をかえる。あなたと一緒に未来をつくる。
@@ -64,7 +64,7 @@ export default async function Hero() {
                   variant="outline"
                   className="text-gray-800 border border-black font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:opacity-90 transform hover:-translate-y-0.5 transition-all duration-200 text-base whitespace-nowrap min-w-fit"
                 >
-                  アクションボードに登録する
+                  浜通りクエストに登録する
                 </Button>
               </Link>
 
@@ -72,7 +72,7 @@ export default async function Hero() {
                 variant="link"
                 className="text-sm hover:text-[#0d6b5e] underline font-medium transition-colors duration-200"
               >
-                アクションボードとは？
+                浜通りクエストとは？
               </OnboardingButton>
             </div>
           )}

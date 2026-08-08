@@ -15,7 +15,7 @@ import { getCurrentSeason } from "@/lib/loaders/seasons-loaders";
 import type { Tables } from "@/lib/types/supabase";
 
 export const metadata: Metadata = {
-  title: "都道府県チームパワー - アクションボード",
+  title: "都道府県チームパワー - 浜通りクエスト",
   description: "あなたの都道府県チームパワーを確認しましょう",
 };
 

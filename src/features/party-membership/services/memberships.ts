@@ -32,7 +32,7 @@ export async function getPartyMembership(
 }
 
 /**
- * メールアドレスからアクションボードユーザーと党員情報を検索する
+ * メールアドレスから浜通りクエストユーザーと党員情報を検索する
  *
  * 党員同期（sync-party-memberships）と同じく auth.users.email との
  * 小文字比較でマッチングする。問い合わせ対応用のMCPツールから利用される想定。

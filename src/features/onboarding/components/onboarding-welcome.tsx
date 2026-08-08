@@ -2,7 +2,7 @@ import Image from "next/image";
 
 /**
  * オンボーディングウェルカム画面コンポーネント
- * ロゴとアクションボードテキストを表示
+ * ロゴと浜通りクエストテキストを表示
  */
 export const OnboardingWelcome: React.FC = () => {
   return (
@@ -17,9 +17,9 @@ export const OnboardingWelcome: React.FC = () => {
         />
       </div>
 
-      {/* アクションボードテキスト */}
+      {/* 浜通りクエストテキスト */}
       <h5 className="text-black text-base sm:text-lg md:text-base lg:text-lg font-bold tracking-wider w-[40vw] sm:w-24 md:w-40 lg:w-44 text-center">
-        アクションボード
+        浜通りクエスト
       </h5>
     </div>
   );

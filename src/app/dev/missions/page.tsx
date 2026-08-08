@@ -71,7 +71,7 @@ export default async function DevMissionsPage() {
                   {mission.slug ? (
                     <Link
                       href={`/missions/${mission.slug}`}
-                      className="text-primary underline underline-offset-2"
+                      className="text-brand-ink underline underline-offset-2"
                     >
                       {mission.title}
                     </Link>

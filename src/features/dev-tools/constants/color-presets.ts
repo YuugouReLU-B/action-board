@@ -103,6 +103,17 @@ function buildDefaultPreset(): ColorPreset {
         reason:
           "ページ背景に直接載る補足テキスト（区切り線の「または」やフッターの著作権表示）。派生元から引き継いだ状態。",
       },
+      {
+        pair: "インク / 背景",
+        ratio: 2.67,
+        reason:
+          "ティールのリンク文字。派生元から引き継いだ状態で AA 未達。色を変えると全リンクの印象が変わるため据え置いている。",
+      },
+      {
+        pair: "インク / カード",
+        ratio: 2.95,
+        reason: "同上。カード内のリンク文字。",
+      },
     ],
   };
 }
@@ -137,6 +148,8 @@ const HAMADOORI_CIRCLE_PRESET: ColorPreset = {
   values: {
     // --- ブランド ---
     "--app-brand-primary": "#ffea00",
+    // リンクや強調文字。鮮やかな黄色のままだと白地で 1.18:1 になり読めない
+    "--app-brand-ink": "#736000",
     // 白背景のトップローダー。純黄色だと 1.23:1 で見えないため濃い金に
     "--app-brand-primary-strong": "#b38f00",
     // カレンダーのアクセントと OG 画像の見出し。白地に文字として載る
@@ -276,6 +289,17 @@ export const CONTRAST_PAIRS: Array<{
   {
     label: "ミュート前景 / カード",
     foreground: "--muted-foreground",
+    background: "--card",
+  },
+  // インクはリンクや強調文字として背景・カードの上に直接載る
+  {
+    label: "インク / 背景",
+    foreground: "--app-brand-ink",
+    background: "--background",
+  },
+  {
+    label: "インク / カード",
+    foreground: "--app-brand-ink",
     background: "--card",
   },
 ];

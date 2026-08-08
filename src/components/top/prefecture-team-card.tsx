@@ -50,7 +50,7 @@ export async function PrefectureTeamCard() {
         <CardHeader className="pb-3">
           <CardTitle className="text-lg flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-primary" />
+              <MapPin className="w-5 h-5 text-brand-ink" />
               都道府県チームパワー
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />

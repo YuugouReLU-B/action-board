@@ -337,7 +337,7 @@ export default function ProfileForm({
               </div>
             </fieldset>
             {ageError && (
-              <p className="text-primary text-sm font-medium mb-2">
+              <p className="text-brand-ink text-sm font-medium mb-2">
                 {ageError}
               </p>
             )}

@@ -64,7 +64,9 @@ function EmailSignUpFormContent({
         onChange={(e) => setPassword(e.target.value)}
       />
       {passwordError && (
-        <p className="text-primary text-sm font-medium mb-2">{passwordError}</p>
+        <p className="text-brand-ink text-sm font-medium mb-2">
+          {passwordError}
+        </p>
       )}
 
       <SubmitButton
@@ -150,7 +152,7 @@ export default function EmailSignUpForm({
         メールアドレスとパスワードを入力
       </h1>
       <p className="text-sm text-foreground text-center">
-        <Link className="text-primary font-medium underline" href="/sign-up">
+        <Link className="text-brand-ink font-medium underline" href="/sign-up">
           他の方法でアカウント作成
         </Link>
       </p>

@@ -367,7 +367,7 @@ export default function QuizComponent({
             <div className="space-y-2">
               <div className="text-xl font-bold flex mb-6">
                 <div>結果: {result.totalQuestions}問中</div>
-                <div className="ml-2 text-primary">
+                <div className="ml-2 text-brand-ink">
                   {result.correctAnswers}問正解
                 </div>
               </div>

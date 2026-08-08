@@ -27,7 +27,7 @@ export function DevTabs() {
                 className={cn(
                   "-mb-px inline-block border-b-2 px-4 py-2.5 text-sm font-bold transition-colors",
                   isActive
-                    ? "border-primary text-primary"
+                    ? "border-primary text-brand-ink"
                     : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-800",
                 )}
               >

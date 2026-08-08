@@ -57,6 +57,8 @@ const config = {
         },
         // 定義元は src/app/globals.css の --app-brand-primary
         "tm-teal": "var(--app-brand-primary)",
+        // リンク等の文字用ブランド色。定義元は --app-brand-ink
+        "brand-ink": "var(--app-brand-ink)",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -42,7 +42,7 @@ export default function DevPagesPage() {
                   ) : (
                     <Link
                       href={entry.route}
-                      className="text-primary underline underline-offset-2"
+                      className="text-brand-ink underline underline-offset-2"
                     >
                       {entry.route}
                     </Link>

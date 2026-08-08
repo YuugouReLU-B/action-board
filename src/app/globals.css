@@ -79,7 +79,7 @@
 
 @utility mission-content {
   & a {
-    @apply text-primary underline transition-colors duration-200;
+    @apply text-brand-ink underline transition-colors duration-200;
   }
 }
 
@@ -123,6 +123,11 @@
 
     /* --- ブランド ------------------------------------------- */
     --app-brand-primary: #30baa7;
+    /* リンクや強調文字に使う「読ませる」ブランド色。
+       --primary はボタンの塗りにも使われるため、彩度の高い色を入れると
+       文字が読めなくなる。文字用途はこちらに分離している。
+       既定値は従来 text-brand-ink が解決していた hsl(168 59% 41%) と同じ */
+    --app-brand-ink: #2aa88f;
     --app-brand-primary-strong: #2aa693;
     --app-brand-deep: #0d9488;
     --app-brand-link-hover: #0d6b5e;

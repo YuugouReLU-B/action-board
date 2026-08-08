@@ -100,6 +100,9 @@ export const APP_COLOR_TOKEN_GROUPS: ColorTokenGroup[] = [
       "ヒーロー・フッターのグラデーション、レベルバー、リンクなどに使う基幹色。見た目の印象を最も左右する。",
     tokens: [
       hex("--app-brand-primary", "プライマリ", "#30baa7"),
+      hex("--app-brand-ink", "インク（リンク・強調文字）", "#2aa88f", {
+        note: "text-brand-ink。--primary はボタンの塗りも兼ねるため文字用途を分離している",
+      }),
       hex("--app-brand-primary-strong", "プライマリ（濃）", "#2aa693", {
         note: "ページ遷移時のトップローダー",
       }),

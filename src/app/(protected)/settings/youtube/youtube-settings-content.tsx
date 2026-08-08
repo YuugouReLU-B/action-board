@@ -90,7 +90,7 @@ export function YouTubeSettingsContent({
                 <br />
                 <Link
                   href="/missions/youtube-like"
-                  className="text-primary hover:underline"
+                  className="text-brand-ink hover:underline"
                 >
                   ミッションページへ →
                 </Link>
@@ -109,7 +109,7 @@ export function YouTubeSettingsContent({
                 <br />
                 <Link
                   href="/missions/youtube-comment"
-                  className="text-primary hover:underline"
+                  className="text-brand-ink hover:underline"
                 >
                   ミッションページへ →
                 </Link>

@@ -149,7 +149,7 @@ function ConsentPhase({
         </div>
       </fieldset>
       {ageError && (
-        <p className="text-primary text-sm font-medium mb-2">{ageError}</p>
+        <p className="text-brand-ink text-sm font-medium mb-2">{ageError}</p>
       )}
 
       <div className="flex flex-col gap-3 mb-4 mt-4">
@@ -162,7 +162,7 @@ function ConsentPhase({
           <Label htmlFor="terms" className="text-sm font-normal cursor-pointer">
             <Link
               href="/terms"
-              className="text-primary underline hover:no-underline"
+              className="text-brand-ink underline hover:no-underline"
               target="_blank"
             >
               利用規約
@@ -170,7 +170,7 @@ function ConsentPhase({
             および
             <Link
               href="/privacy"
-              className="text-primary underline hover:no-underline"
+              className="text-brand-ink underline hover:no-underline"
               target="_blank"
             >
               プライバシーポリシー
@@ -357,7 +357,7 @@ export default function TwoStepSignUpForm({
       </h1>
       <p className="text-sm text-foreground text-center mb-4">
         すでに登録済みの方は{" "}
-        <Link className="text-primary font-medium underline" href="/sign-in">
+        <Link className="text-brand-ink font-medium underline" href="/sign-in">
           こちら
         </Link>
       </p>

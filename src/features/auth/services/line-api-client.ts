@@ -35,6 +35,11 @@ export class LineApiClientImpl implements LineApiClient {
     return response.json();
   }
 
+  /**
+   * 「現在」友だちかどうかを返す。認証時に変化したかではないので、
+   * 以前から友だちだったユーザーも true になる。
+   * ブロック中のユーザーは false になる。
+   */
   async getFriendshipStatus(accessToken: string): Promise<boolean | null> {
     try {
       const response = await fetch("https://api.line.me/friendship/v1/status", {

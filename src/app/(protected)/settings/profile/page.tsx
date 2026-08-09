@@ -9,6 +9,7 @@ import {
 import { AccountDeletionSection } from "@/features/user-settings/components/account-deletion-section";
 import { LoginSection } from "@/features/user-settings/components/login-section";
 import ProfileForm from "@/features/user-settings/components/profile-form";
+import { createAdminClient } from "@/lib/supabase/adminClient";
 
 type ProfileSettingsPageSearchParams = {
   new: string;
@@ -39,7 +40,10 @@ export default async function ProfileSettingsPage({
   const isEmailChangeSuccessful = params?.type === "email_change";
 
   // 登録直後はトップではなく最初のミッションへ送る
-  const nextUrlAfterSignup = await getFirstMissionPath();
+  const nextUrlAfterSignup = await getFirstMissionPath(
+    await createAdminClient(),
+    user.id,
+  );
 
   return (
     <div className="flex flex-col items-center justify-center py-2">

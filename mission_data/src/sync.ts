@@ -26,6 +26,10 @@ program
     "Show what would be changed without making actual changes",
   )
   .option(
+    "--overwrite",
+    "既存ミッションも yaml の内容で上書きする（通常は管理画面が正なので上書きしない）",
+  )
+  .option(
     "--only <type>",
     "Sync only specific type: categories, missions, links, quiz-categories, quiz-questions, or quiz-links",
   )
@@ -79,51 +83,103 @@ async function syncCategories(categories: Category[], dryRun: boolean) {
   }
 }
 
-async function syncMissions(missions: Mission[], dryRun: boolean) {
+/** difficulty から既定のポイントを求める（src/features/user-level と同じ表） */
+function defaultPointsForDifficulty(difficulty: number): number {
+  switch (difficulty) {
+    case 1:
+      return 50;
+    case 2:
+      return 100;
+    case 3:
+      return 200;
+    case 4:
+      return 400;
+    case 5:
+      return 800;
+    default:
+      return 50;
+  }
+}
+
+/**
+ * ミッションを同期する。
+ *
+ * **既存のミッションは既定では上書きしない。**
+ * ミッションは管理画面（/admin）から編集するようになったので、DBが正である。
+ * ここで yaml の内容を毎回上書きすると、管理画面の編集が消える。
+ * yaml は新しい環境を立ち上げるときの種データとして残している。
+ *
+ * yaml の内容を意図的に反映させたいときだけ `--overwrite` を付ける。
+ */
+async function syncMissions(
+  missions: Mission[],
+  dryRun: boolean,
+  overwrite: boolean,
+) {
   console.log("\n📋 Syncing missions...");
+  if (!overwrite) {
+    console.log(
+      "  （既存ミッションは上書きしません。反映したい場合は --overwrite）",
+    );
+  }
   const supabase = await createAdminClient();
+  let inserted = 0;
+  let skipped = 0;
 
   for (const mission of missions) {
+    // Check if mission exists
+    const { data: existing } = await supabase
+      .from("missions")
+      .select("id")
+      .eq("slug", mission.slug)
+      .single();
+
+    if (existing && !overwrite) {
+      skipped++;
+      continue;
+    }
+
     if (dryRun) {
       console.log(
-        `  [DRY RUN] Would upsert mission: ${mission.slug} - ${mission.title}`,
+        `  [DRY RUN] Would ${existing ? "overwrite" : "insert"} mission: ${mission.slug} - ${mission.title}`,
       );
+      continue;
+    }
+
+    const missionData = {
+      id: existing?.id || crypto.randomUUID(),
+      slug: mission.slug,
+      title: mission.title,
+      icon_url: mission.icon_url,
+      content: mission.content,
+      difficulty: mission.difficulty,
+      points: mission.points ?? defaultPointsForDifficulty(mission.difficulty),
+      required_artifact_type: mission.required_artifact_type,
+      max_achievement_count: mission.max_achievement_count,
+      is_featured: mission.is_featured,
+      featured_importance: mission.featured_importance,
+      is_hidden: mission.is_hidden,
+      artifact_label: mission.artifact_label,
+      ogp_image_url: mission.ogp_image_url,
+      event_date: mission.event_date,
+    };
+
+    const { error } = await supabase.from("missions").upsert(missionData);
+
+    if (error) {
+      console.error(`  ❌ Error upserting mission ${mission.slug}:`, error);
     } else {
-      // Check if mission exists
-      const { data: existing } = await supabase
-        .from("missions")
-        .select("id")
-        .eq("slug", mission.slug)
-        .single();
-
-      const missionData = {
-        id: existing?.id || crypto.randomUUID(),
-        slug: mission.slug,
-        title: mission.title,
-        icon_url: mission.icon_url,
-        content: mission.content,
-        difficulty: mission.difficulty,
-        required_artifact_type: mission.required_artifact_type,
-        max_achievement_count: mission.max_achievement_count,
-        is_featured: mission.is_featured,
-        featured_importance: mission.featured_importance,
-        is_hidden: mission.is_hidden,
-        artifact_label: mission.artifact_label,
-        ogp_image_url: mission.ogp_image_url,
-        event_date: mission.event_date,
-      };
-
-      const { error } = await supabase.from("missions").upsert(missionData);
-
-      if (error) {
-        console.error(`  ❌ Error upserting mission ${mission.slug}:`, error);
-      } else {
-        console.log(
-          `  ✅ Upserted mission: ${mission.slug} - ${mission.title}`,
-        );
-      }
+      inserted++;
+      console.log(
+        `  ✅ ${existing ? "Overwrote" : "Inserted"} mission: ${mission.slug} - ${mission.title}`,
+      );
     }
   }
+
+  if (skipped > 0) {
+    console.log(`  ⏭️  既存のため ${skipped} 件をスキップしました`);
+  }
+  console.log(`  📊 反映 ${inserted} 件 / スキップ ${skipped} 件`);
 }
 
 async function syncCategoryLinks(
@@ -431,7 +487,7 @@ async function main() {
       const { missions } = await loadYamlFile<{ missions: Mission[] }>(
         "missions.yaml",
       );
-      await syncMissions(missions, options.dryRun);
+      await syncMissions(missions, options.dryRun, options.overwrite);
     }
 
     if (!options.only || options.only === "links") {

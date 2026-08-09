@@ -54,8 +54,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Sync mission data
-        run: pnpm run mission:sync
+      # ミッションは管理画面（/admin）から編集するようになったため、DBが正。
+      # ここで毎デプロイ同期すると管理画面の編集が消える。
+      # 新環境の初期投入は `pnpm run mission:sync` を手動で1回だけ実行する。
 
       - name: Sync posting event data
         run: pnpm run posting:sync

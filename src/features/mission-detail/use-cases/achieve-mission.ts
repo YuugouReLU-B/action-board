@@ -218,7 +218,7 @@ export async function achieveMission(
   const { data: missionData, error: missionFetchError } = await adminSupabase
     .from("missions")
     .select(
-      "max_achievement_count, required_artifact_type, is_featured, difficulty, title",
+      "max_achievement_count, required_artifact_type, is_featured, difficulty, points, title",
     )
     .eq("id", missionId)
     .single();
@@ -441,10 +441,7 @@ export async function achieveMission(
   };
   if (missionData?.required_artifact_type !== "POSTING") {
     // Inline grantMissionCompletionXp logic using adminSupabase
-    const xpToGrant = calculateMissionXp(
-      missionData.difficulty,
-      missionData.is_featured,
-    );
+    const xpToGrant = calculateMissionXp(missionData);
     const xpDescription = `ミッション「${missionData.title}」達成による経験値獲得`;
 
     xpResult = await processXpGrant(adminSupabase, {

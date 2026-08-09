@@ -279,6 +279,49 @@ export type Database = {
           },
         ];
       };
+      mission_qr_codes: {
+        Row: {
+          code: string;
+          created_at: string;
+          mission_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          code: string;
+          created_at?: string;
+          mission_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          code?: string;
+          created_at?: string;
+          mission_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "mission_qr_codes_mission_id_fkey";
+            columns: ["mission_id"];
+            isOneToOne: true;
+            referencedRelation: "mission_achievement_count_view";
+            referencedColumns: ["mission_id"];
+          },
+          {
+            foreignKeyName: "mission_qr_codes_mission_id_fkey";
+            columns: ["mission_id"];
+            isOneToOne: true;
+            referencedRelation: "mission_category_view";
+            referencedColumns: ["mission_id"];
+          },
+          {
+            foreignKeyName: "mission_qr_codes_mission_id_fkey";
+            columns: ["mission_id"];
+            isOneToOne: true;
+            referencedRelation: "missions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       mission_quiz_links: {
         Row: {
           created_at: string;
@@ -340,8 +383,11 @@ export type Database = {
           id: string;
           is_featured: boolean;
           is_hidden: boolean;
+          latitude: number | null;
+          longitude: number | null;
           max_achievement_count: number | null;
           ogp_image_url: string | null;
+          points: number;
           required_artifact_type: string;
           slug: string;
           title: string;
@@ -358,8 +404,11 @@ export type Database = {
           id: string;
           is_featured?: boolean;
           is_hidden?: boolean;
+          latitude?: number | null;
+          longitude?: number | null;
           max_achievement_count?: number | null;
           ogp_image_url?: string | null;
+          points?: number;
           required_artifact_type?: string;
           slug: string;
           title: string;
@@ -376,8 +425,11 @@ export type Database = {
           id?: string;
           is_featured?: boolean;
           is_hidden?: boolean;
+          latitude?: number | null;
+          longitude?: number | null;
           max_achievement_count?: number | null;
           ogp_image_url?: string | null;
+          points?: number;
           required_artifact_type?: string;
           slug?: string;
           title?: string;
@@ -1798,10 +1850,13 @@ export type Database = {
           icon_url: string | null;
           is_featured: boolean | null;
           is_hidden: boolean | null;
+          latitude: number | null;
           link_sort_no: number | null;
+          longitude: number | null;
           max_achievement_count: number | null;
           mission_id: string | null;
           ogp_image_url: string | null;
+          points: number | null;
           required_artifact_type: string | null;
           slug: string | null;
           title: string | null;

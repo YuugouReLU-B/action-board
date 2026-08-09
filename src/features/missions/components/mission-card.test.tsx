@@ -75,6 +75,7 @@ jest.mock("@/features/missions/components/difficulty-badge", () => ({
     className,
   }: {
     difficulty: number;
+    points: number;
     className?: string;
   }) => (
     <span className={className} data-testid="difficulty-badge">
@@ -142,6 +143,9 @@ const mockMission: Tables<"missions"> = {
   title: "テストミッション",
   content: "テストミッションの内容",
   difficulty: 1,
+  points: 50,
+  latitude: null,
+  longitude: null,
   icon_url: "/test-icon.svg",
   event_date: "2025-06-22",
   max_achievement_count: 3,

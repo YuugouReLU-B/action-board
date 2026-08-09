@@ -22,7 +22,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${event.title} - チームみらいポスティングマップ`,
+    title: `${event.title} - ポスティングマップ`,
     description: event.description || `${event.title}のポスティングマップ`,
   };
 }

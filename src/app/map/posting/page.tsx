@@ -7,8 +7,8 @@ import {
 import { getUser } from "@/features/user-profile/services/profile";
 
 export const metadata: Metadata = {
-  title: "チームみらいポスティングマップ",
-  description: "チームみらいポスティングマップ",
+  title: "ポスティングマップ",
+  description: "ポスティングマップ",
 };
 
 export default async function PostingPage() {

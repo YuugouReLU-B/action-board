@@ -24,7 +24,7 @@ type Props = {
 
 export function MissionCompleteDialog({ isOpen, onClose, mission }: Props) {
   const message = `「${mission.title}」を達成しました！`;
-  const shareMessage = `浜通りクエストで${message} #チームみらい\n`;
+  const shareMessage = `浜通りクエストで${message} #浜通りクエスト\n`;
 
   // OGP画像付きURLを生成（slugベース）
   const shareUrl =

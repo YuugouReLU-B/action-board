@@ -14,7 +14,7 @@ export function ShareButton({ message, missionSlug, url }: Props) {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "チームみらい Action Board",
+          title: "浜通りクエスト",
           text: message,
           url: shareUrl,
         });

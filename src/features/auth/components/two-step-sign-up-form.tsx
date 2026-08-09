@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { CollapsibleInfo } from "@/components/common/collapsible-info";
 import { FormMessage, type Message } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
@@ -187,19 +186,6 @@ function ConsentPhase({
       >
         次へ進む
       </Button>
-      {/* チームみらいサポーター情報 */}
-      <Card className="bg-gray-50 border-gray-200 mt-4">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <div className="text-sm text-gray-600">
-              {/* <p className="font-medium mb-1">チームみらいサポーターへの参加</p> */}
-              <p className="text-gray-600">
-                浜通りクエストに登録することで、サポーターとしてチームみらいを応援することができます。義務や費用は一切発生しません。
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

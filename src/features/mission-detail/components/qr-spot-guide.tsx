@@ -1,4 +1,7 @@
 import { MapPin, QrCode } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { SCAN_PATH } from "@/features/qr-spot/constants/qr-scan";
 
 type QrSpotGuideProps = {
   latitude: number | null;
@@ -21,8 +24,16 @@ export function QrSpotGuide({ latitude, longitude }: QrSpotGuideProps) {
         <QrCode className="h-10 w-10 text-gray-700" aria-hidden="true" />
         <p className="text-lg font-bold">現地のQRコードを読み取ろう</p>
         <p className="text-sm text-gray-600">
-          スポットに掲示されているQRコードをスマホのカメラで読み取ると、
-          自動でミッション達成になります。この画面での提出は不要です。
+          スポットに掲示されているQRコードを読み取ると、自動でミッション達成に
+          なります。この画面での提出は不要です。
+        </p>
+
+        <Button asChild size="lg" className="mt-1 w-full sm:w-auto">
+          <Link href={SCAN_PATH}>カメラを起動する</Link>
+        </Button>
+
+        <p className="text-xs text-gray-500">
+          スマホの標準カメラアプリで読み取っても同じように進めます。
         </p>
 
         {hasLocation && (

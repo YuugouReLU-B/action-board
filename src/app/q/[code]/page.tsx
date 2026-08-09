@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { QrSpotLoginPrompt } from "@/features/qr-spot/components/qr-spot-login-prompt";
-import { QR_SCAN_PATH } from "@/features/qr-spot/services/qr-code";
+import { QR_SCAN_PATH } from "@/features/qr-spot/constants/qr-scan";
 import { redeemQrSpot } from "@/features/qr-spot/use-cases/redeem-qr-spot";
 import { getUser } from "@/features/user-profile/services/profile";
 import { createAdminClient } from "@/lib/supabase/adminClient";

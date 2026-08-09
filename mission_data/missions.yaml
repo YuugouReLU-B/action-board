@@ -307,7 +307,7 @@ missions:
     required_artifact_type: LINK
     max_achievement_count: null
     is_featured: false
-    is_hidden: false
+    is_hidden: true
     artifact_label: あなたが作成したプルリクエストのURL
     ogp_image_url: https://tibsocpjqvxxipszbwui.supabase.co/storage/v1/object/public/ogp//14_github_pull_request.png
   - slug: join-slack
@@ -927,4 +927,71 @@ missions:
     is_featured: false
     is_hidden: true
     artifact_label: null
+    ogp_image_url: null
+  # ── 浜通りクエスト ベータ向けに追加したミッション ──
+  - slug: event-checkin
+    title: イベント会場でチェックイン
+    icon_url: /img/mission-icons/actionboard_icon_work_20250713_ol_join-event.svg
+    content: |-
+      会場に掲示されているQRコードを読み取るとチェックイン完了です。
+      イベントごとにこのミッションを複製して、イベント名と日付を入れて使います。
+    difficulty: 1
+    required_artifact_type: QR
+    points: 200
+    max_achievement_count: 1
+    is_featured: true
+    featured_importance: 200
+    is_hidden: false
+    artifact_label: null
+    ogp_image_url: null
+  - slug: follow-hamadori-x
+    title: Xで浜通りクエストをフォローしよう
+    icon_url: /img/mission-icons/actionboard_icon_work_20250713_ol_follow-teammirai-x.svg
+    content: 公式Xアカウントをフォローして、最新の情報を受け取ろう。フォローしたらあなたのXアカウント名を入力してください。
+    difficulty: 1
+    required_artifact_type: TEXT
+    points: 50
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: true
+    artifact_label: あなたのXアカウント名
+    ogp_image_url: null
+  - slug: follow-hamadori-instagram
+    title: Instagramで浜通りクエストをフォローしよう
+    icon_url: /img/mission-icons/actionboard_icon_work_20250713_ol_instagram-like.svg
+    content: 公式Instagramをフォローして、浜通りの風景やイベントの様子をチェックしよう。フォローしたらあなたのアカウント名を入力してください。
+    difficulty: 1
+    required_artifact_type: TEXT
+    points: 50
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: true
+    artifact_label: あなたのInstagramアカウント名
+    ogp_image_url: null
+  - slug: follow-hamadori-note
+    title: noteで浜通りクエストをフォローしよう
+    icon_url: /img/mission-icons/actionboard_icon_work_20250713_ol_follow-note.svg
+    content: 公式noteをフォローして、活動の裏側や地域の人の話を読んでみよう。フォローしたらあなたのnoteアカウント名を入力してください。
+    difficulty: 1
+    required_artifact_type: TEXT
+    points: 50
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: true
+    artifact_label: あなたのnoteアカウント名
+    ogp_image_url: null
+  - slug: post-hamadori-x
+    title: Xで浜通りのことを投稿しよう
+    icon_url: /img/mission-icons/actionboard_icon_work_20250713_ol_x-post.svg
+    content: |-
+      訪れたスポットや食べたもの、感じたことを X で投稿してみよう。
+      ハッシュタグ <b>#浜通りクエスト</b> をつけると、ほかの参加者にも届きます。<br />
+      投稿できたら、その投稿のURLを貼り付けてください。
+    difficulty: 2
+    required_artifact_type: LINK
+    points: 100
+    max_achievement_count: 3
+    is_featured: false
+    is_hidden: false
+    artifact_label: 投稿したポストのURL
     ogp_image_url: null

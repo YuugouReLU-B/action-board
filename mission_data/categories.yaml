@@ -4,8 +4,12 @@ categories:
     sort_no: 50
     category_kbn: DEFAULT
   - slug: follow-teammirai
-    title: 浜通りクエストをフォローしよう
+    title: SNSをフォローしよう
     sort_no: 100
+    category_kbn: DEFAULT
+  - slug: attend-events
+    title: イベントに参加しよう
+    sort_no: 150
     category_kbn: DEFAULT
   - slug: learn-about-teammirai
     title: 浜通りクエストのことを知ろう
@@ -21,7 +25,7 @@ categories:
     category_kbn: DEFAULT
   - slug: share-and-spread
     title: 発信・拡散しよう
-    sort_no: 500
+    sort_no: 180
     category_kbn: DEFAULT
   - slug: local-activities
     title: 地域で活動しよう

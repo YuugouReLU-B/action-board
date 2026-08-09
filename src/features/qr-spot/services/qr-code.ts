@@ -2,11 +2,9 @@ import "server-only";
 
 import { randomBytes } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { QR_SCAN_PATH } from "@/features/qr-spot/constants/qr-scan";
 import { APP_ORIGIN } from "@/lib/constants/app-origin";
 import type { Database } from "@/lib/types/supabase";
-
-/** QRが指すパス。`/q/<code>` */
-export const QR_SCAN_PATH = "/q";
 
 /**
  * QRコードの文字列長（base64url 換算）。

@@ -11,10 +11,7 @@ import { APP_ORIGIN, LINE_REDIRECT_URI } from "@/lib/constants/app-origin";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 import { createClient } from "@/lib/supabase/client";
 import { deleteCookie, getCookie } from "@/lib/utils/server-cookies";
-import { calculateAge } from "@/lib/utils/utils";
 import { validateReturnUrl } from "@/lib/validation/url";
-
-const MINIMUM_AGE = 18;
 
 function signInRedirect(error: string) {
   return NextResponse.redirect(
@@ -47,7 +44,6 @@ function decodeReturnUrl(raw: string | undefined): string | undefined {
 async function clearFlowCookies() {
   await Promise.all([
     deleteCookie(LINE_LOGIN_COOKIE.state),
-    deleteCookie(LINE_LOGIN_COOKIE.dateOfBirth),
     deleteCookie(LINE_LOGIN_COOKIE.returnUrl),
   ]);
 }
@@ -100,13 +96,6 @@ export async function GET(request: NextRequest) {
       return signInRedirect("LINE認証の設定が不完全です");
     }
 
-    const dateOfBirth = await getCookie(LINE_LOGIN_COOKIE.dateOfBirth);
-    // 生年月日はクライアント由来なのでサーバー側で必ず再検証する
-    if (dateOfBirth && calculateAge(dateOfBirth) < MINIMUM_AGE) {
-      await clearFlowCookies();
-      return signInRedirect("18歳未満の方は登録できません");
-    }
-
     const adminSupabase = await createAdminClient();
     const result = await lineLogin(
       adminSupabase,
@@ -114,7 +103,6 @@ export async function GET(request: NextRequest) {
       {
         code,
         redirectUri: LINE_REDIRECT_URI,
-        dateOfBirth,
         onUserCreated: async (userId) => {
           await getOrInitializeUserLevel(userId);
         },

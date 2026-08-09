@@ -1,156 +1,62 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { CollapsibleInfo } from "@/components/common/collapsible-info";
+import { useState } from "react";
 import { FormMessage, type Message } from "@/components/common/form-message";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { signInWithLine } from "@/features/auth/client/line-auth";
-import {
-  formatBirthDate,
-  generateDaysArray,
-} from "@/lib/utils/date-form-utils";
-import { verifyMinimumAge } from "@/lib/utils/form-date-utils";
 
-interface TwoStepSignUpFormProps {
+interface SignUpFormProps {
   searchParams: Message;
 }
 
-// フェーズ1: 同意・生年月日入力
-function ConsentPhase({
-  isTermsAgreed,
-  setIsTermsAgreed,
-  selectedYear,
-  selectedMonth,
-  selectedDay,
-  setSelectedYear,
-  setSelectedMonth,
-  setSelectedDay,
-  years,
-  months,
-  days,
-  ageError,
-  isAgeValid,
-  onNext,
-}: {
-  isTermsAgreed: boolean;
-  setIsTermsAgreed: (value: boolean) => void;
-  selectedYear: number;
-  selectedMonth: number;
-  selectedDay: number;
-  setSelectedYear: (value: number) => void;
-  setSelectedMonth: (value: number) => void;
-  setSelectedDay: (value: number) => void;
-  years: number[];
-  months: number[];
-  days: number[];
-  ageError: string | null;
-  isAgeValid: boolean;
-  onNext: () => void;
-}) {
-  const canProceed = isTermsAgreed && isAgeValid;
+/**
+ * 新規登録フォーム。
+ *
+ * 以前は「生年月日＋同意」→「ログイン方法選択」の2フェーズだった。
+ * 生年月日（公職選挙法の18歳以上確認）を取得しなくなり、
+ * 残るのが規約同意だけになったため1画面に統合した。
+ */
+export default function SignUpForm({ searchParams }: SignUpFormProps) {
+  const [isTermsAgreed, setIsTermsAgreed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleLINELogin = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      await signInWithLine();
+    } catch (_error) {
+      setIsLoading(false);
+      setError("LINE連携に失敗しました。もう一度お試しください。");
+    }
+  };
 
   return (
-    <div className="flex flex-col gap-2 mt-2">
-      <Label htmlFor="date_of_birth">
-        生年月日（満18歳以上である必要があります）
-      </Label>
+    <div className="flex flex-col min-w-72 max-w-72 mx-auto">
+      <h1 className="text-2xl font-medium text-center mb-2">
+        浜通りクエストに登録
+      </h1>
+      <p className="text-sm text-foreground text-center mb-4">
+        すでに登録済みの方は{" "}
+        <Link className="text-brand-ink font-medium underline" href="/sign-in">
+          こちら
+        </Link>
+      </p>
 
-      {/* 生年月日が必要な理由の説明エリア（折りたたみ可能） */}
-      <CollapsibleInfo title="なぜ生年月日が必要ですか？" variant="gray">
-        <p>
-          法律により、サポーター登録は満18歳以上の方に限定されているため、年齢確認が必要です。
-        </p>
-        <p>
-          プライバシーポリシーに従って厳重に管理され、他の目的には使用されません。また、公開されることもありません。
-        </p>
-      </CollapsibleInfo>
-      <fieldset
-        className="grid grid-cols-3 gap-2 -mt-2"
-        aria-labelledby="date_of_birth_year"
-      >
-        <legend className="sr-only">生年月日</legend>
-        <div>
-          <Label htmlFor="date_of_birth_year" className="sr-only">
-            年
-          </Label>
-          <Select
-            name="year_select"
-            value={selectedYear.toString()}
-            onValueChange={(value) => setSelectedYear(Number(value))}
-            required
-          >
-            <SelectTrigger data-testid="year_select">
-              <SelectValue placeholder="年" />
-            </SelectTrigger>
-            <SelectContent>
-              {years.map((year) => (
-                <SelectItem key={year} value={year.toString()}>
-                  {year}年
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label htmlFor="date_of_birth_month" className="sr-only">
-            月
-          </Label>
-          <Select
-            name="month_select"
-            value={selectedMonth.toString()}
-            onValueChange={(value) => setSelectedMonth(Number(value))}
-            required
-          >
-            <SelectTrigger data-testid="month_select">
-              <SelectValue placeholder="月" />
-            </SelectTrigger>
-            <SelectContent>
-              {months.map((month) => (
-                <SelectItem key={month} value={month.toString()}>
-                  {month}月
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label htmlFor="date_of_birth_day" className="sr-only">
-            日
-          </Label>
-          <Select
-            name="day_select"
-            value={selectedDay.toString()}
-            onValueChange={(value) => setSelectedDay(Number(value))}
-            required
-          >
-            <SelectTrigger data-testid="day_select">
-              <SelectValue placeholder="日" />
-            </SelectTrigger>
-            <SelectContent>
-              {days.map((day) => (
-                <SelectItem key={day} value={day.toString()}>
-                  {day}日
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </fieldset>
-      {ageError && (
-        <p className="text-brand-ink text-sm font-medium mb-2">{ageError}</p>
-      )}
+      {/* searchParamsからのメッセージを表示 */}
+      <FormMessage className="mt-8" message={searchParams} />
 
-      <div className="flex flex-col gap-3 mb-4 mt-4">
+      <div className="flex flex-col gap-4 mt-8">
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-3">
+            <p className="text-red-700 text-sm">{error}</p>
+          </div>
+        )}
+
         <div className="flex items-center space-x-2">
           <Checkbox
             id="terms"
@@ -176,165 +82,16 @@ function ConsentPhase({
             に同意する
           </Label>
         </div>
+
+        <Button
+          type="button"
+          onClick={handleLINELogin}
+          disabled={!isTermsAgreed || isLoading}
+          className="w-full h-12 bg-[var(--app-vendor-line-green)] hover:bg-[var(--app-vendor-line-green-hover)] text-white"
+        >
+          {isLoading ? "LINE連携中..." : "LINEでアカウント作成"}
+        </Button>
       </div>
-
-      <Button
-        type="button"
-        disabled={!canProceed}
-        onClick={onNext}
-        className="w-full"
-      >
-        次へ進む
-      </Button>
-    </div>
-  );
-}
-
-// フェーズ2: ログイン方法選択
-function LoginSelectionPhase({
-  formattedDate,
-  onBack,
-}: {
-  formattedDate: string;
-  onBack: () => void;
-}) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleLINELogin = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      // 生年月日はサーバー側で HttpOnly cookie に退避される（startLineLogin）
-      await signInWithLine(undefined, formattedDate);
-    } catch (error) {
-      setIsLoading(false);
-      setError("LINE連携に失敗しました。もう一度お試しください。");
-      console.error("LINE login error:", error);
-    }
-  };
-
-  return (
-    <div className="flex flex-col gap-4 mt-8">
-      {/* エラーメッセージ表示 */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-3">
-          <p className="text-red-700 text-sm">{error}</p>
-        </div>
-      )}
-
-      {/* LINEログインボタン */}
-      <Button
-        type="button"
-        onClick={handleLINELogin}
-        disabled={isLoading}
-        className="w-full h-12 bg-[var(--app-vendor-line-green)] hover:bg-[var(--app-vendor-line-green-hover)] text-white"
-      >
-        {isLoading ? "LINE連携中..." : "LINEでアカウント作成"}
-      </Button>
-
-      <Button
-        type="button"
-        variant="link"
-        onClick={onBack}
-        className="w-full mt-2"
-      >
-        戻る
-      </Button>
-    </div>
-  );
-}
-
-export default function TwoStepSignUpForm({
-  searchParams,
-}: TwoStepSignUpFormProps) {
-  // フェーズ管理
-  const [currentPhase, setCurrentPhase] = useState<
-    "consent" | "login-selection"
-  >("consent");
-
-  // 同意状態
-  const [isTermsAgreed, setIsTermsAgreed] = useState(false);
-
-  // 生年月日の状態
-  const [selectedYear, setSelectedYear] = useState(1990);
-  const [selectedMonth, setSelectedMonth] = useState(1);
-  const [selectedDay, setSelectedDay] = useState(1);
-  const [ageError, setAgeError] = useState<string | null>(null);
-  const [isAgeValid, setIsAgeValid] = useState(false);
-
-  // 年月日の選択肢を生成
-  const birthYearThreshold = new Date().getFullYear() - 18;
-  const years = Array.from({ length: 100 }, (_, i) => birthYearThreshold - i);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const days = generateDaysArray(selectedYear, selectedMonth);
-
-  const formattedDate = formatBirthDate(
-    selectedYear,
-    selectedMonth,
-    selectedDay,
-  );
-
-  // 生年月日が変更された際に年齢チェックを実行
-  useEffect(() => {
-    const result = verifyMinimumAge(formattedDate, 18);
-    setAgeError(result.message);
-    setIsAgeValid(result.isValid);
-  }, [formattedDate]);
-
-  // 月を変更した際、日付が月の日数を超えていたら1日に変更する
-  useEffect(() => {
-    if (selectedDay > days.length) {
-      setSelectedDay(1);
-    }
-  }, [selectedDay, days.length]);
-
-  const handleNext = () => {
-    setCurrentPhase("login-selection");
-  };
-
-  const handleBack = () => {
-    setCurrentPhase("consent");
-  };
-
-  return (
-    <div className="flex flex-col min-w-72 max-w-72 mx-auto">
-      <h1 className="text-2xl font-medium text-center mb-2">
-        浜通りクエストに登録
-      </h1>
-      <p className="text-sm text-foreground text-center mb-4">
-        すでに登録済みの方は{" "}
-        <Link className="text-brand-ink font-medium underline" href="/sign-in">
-          こちら
-        </Link>
-      </p>
-
-      {/* searchParamsからのメッセージを表示 */}
-      <FormMessage className="mt-8" message={searchParams} />
-
-      {currentPhase === "consent" ? (
-        <ConsentPhase
-          isTermsAgreed={isTermsAgreed}
-          setIsTermsAgreed={setIsTermsAgreed}
-          selectedYear={selectedYear}
-          selectedMonth={selectedMonth}
-          selectedDay={selectedDay}
-          setSelectedYear={setSelectedYear}
-          setSelectedMonth={setSelectedMonth}
-          setSelectedDay={setSelectedDay}
-          years={years}
-          months={months}
-          days={days}
-          ageError={ageError}
-          isAgeValid={isAgeValid}
-          onNext={handleNext}
-        />
-      ) : (
-        <LoginSelectionPhase
-          formattedDate={formattedDate}
-          onBack={handleBack}
-        />
-      )}
     </div>
   );
 }

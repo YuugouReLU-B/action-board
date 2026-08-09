@@ -6,7 +6,6 @@ import type { LineApiClient } from "../types/line-api-client";
 export type LineLoginInput = {
   code: string;
   redirectUri: string;
-  dateOfBirth?: string;
   onUserCreated?: (userId: string) => Promise<void>;
 };
 
@@ -110,15 +109,7 @@ export async function lineLogin(
       };
     }
   } else {
-    // 新規ユーザー
-    if (!input.dateOfBirth) {
-      return {
-        success: false,
-        error:
-          "新規ユーザー登録には各種同意と生年月日が必要です。サインアップページから登録してください。",
-      };
-    }
-
+    // 新規ユーザー。生年月日は取得しなくなったため、ここでの必須チェックは行わない
     const { data: newUser, error: createError } =
       await adminSupabase.auth.admin.createUser({
         email,
@@ -129,7 +120,6 @@ export async function lineLogin(
           email,
           provider: "line",
           line_user_id: lineUserId,
-          date_of_birth: input.dateOfBirth,
           email_verified: true,
           line_linked_at: new Date().toISOString(),
           phone_verified: false,

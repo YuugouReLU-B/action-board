@@ -14,9 +14,10 @@ export type UpdateProfileInput = {
   userId: string;
   email: string | undefined;
   name: string;
-  addressPrefecture: string;
-  dateOfBirth: string;
-  postcode: string;
+  /** 任意。アンケート項目 */
+  addressPrefecture?: string;
+  /** 任意。アンケート項目 */
+  dateOfBirth?: string;
   xUsername?: string;
   githubUsername?: string;
   avatarPath: string | null;
@@ -37,23 +38,21 @@ const updateProfileSchema = z.object({
     .string()
     .nonempty({ message: "ニックネームを入力してください" })
     .max(100, { message: "ニックネームは100文字以内で入力してください" }),
+  // 以下は任意のアンケート項目。未入力なら undefined に正規化し、
+  // 入力された場合だけ形式を検証する
   addressPrefecture: z
     .string()
-    .nonempty({ message: "都道府県を選択してください" })
-    .refine((val) => PREFECTURES.includes(val), {
+    .optional()
+    .transform((val) => (val ? val : undefined))
+    .refine((val) => val === undefined || PREFECTURES.includes(val), {
       message: "有効な都道府県を選択してください",
     }),
   dateOfBirth: z
     .string()
-    .nonempty({ message: "生年月日を入力してください" })
-    .regex(/^\d{4}-\d{2}-\d{2}$/, {
+    .optional()
+    .transform((val) => (val ? val : undefined))
+    .refine((val) => val === undefined || /^\d{4}-\d{2}-\d{2}$/.test(val), {
       message: "生年月日はYYYY-MM-DD形式で入力してください",
-    }),
-  postcode: z
-    .string()
-    .nonempty({ message: "郵便番号を入力してください" })
-    .regex(/^\d{7}$/, {
-      message: "郵便番号はハイフンなし7桁で入力してください",
     }),
   xUsername: z
     .string()
@@ -76,7 +75,6 @@ export async function updateProfile(
     name: input.name,
     addressPrefecture: input.addressPrefecture,
     dateOfBirth: input.dateOfBirth,
-    postcode: input.postcode,
     xUsername: input.xUsername,
     githubUsername: input.githubUsername,
   });
@@ -106,8 +104,7 @@ export async function updateProfile(
       .from("private_users")
       .insert({
         id: input.userId,
-        date_of_birth: validatedData.dateOfBirth,
-        postcode: validatedData.postcode,
+        date_of_birth: validatedData.dateOfBirth ?? null,
         hubspot_contact_id: null,
         updated_at: new Date().toISOString(),
       });
@@ -124,7 +121,7 @@ export async function updateProfile(
       .insert({
         id: input.userId,
         name: validatedData.name,
-        address_prefecture: validatedData.addressPrefecture,
+        address_prefecture: validatedData.addressPrefecture ?? null,
         x_username: validatedData.xUsername || null,
         github_username: validatedData.githubUsername || null,
         avatar_url: input.avatarPath,
@@ -171,8 +168,7 @@ export async function updateProfile(
     const { error: privateUserError } = await adminSupabase
       .from("private_users")
       .update({
-        date_of_birth: validatedData.dateOfBirth,
-        postcode: validatedData.postcode,
+        date_of_birth: validatedData.dateOfBirth ?? null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", input.userId);
@@ -188,7 +184,7 @@ export async function updateProfile(
       .from("public_user_profiles")
       .update({
         name: validatedData.name,
-        address_prefecture: validatedData.addressPrefecture,
+        address_prefecture: validatedData.addressPrefecture ?? null,
         x_username: validatedData.xUsername || null,
         github_username: validatedData.githubUsername || null,
         avatar_url: input.avatarPath,
@@ -210,7 +206,7 @@ export async function updateProfile(
       {
         email: input.email || "",
         firstname: input.email || "",
-        state: validatedData.addressPrefecture,
+        state: validatedData.addressPrefecture ?? "",
       },
       hubspotContactId,
     );

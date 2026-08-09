@@ -11,8 +11,6 @@
 export const LINE_LOGIN_COOKIE = {
   /** CSRF対策の state */
   state: "line_login_state",
-  /** 新規登録時のみ渡ってくる生年月日 */
-  dateOfBirth: "line_login_dob",
   /** ログイン後の戻り先 */
   returnUrl: "line_login_return",
 } as const;

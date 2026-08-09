@@ -82,7 +82,7 @@ async function getAllUsers(): Promise<UserData[]> {
         return {
           id: publicUserProfile.id,
           email: email || "",
-          address_prefecture: publicUserProfile.address_prefecture,
+          address_prefecture: publicUserProfile.address_prefecture ?? "",
         };
       })
       .filter((user) => user.email); // メールアドレスがあるユーザーのみ

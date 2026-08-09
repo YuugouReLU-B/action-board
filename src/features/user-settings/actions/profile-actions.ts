@@ -58,7 +58,6 @@ export async function updateProfile(
   const address_prefecture =
     formData.get("address_prefecture")?.toString() ?? "";
   const date_of_birth = formData.get("date_of_birth")?.toString() ?? "";
-  const postcode = formData.get("postcode")?.toString() ?? "";
   const x_username = formData.get("x_username")?.toString() || "";
   const github_username = formData.get("github_username")?.toString() || "";
 
@@ -143,7 +142,6 @@ export async function updateProfile(
       name,
       addressPrefecture: address_prefecture,
       dateOfBirth: date_of_birth,
-      postcode,
       xUsername: x_username,
       githubUsername: github_username,
       avatarPath: avatar_path,

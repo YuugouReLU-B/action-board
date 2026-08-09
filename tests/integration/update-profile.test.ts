@@ -36,7 +36,6 @@ describe("updateProfile ユースケース", () => {
     name: "テスト太郎",
     addressPrefecture: "東京都",
     dateOfBirth: "1990-01-15",
-    postcode: "1000001",
     xUsername: "test_x",
     githubUsername: "test-gh",
     avatarPath: null,
@@ -62,7 +61,6 @@ describe("updateProfile ユースケース", () => {
       .single();
     expect(privateUser).not.toBeNull();
     expect(privateUser!.date_of_birth).toBe("1990-01-15");
-    expect(privateUser!.postcode).toBe("1000001");
 
     // public_user_profiles が作成されていることを検証
     const { data: publicProfile } = await adminClient
@@ -125,7 +123,6 @@ describe("updateProfile ユースケース", () => {
         name: "更新太郎",
         addressPrefecture: "大阪府",
         dateOfBirth: "1985-06-20",
-        postcode: "5300001",
         xUsername: "updated_x",
         githubUsername: "updated-gh",
         avatarPath: null,
@@ -140,7 +137,6 @@ describe("updateProfile ユースケース", () => {
       .eq("id", userId)
       .single();
     expect(privateUser!.date_of_birth).toBe("1985-06-20");
-    expect(privateUser!.postcode).toBe("5300001");
 
     // public_user_profiles が更新されていることを検証
     const { data: publicProfile } = await adminClient
@@ -162,34 +158,6 @@ describe("updateProfile ユースケース", () => {
 
     // 2回目はウェルカムメールが送信されていないことを検証（既存ユーザーのため）
     expect(mail.sentTo.length).toBe(1); // 1回目のみ
-  });
-
-  test("バリデーションエラー（無効な郵便番号）", async () => {
-    const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
-    const mail = new FakeMailClient();
-
-    const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
-      {
-        ...validInput,
-        userId,
-        email,
-        postcode: "123", // 7桁でない
-      },
-    );
-
-    expect(result.success).toBe(false);
-    if (result.success) return;
-    expect(result.error).toContain("郵便番号");
-
-    // DBにデータが作成されていないことを検証
-    const { data: privateUser } = await adminClient
-      .from("private_users")
-      .select("id")
-      .eq("id", userId)
-      .maybeSingle();
-    expect(privateUser).toBeNull();
   });
 
   test("バリデーションエラー（無効な都道府県）", async () => {
@@ -364,5 +332,69 @@ describe("updateProfile ユースケース", () => {
       .single();
     expect(privateUser!.hubspot_contact_id).not.toBeNull();
     expect(privateUser!.hubspot_contact_id).toContain("fake-hubspot-");
+  });
+  test("生年月日と都道府県は任意（未指定でも作成できる）", async () => {
+    const { userId, email } = await createAuthUser();
+    const hubspot = new FakeHubSpotClient();
+    const mail = new FakeMailClient();
+
+    const result = await updateProfile(
+      { adminSupabase: adminClient, hubspot, mail },
+      { userId, email, name: "ニックネームだけの人", avatarPath: null },
+    );
+
+    expect(result.success).toBe(true);
+
+    const { data: privateUser } = await adminClient
+      .from("private_users")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle();
+    expect(privateUser).not.toBeNull();
+    expect(privateUser!.date_of_birth).toBeNull();
+    expect(privateUser!.postcode).toBeNull();
+
+    const { data: publicProfile } = await adminClient
+      .from("public_user_profiles")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle();
+    expect(publicProfile!.name).toBe("ニックネームだけの人");
+    expect(publicProfile!.address_prefecture).toBeNull();
+  });
+
+  test("ニックネームは必須のまま", async () => {
+    const { userId, email } = await createAuthUser();
+    const hubspot = new FakeHubSpotClient();
+    const mail = new FakeMailClient();
+
+    const result = await updateProfile(
+      { adminSupabase: adminClient, hubspot, mail },
+      { userId, email, name: "", avatarPath: null },
+    );
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error).toContain("ニックネーム");
+  });
+
+  test("郵便番号は取得しない（渡しても保存されない）", async () => {
+    const { userId, email } = await createAuthUser();
+    const hubspot = new FakeHubSpotClient();
+    const mail = new FakeMailClient();
+
+    const result = await updateProfile(
+      { adminSupabase: adminClient, hubspot, mail },
+      { ...validInput, userId, email },
+    );
+
+    expect(result.success).toBe(true);
+
+    const { data: privateUser } = await adminClient
+      .from("private_users")
+      .select("postcode")
+      .eq("id", userId)
+      .maybeSingle();
+    expect(privateUser!.postcode).toBeNull();
   });
 });

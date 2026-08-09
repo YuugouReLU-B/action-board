@@ -76,13 +76,8 @@ describe("startLineLogin", () => {
     expect(first).not.toBe(second);
   });
 
-  test("生年月日が渡された場合のみ cookie に保存する", async () => {
-    await startLineLogin({ dateOfBirth: "1990-01-15" });
-    expect(
-      setCookieMock.mock.calls.find(([name]) => name === "line_login_dob")?.[1],
-    ).toBe("1990-01-15");
-
-    setCookieMock.mockReset();
+  test("生年月日はもう cookie に保存しない", async () => {
+    // 生年月日の取得をやめたため、登録フローで渡す値そのものが無くなった
     await startLineLogin();
     expect(
       setCookieMock.mock.calls.find(([name]) => name === "line_login_dob"),

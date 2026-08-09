@@ -778,28 +778,28 @@ export type Database = {
       private_users: {
         Row: {
           created_at: string;
-          date_of_birth: string;
+          date_of_birth: string | null;
           hubspot_contact_id: string | null;
           id: string;
-          postcode: string;
+          postcode: string | null;
           registered_at: string;
           updated_at: string;
         };
         Insert: {
           created_at?: string;
-          date_of_birth: string;
+          date_of_birth?: string | null;
           hubspot_contact_id?: string | null;
           id: string;
-          postcode: string;
+          postcode?: string | null;
           registered_at?: string;
           updated_at?: string;
         };
         Update: {
           created_at?: string;
-          date_of_birth?: string;
+          date_of_birth?: string | null;
           hubspot_contact_id?: string | null;
           id?: string;
-          postcode?: string;
+          postcode?: string | null;
           registered_at?: string;
           updated_at?: string;
         };
@@ -807,7 +807,7 @@ export type Database = {
       };
       public_user_profiles: {
         Row: {
-          address_prefecture: string;
+          address_prefecture: string | null;
           avatar_url: string | null;
           created_at: string;
           github_username: string | null;
@@ -817,7 +817,7 @@ export type Database = {
           x_username: string | null;
         };
         Insert: {
-          address_prefecture: string;
+          address_prefecture?: string | null;
           avatar_url?: string | null;
           created_at?: string;
           github_username?: string | null;
@@ -827,7 +827,7 @@ export type Database = {
           x_username?: string | null;
         };
         Update: {
-          address_prefecture?: string;
+          address_prefecture?: string | null;
           avatar_url?: string | null;
           created_at?: string;
           github_username?: string | null;

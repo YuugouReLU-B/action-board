@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import type { Message } from "@/components/common/form-message";
+import { getFirstMissionPath } from "@/features/missions/services/first-mission";
 import { PartyBadgeVisibilityToggle } from "@/features/party-membership/components/party-badge-visibility-toggle";
 import { getPartyMembership } from "@/features/party-membership/loaders/memberships-loaders";
 import {
@@ -40,6 +41,9 @@ export default async function ProfileSettingsPage({
   // メールアドレス変更成功メッセージ
   const isEmailChangeSuccessful = params?.type === "email_change";
 
+  // 登録直後はトップではなく最初のミッションへ送る
+  const nextUrlAfterSignup = await getFirstMissionPath();
+
   return (
     <div className="flex flex-col items-center justify-center py-2">
       <ProfileForm
@@ -54,7 +58,7 @@ export default async function ProfileSettingsPage({
           github_username: publicUser?.github_username || null,
           avatar_url: publicUser?.avatar_url || null,
         }}
-        initialPrivateUser={privateUser}
+        nextUrlAfterSignup={nextUrlAfterSignup}
       />
 
       {partyMembership && (

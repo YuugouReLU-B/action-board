@@ -13,8 +13,6 @@ import { setCookie } from "@/lib/utils/server-cookies";
 import { validateReturnUrl } from "@/lib/validation/url";
 
 type StartLineLoginInput = {
-  /** 新規登録フローから来た場合のみ渡る */
-  dateOfBirth?: string;
   /** ログイン後の戻り先 */
   returnUrl?: string;
 };
@@ -22,12 +20,11 @@ type StartLineLoginInput = {
 /**
  * LINEログインを開始する。
  *
- * state と、フロー中だけ必要な値（生年月日・戻り先）を HttpOnly cookie に保存し、
+ * state と、フロー中だけ必要な値（戻り先）を HttpOnly cookie に保存し、
  * authorize URL を返す。呼び出し側はその URL に遷移するだけ。
  * 照合はコールバックのルートハンドラがサーバー側で行う。
  */
 export async function startLineLogin({
-  dateOfBirth,
   returnUrl,
 }: StartLineLoginInput = {}): Promise<
   { success: true; authorizeUrl: string } | { success: false; error: string }
@@ -51,10 +48,6 @@ export async function startLineLogin({
   };
 
   await setCookie(LINE_LOGIN_COOKIE.state, state, cookieOptions);
-
-  if (dateOfBirth) {
-    await setCookie(LINE_LOGIN_COOKIE.dateOfBirth, dateOfBirth, cookieOptions);
-  }
 
   // オープンリダイレクト対策。保存する前に検証しておく
   const safeReturnUrl = validateReturnUrl(returnUrl);

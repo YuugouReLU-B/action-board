@@ -10,8 +10,8 @@ import { startLineLogin } from "@/features/auth/actions/start-line-login";
  * 以前は localStorage に state を置いてクライアントで照合していたが、
  * サーバー側の検証を素通りできる構造だったため HttpOnly cookie 方式に変更した。
  */
-export async function signInWithLine(returnUrl?: string, dateOfBirth?: string) {
-  const result = await startLineLogin({ returnUrl, dateOfBirth });
+export async function signInWithLine(returnUrl?: string) {
+  const result = await startLineLogin({ returnUrl });
 
   if (!result.success) {
     throw new Error(result.error);

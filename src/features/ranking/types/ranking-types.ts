@@ -1,7 +1,6 @@
 /**
  * Ranking feature type definitions
  */
-import type { PartyMembership } from "@/features/party-membership/types";
 
 export type RankingPeriod = "all" | "daily";
 
@@ -13,7 +12,6 @@ export interface UserRanking {
   rank: number | null;
   updated_at: string | null;
   xp: number | null;
-  party_membership?: PartyMembership | null;
 }
 
 export interface UserMissionRanking extends UserRanking {
@@ -35,5 +33,4 @@ export interface CurrentUserRanking {
   rank: number | null;
   xp?: number | null;
   user_achievement_count?: number | null;
-  party_membership?: PartyMembership | null;
 }

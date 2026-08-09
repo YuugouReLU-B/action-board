@@ -2,24 +2,13 @@ import { render, screen } from "@testing-library/react";
 import type React from "react";
 import { RankingItem } from "./ranking-item";
 
-const mockUserNameWithBadge = jest.fn(
-  ({ name, membership }: { name: string; membership?: unknown }) => (
-    <span
-      data-testid="user-name-with-badge"
-      data-membership={JSON.stringify(membership)}
-    >
-      {name}
-    </span>
-  ),
-);
+const mockUserName = jest.fn(({ name }: { name: string }) => (
+  <span data-testid="user-name">{name}</span>
+));
 
-jest.mock(
-  "@/features/party-membership/components/user-name-with-badge",
-  () => ({
-    UserNameWithBadge: (props: unknown) =>
-      mockUserNameWithBadge(props as { name: string; membership?: unknown }),
-  }),
-);
+jest.mock("@/components/common/user-name", () => ({
+  UserName: (props: unknown) => mockUserName(props as { name: string }),
+}));
 
 const mockPartyMembership = {
   user_id: "test-user-1",
@@ -113,7 +102,7 @@ const mockUserMissionRanking: UserMissionRanking = {
 
 describe("RankingItem", () => {
   beforeEach(() => {
-    mockUserNameWithBadge.mockClear();
+    mockUserName.mockClear();
   });
 
   describe("基本的な表示", () => {
@@ -124,11 +113,9 @@ describe("RankingItem", () => {
       expect(screen.getByText("東京都")).toBeInTheDocument();
       expect(screen.getByText("Lv.15")).toBeInTheDocument();
       expect(screen.getByText("1,500pt")).toBeInTheDocument();
-      expect(mockUserNameWithBadge).toHaveBeenCalledWith(
+      expect(mockUserName).toHaveBeenCalledWith(
         expect.objectContaining({
           name: "テストユーザー",
-          membership: mockUserRanking.party_membership,
-          badgeSize: 20,
         }),
       );
     });

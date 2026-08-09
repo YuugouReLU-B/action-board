@@ -1,16 +1,12 @@
 import "server-only";
 
-import {
-  getPartyMembership,
-  getPartyMembershipMap,
-} from "@/features/party-membership/services/memberships";
 import type { ActivityTimelineItem } from "@/features/user-activity/types/activity-types";
 import {
-  enrichTimelineItemsWithMemberships,
   extractValidUserIds,
   mapAchievementsToTimeline,
   mapActivitiesToTimeline,
   mergeAndSortTimeline,
+  toActivityTimelineItems,
 } from "@/features/user-activity/utils/timeline-transforms";
 import { createClient } from "@/lib/supabase/client";
 
@@ -80,20 +76,17 @@ export async function getUserActivityTimeline(
   }
 
   const userProfile = userProfileResult.data;
-  const partyMembership = await getPartyMembership(userId);
 
   const achievements = mapAchievementsToTimeline(
     achievementsResult.data || [],
     userId,
     userProfile,
-    partyMembership,
   );
 
   const activities = mapActivitiesToTimeline(
     activitiesResult.data || [],
     userId,
     userProfile,
-    partyMembership,
   );
 
   return mergeAndSortTimeline(achievements, activities, limit);
@@ -145,10 +138,7 @@ export async function getGlobalActivityTimeline(
     .range(offset, offset + limit - 1);
 
   const items = activityTimelines ?? [];
-  const userIds = extractValidUserIds(items);
-  const membershipMap = await getPartyMembershipMap(userIds);
-
-  return enrichTimelineItemsWithMemberships(items, membershipMap);
+  return toActivityTimelineItems(items);
 }
 
 /**

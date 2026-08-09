@@ -53,12 +53,9 @@ export function RankingTabs({ children, seasonSlug }: RankingTabsProps) {
 
   return (
     <Tabs value={getTabValue()} className="w-full max-w-xl mx-auto px-4">
-      <TabsList className="grid w-full grid-cols-3">
+      <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="overall" asChild>
           <Link href={getTabHref("overall")}>全体</Link>
-        </TabsTrigger>
-        <TabsTrigger value="prefecture" asChild>
-          <Link href={getTabHref("prefecture")}>都道府県別</Link>
         </TabsTrigger>
         <TabsTrigger value="mission" asChild>
           <Link href={getTabHref("mission")}>ミッション別</Link>

@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 import type { Message } from "@/components/common/form-message";
 import { getFirstMissionPath } from "@/features/missions/services/first-mission";
-import { PartyBadgeVisibilityToggle } from "@/features/party-membership/components/party-badge-visibility-toggle";
-import { getPartyMembership } from "@/features/party-membership/loaders/memberships-loaders";
 import {
   getMyProfile,
   getProfile,
@@ -33,7 +31,6 @@ export default async function ProfileSettingsPage({
   // ユーザー情報を取得
   const privateUser = await getMyProfile();
   const publicUser = await getProfile(user.id);
-  const partyMembership = await getPartyMembership(user.id);
 
   // 新規ユーザーかどうか判定
   const isNew = Boolean(params?.new);
@@ -60,12 +57,6 @@ export default async function ProfileSettingsPage({
         }}
         nextUrlAfterSignup={nextUrlAfterSignup}
       />
-
-      {partyMembership && (
-        <div className="pt-4 border-gray-200 space-y-3">
-          <PartyBadgeVisibilityToggle membership={partyMembership} />
-        </div>
-      )}
 
       {!isNew && (
         <div className="w-full max-w-md pt-4 ">

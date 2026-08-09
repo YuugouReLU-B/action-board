@@ -68,7 +68,7 @@ describe("RankingTabs", () => {
       );
 
       expect(screen.getByText("全体")).toBeInTheDocument();
-      expect(screen.getByText("都道府県別")).toBeInTheDocument();
+      expect(screen.queryByText("都道府県別")).not.toBeInTheDocument();
       expect(screen.getByText("ミッション別")).toBeInTheDocument();
     });
 
@@ -83,8 +83,7 @@ describe("RankingTabs", () => {
 
       const links = screen.getAllByTestId("link");
       expect(links[0]).toHaveAttribute("href", "/ranking");
-      expect(links[1]).toHaveAttribute("href", "/ranking/ranking-prefecture");
-      expect(links[2]).toHaveAttribute("href", "/ranking/ranking-mission");
+      expect(links[1]).toHaveAttribute("href", "/ranking/ranking-mission");
     });
 
     it("子要素が表示される", () => {

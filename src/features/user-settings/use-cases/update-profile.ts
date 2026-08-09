@@ -3,7 +3,6 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { PREFECTURES } from "@/lib/constants/prefectures";
 import { formatZodErrors } from "@/lib/utils/validation-utils";
-import type { HubSpotClient } from "../types/hubspot-client";
 import type { MailClient } from "../types/mail-client";
 
 function generateReferralCode(length = 8): string {
@@ -29,7 +28,6 @@ export type UpdateProfileResult =
 
 export type UpdateProfileDeps = {
   adminSupabase: SupabaseClient;
-  hubspot: HubSpotClient;
   mail: MailClient;
 };
 
@@ -68,7 +66,7 @@ export async function updateProfile(
   deps: UpdateProfileDeps,
   input: UpdateProfileInput,
 ): Promise<UpdateProfileResult> {
-  const { adminSupabase, hubspot, mail } = deps;
+  const { adminSupabase, mail } = deps;
 
   // バリデーション
   const validatedFields = updateProfileSchema.safeParse({
@@ -96,7 +94,6 @@ export async function updateProfile(
     .single();
 
   const isNewUser = !privateUser;
-  const hubspotContactId = privateUser?.hubspot_contact_id ?? null;
 
   // private_users / public_user_profiles の upsert
   if (isNewUser) {
@@ -198,36 +195,6 @@ export async function updateProfile(
         error: "ユーザー情報の更新に失敗しました",
       };
     }
-  }
-
-  // HubSpot連携処理（プロフィール更新成功後に実行）
-  try {
-    const hubspotResult = await hubspot.createOrUpdateContact(
-      {
-        email: input.email || "",
-        firstname: input.email || "",
-        state: validatedData.addressPrefecture ?? "",
-      },
-      hubspotContactId,
-    );
-
-    if (hubspotResult.success) {
-      const { error: updateHubSpotIdError } = await adminSupabase
-        .from("private_users")
-        .update({ hubspot_contact_id: hubspotResult.contactId })
-        .eq("id", input.userId);
-
-      if (updateHubSpotIdError) {
-        console.error(
-          "Error updating hubspot_contact_id:",
-          updateHubSpotIdError,
-        );
-      }
-    } else {
-      console.error("HubSpot integration failed:", hubspotResult.error);
-    }
-  } catch (error) {
-    console.error("HubSpot integration error:", error);
   }
 
   // ユーザー別紹介コードの登録処理（重複時は最大5回リトライ）

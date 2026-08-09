@@ -1,4 +1,3 @@
-import type { PartyMembership } from "@/features/party-membership/types";
 import type { ActivityTimelineItem } from "@/features/user-activity/types/activity-types";
 
 /**
@@ -42,7 +41,6 @@ export function mapAchievementToTimeline(
   achievement: AchievementRow,
   userId: string,
   userProfile: UserProfileInfo | null,
-  partyMembership: PartyMembership | null,
 ): ActivityTimelineItem {
   return {
     id: `achievement_${achievement.id}`,
@@ -55,7 +53,6 @@ export function mapAchievementToTimeline(
     mission_slug: achievement.missions.slug,
     created_at: achievement.created_at,
     activity_type: "mission_achievement",
-    party_membership: partyMembership,
   };
 }
 
@@ -66,10 +63,9 @@ export function mapAchievementsToTimeline(
   achievements: AchievementRow[],
   userId: string,
   userProfile: UserProfileInfo | null,
-  partyMembership: PartyMembership | null,
 ): ActivityTimelineItem[] {
   return achievements.map((a) =>
-    mapAchievementToTimeline(a, userId, userProfile, partyMembership),
+    mapAchievementToTimeline(a, userId, userProfile),
   );
 }
 
@@ -80,7 +76,6 @@ export function mapActivityToTimeline(
   activity: ActivityRow,
   userId: string,
   userProfile: UserProfileInfo | null,
-  partyMembership: PartyMembership | null,
 ): ActivityTimelineItem {
   return {
     id: `activity_${activity.id}`,
@@ -93,7 +88,6 @@ export function mapActivityToTimeline(
     mission_slug: null,
     created_at: activity.created_at,
     activity_type: activity.activity_type,
-    party_membership: partyMembership,
   };
 }
 
@@ -104,11 +98,8 @@ export function mapActivitiesToTimeline(
   activities: ActivityRow[],
   userId: string,
   userProfile: UserProfileInfo | null,
-  partyMembership: PartyMembership | null,
 ): ActivityTimelineItem[] {
-  return activities.map((a) =>
-    mapActivityToTimeline(a, userId, userProfile, partyMembership),
-  );
+  return activities.map((a) => mapActivityToTimeline(a, userId, userProfile));
 }
 
 /**
@@ -140,9 +131,9 @@ export function extractValidUserIds(
 }
 
 /**
- * タイムラインアイテムにパーティメンバーシップ情報を付与する
+ * DBから取得した行を ActivityTimelineItem の形に整える
  */
-export function enrichTimelineItemsWithMemberships(
+export function toActivityTimelineItems(
   items: Array<{
     id: string | null;
     user_id: string | null;
@@ -155,7 +146,6 @@ export function enrichTimelineItemsWithMemberships(
     created_at: string | null;
     activity_type: string | null;
   }>,
-  membershipMap: Record<string, PartyMembership>,
 ): ActivityTimelineItem[] {
   return items.map((item) => ({
     id: item.id ?? "",
@@ -173,9 +163,5 @@ export function enrichTimelineItemsWithMemberships(
         : null,
     created_at: item.created_at ?? "",
     activity_type: item.activity_type ?? "",
-    party_membership:
-      item.user_id && membershipMap[item.user_id]
-        ? membershipMap[item.user_id]
-        : null,
   }));
 }

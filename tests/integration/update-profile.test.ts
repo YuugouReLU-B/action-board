@@ -1,5 +1,4 @@
 import { updateProfile } from "@/features/user-settings/use-cases/update-profile";
-import { FakeHubSpotClient } from "./fake-hubspot-client";
 import { FakeMailClient } from "./fake-mail-client";
 import { adminClient, cleanupTestUser } from "./utils";
 
@@ -43,11 +42,10 @@ describe("updateProfile ユースケース", () => {
 
   test("新規ユーザーのプロフィール作成 → private_users + public_user_profiles + user_referral 作成確認", async () => {
     const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
     const mail = new FakeMailClient();
 
     const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       { ...validInput, userId, email },
     );
 
@@ -87,10 +85,6 @@ describe("updateProfile ユースケース", () => {
     // ウェルカムメールが送信されていることを検証
     expect(mail.sentTo).toContain(email);
 
-    // HubSpotが呼ばれていることを検証
-    expect(hubspot.calls.length).toBe(1);
-    expect(hubspot.calls[0].contactData.email).toBe(email);
-
     // user_activities にサインアップアクティビティが記録されていることを検証
     const { data: activities } = await adminClient
       .from("user_activities")
@@ -104,19 +98,18 @@ describe("updateProfile ユースケース", () => {
 
   test("既存ユーザーのプロフィール更新 → 更新確認", async () => {
     const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
     const mail = new FakeMailClient();
 
     // 1回目: 新規作成
     const first = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       { ...validInput, userId, email },
     );
     expect(first.success).toBe(true);
 
     // 2回目: 更新
     const second = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       {
         userId,
         email,
@@ -162,11 +155,10 @@ describe("updateProfile ユースケース", () => {
 
   test("バリデーションエラー（無効な都道府県）", async () => {
     const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
     const mail = new FakeMailClient();
 
     const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       {
         ...validInput,
         userId,
@@ -188,45 +180,12 @@ describe("updateProfile ユースケース", () => {
     expect(privateUser).toBeNull();
   });
 
-  test("HubSpot失敗時もプロフィール更新は成功する（耐障害性）", async () => {
-    const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient(true); // shouldFail=true
-    const mail = new FakeMailClient();
-
-    const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
-      { ...validInput, userId, email },
-    );
-
-    // HubSpotが失敗してもプロフィール更新は成功する
-    expect(result.success).toBe(true);
-
-    // private_users が正しく作成されていることを検証
-    const { data: privateUser } = await adminClient
-      .from("private_users")
-      .select("*")
-      .eq("id", userId)
-      .single();
-    expect(privateUser).not.toBeNull();
-    expect(privateUser!.hubspot_contact_id).toBeNull(); // HubSpot失敗のためnullのまま
-
-    // public_user_profiles も正しく作成されていることを検証
-    const { data: publicProfile } = await adminClient
-      .from("public_user_profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-    expect(publicProfile).not.toBeNull();
-    expect(publicProfile!.name).toBe("テスト太郎");
-  });
-
   test("メール送信失敗時もプロフィール作成は成功する", async () => {
     const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
     const mail = new FakeMailClient(true); // shouldFail=true
 
     const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       { ...validInput, userId, email },
     );
 
@@ -244,11 +203,10 @@ describe("updateProfile ユースケース", () => {
 
   test("バリデーションエラー（空のニックネーム）", async () => {
     const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
     const mail = new FakeMailClient();
 
     const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       {
         ...validInput,
         userId,
@@ -272,11 +230,10 @@ describe("updateProfile ユースケース", () => {
 
   test("バリデーションエラー（無効な生年月日形式）", async () => {
     const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
     const mail = new FakeMailClient();
 
     const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       {
         ...validInput,
         userId,
@@ -292,11 +249,10 @@ describe("updateProfile ユースケース", () => {
 
   test("emailなしの新規ユーザー作成（ウェルカムメール未送信）", async () => {
     const { userId } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
     const mail = new FakeMailClient();
 
     const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       { ...validInput, userId, email: undefined },
     );
 
@@ -314,32 +270,12 @@ describe("updateProfile ユースケース", () => {
     expect(privateUser).not.toBeNull();
   });
 
-  test("HubSpot成功時にhubspot_contact_idが保存される", async () => {
-    const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
-    const mail = new FakeMailClient();
-
-    await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
-      { ...validInput, userId, email },
-    );
-
-    // hubspot_contact_id が保存されていることを検証
-    const { data: privateUser } = await adminClient
-      .from("private_users")
-      .select("hubspot_contact_id")
-      .eq("id", userId)
-      .single();
-    expect(privateUser!.hubspot_contact_id).not.toBeNull();
-    expect(privateUser!.hubspot_contact_id).toContain("fake-hubspot-");
-  });
   test("生年月日と都道府県は任意（未指定でも作成できる）", async () => {
     const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
     const mail = new FakeMailClient();
 
     const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       { userId, email, name: "ニックネームだけの人", avatarPath: null },
     );
 
@@ -365,11 +301,10 @@ describe("updateProfile ユースケース", () => {
 
   test("ニックネームは必須のまま", async () => {
     const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
     const mail = new FakeMailClient();
 
     const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       { userId, email, name: "", avatarPath: null },
     );
 
@@ -380,11 +315,10 @@ describe("updateProfile ユースケース", () => {
 
   test("郵便番号は取得しない（渡しても保存されない）", async () => {
     const { userId, email } = await createAuthUser();
-    const hubspot = new FakeHubSpotClient();
     const mail = new FakeMailClient();
 
     const result = await updateProfile(
-      { adminSupabase: adminClient, hubspot, mail },
+      { adminSupabase: adminClient, mail },
       { ...validInput, userId, email },
     );
 

@@ -40,7 +40,6 @@
     "poster:mask-names": "tsx poster_data/mask-names.ts",
     "calculate-badges": "tsx scripts/calculate-badges.ts",
     "export-users-prefecture": "tsx scripts/export-users-prefecture.ts",
-    "sync-party-memberships": "tsx src/scripts/sync-party-memberships.ts",
     "posting:sync": "tsx posting_data/src/sync.ts",
     "posting:sync:dry": "tsx posting_data/src/sync.ts --dry-run",
     "season:sync": "tsx season_data/src/sync.ts",

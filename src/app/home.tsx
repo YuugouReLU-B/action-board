@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import NoticeBoardAlert from "@/components/common/notice-board-alert";
 import Hero from "@/components/top/hero";
-import { PrefectureTeamCard } from "@/components/top/prefecture-team-card";
 import { MetricsWithSuspense } from "@/features/metrics/components/metrics-with-suspense";
 import FeaturedMissions from "@/features/missions/components/featured-missions";
 import FirstMissions from "@/features/missions/components/first-missions";
@@ -84,15 +83,6 @@ export default async function Home({
       </section>
       {/* 注意書き */}
       <NoticeBoardAlert />
-
-      {/* 都道府県対抗ランキング導線 */}
-      {user != null && (
-        <section className="py-4 md:py-8">
-          <div className="w-full max-w-lg mx-auto px-4">
-            <PrefectureTeamCard />
-          </div>
-        </section>
-      )}
 
       {/* メトリクスセクション */}
       <MetricsWithSuspense />

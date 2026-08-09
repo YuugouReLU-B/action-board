@@ -26,7 +26,6 @@ export const CurrentUserCardPrefecture: React.FC<CurrentUserCardProps> = ({
     name: currentUser.name,
     address_prefecture: currentUser.address_prefecture,
     rank: currentUser.rank,
-    party_membership: currentUser.party_membership ?? null,
   };
 
   return (

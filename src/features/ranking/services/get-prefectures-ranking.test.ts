@@ -1,7 +1,3 @@
-import {
-  getPartyMembership,
-  getPartyMembershipMap,
-} from "@/features/party-membership/services/memberships";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 import { getJSTMidnightToday } from "@/lib/utils/date-utils";
 
@@ -26,11 +22,6 @@ jest.mock("@/lib/services/seasons", () => ({
   getCurrentSeasonId: jest.fn(),
 }));
 
-jest.mock("@/features/party-membership/services/memberships", () => ({
-  getPartyMembershipMap: jest.fn(),
-  getPartyMembership: jest.fn(),
-}));
-
 describe("prefecturesRanking service", () => {
   const mockSupabase = {
     rpc: jest.fn(),
@@ -40,8 +31,6 @@ describe("prefecturesRanking service", () => {
     jest.clearAllMocks();
     (createAdminClient as jest.Mock).mockResolvedValue(mockSupabase);
     (getCurrentSeasonId as jest.Mock).mockResolvedValue("test-season-id");
-    (getPartyMembershipMap as jest.Mock).mockResolvedValue({});
-    (getPartyMembership as jest.Mock).mockResolvedValue(null);
   });
 
   describe("getPrefecturesRanking", () => {
@@ -91,9 +80,7 @@ describe("prefecturesRanking service", () => {
           name: "東京ユーザー1",
           address_prefecture: "東京都",
           rank: 1,
-          party_membership: null,
         });
-        expect(getPartyMembershipMap).toHaveBeenCalledWith(["user1", "user2"]);
       });
 
       it("limitパラメータで取得件数を制限できる", async () => {
@@ -151,9 +138,7 @@ describe("prefecturesRanking service", () => {
           xp: 200,
           level: undefined,
           updated_at: undefined,
-          party_membership: null,
         });
-        expect(getPartyMembershipMap).toHaveBeenCalledWith(["user1"]);
       });
 
       it("日次ランキングを取得する（日付確認）", async () => {
@@ -215,16 +200,6 @@ describe("prefecturesRanking service", () => {
           data: [mockRankingData],
           error: null,
         });
-        (getPartyMembership as jest.Mock).mockResolvedValue({
-          user_id: userId,
-          plan: "premium",
-          badge_visibility: true,
-          synced_at: "2024-01-01T00:00:00Z",
-          metadata: {},
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z",
-        });
-
         const result = await getUserPrefecturesRanking(prefecture, userId);
 
         expect(mockSupabase.rpc).toHaveBeenCalledWith(
@@ -241,12 +216,7 @@ describe("prefecturesRanking service", () => {
           name: "テストユーザー",
           address_prefecture: "東京都",
           rank: 5,
-          party_membership: {
-            user_id: userId,
-            plan: "premium",
-          },
         });
-        expect(getPartyMembership).toHaveBeenCalledWith(userId);
       });
     });
 

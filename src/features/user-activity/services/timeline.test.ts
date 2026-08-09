@@ -13,7 +13,6 @@
  */
 jest.unmock("@/features/user-activity/services/timeline");
 
-import { getPartyMembership } from "@/features/party-membership/services/memberships";
 import { createClient } from "@/lib/supabase/client";
 import {
   getUserActivityTimeline,
@@ -24,15 +23,8 @@ jest.mock("@/lib/supabase/client", () => ({
   createClient: jest.fn(),
 }));
 
-jest.mock("@/features/party-membership/services/memberships", () => ({
-  getPartyMembership: jest.fn(),
-}));
-
 const mockCreateClient = createClient as jest.MockedFunction<
   typeof createClient
->;
-const mockGetPartyMembership = getPartyMembership as jest.MockedFunction<
-  typeof getPartyMembership
 >;
 
 describe("activityTimeline service", () => {
@@ -46,7 +38,6 @@ describe("activityTimeline service", () => {
     };
 
     mockCreateClient.mockReturnValue(mockSupabase);
-    mockGetPartyMembership.mockResolvedValue(null);
   });
 
   describe("getUserActivityTimeline", () => {
@@ -91,15 +82,6 @@ describe("activityTimeline service", () => {
         .mockReturnValueOnce(createMockChain(mockAchievements))
         .mockReturnValueOnce(createMockChain(mockActivities))
         .mockReturnValueOnce(createMockChain(mockUserProfile));
-      mockGetPartyMembership.mockResolvedValue({
-        user_id: userId,
-        plan: "starter",
-        badge_visibility: true,
-        synced_at: "2024-01-01T00:00:00Z",
-        metadata: {},
-        created_at: "2024-01-01T00:00:00Z",
-        updated_at: "2024-01-01T00:00:00Z",
-      } as any);
 
       const result = await getUserActivityTimeline(userId, 20, 0);
 
@@ -113,10 +95,6 @@ describe("activityTimeline service", () => {
         name: "テストユーザー",
         title: "テストミッション1",
         activity_type: "mission_achievement",
-        party_membership: {
-          user_id: userId,
-          plan: "starter",
-        },
       });
       expect(result[1]).toMatchObject({
         id: "activity_activity-1",
@@ -124,10 +102,6 @@ describe("activityTimeline service", () => {
         name: "テストユーザー",
         title: "サインアップ",
         activity_type: "signup",
-        party_membership: {
-          user_id: userId,
-          plan: "starter",
-        },
       });
     });
 
@@ -267,7 +241,6 @@ describe("activityTimeline service", () => {
         title: "テストミッション",
         created_at: "2024-01-01T12:00:00Z",
         activity_type: "mission_achievement",
-        party_membership: null,
       });
     });
   });

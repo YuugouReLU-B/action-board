@@ -1,9 +1,5 @@
 import "server-only";
 
-import {
-  getPartyMembership,
-  getPartyMembershipMap,
-} from "@/features/party-membership/services/memberships";
 import { getCurrentSeasonId } from "@/lib/services/seasons";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 import type { RankingPeriod, UserRanking } from "../types/ranking-types";
@@ -11,7 +7,6 @@ import {
   dateFilterToISOString,
   getPeriodDateFilter,
 } from "../utils/period-utils";
-import { attachPartyMembership } from "../utils/ranking-helpers";
 
 export async function getPrefecturesRanking(
   prefecture: string,
@@ -55,12 +50,6 @@ export async function getPrefecturesRanking(
       return [];
     }
 
-    const membershipMap = await getPartyMembershipMap(
-      rankings
-        .map((ranking) => ranking.user_id)
-        .filter((id): id is string => typeof id === "string" && id.length > 0),
-    );
-
     // ランキングデータを変換（period_prefecture_rankingの結果形式）
     const mapped = rankings.map((ranking: Record<string, unknown>) => ({
       user_id: ranking.user_id as string | null,
@@ -71,7 +60,7 @@ export async function getPrefecturesRanking(
       xp: ranking.xp,
       updated_at: ranking.updated_at,
     }));
-    return attachPartyMembership(mapped, membershipMap) as UserRanking[];
+    return mapped as UserRanking[];
   } catch (error) {
     console.error("Prefecture ranking service error:", error);
     throw error;
@@ -122,8 +111,6 @@ export async function getUserPrefecturesRanking(
 
     const ranking = rankings[0] as Record<string, unknown>;
 
-    const membership = await getPartyMembership(userId);
-
     return {
       user_id: userId,
       name: ranking.name,
@@ -132,7 +119,6 @@ export async function getUserPrefecturesRanking(
       level: ranking.level,
       xp: ranking.xp,
       updated_at: ranking.updated_at,
-      party_membership: membership,
     } as UserRanking;
   } catch (error) {
     console.error("User prefecture ranking service error:", error);

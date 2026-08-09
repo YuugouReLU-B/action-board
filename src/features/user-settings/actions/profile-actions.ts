@@ -7,11 +7,9 @@ import {
   shouldDeleteOldAvatar,
   validateAvatarFile,
 } from "@/features/user-settings/utils/avatar-helpers";
-import { createOrUpdateHubSpotContact } from "@/lib/services/hubspot";
 import { sendWelcomeMail } from "@/lib/services/mail";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 import { createClient } from "@/lib/supabase/client";
-import type { HubSpotClient } from "../types/hubspot-client";
 import type { MailClient } from "../types/mail-client";
 import { updateProfile as updateProfileUseCase } from "../use-cases/update-profile";
 
@@ -24,12 +22,6 @@ export type UploadAvatarResult = {
   success: boolean;
   avatarPath?: string;
   error?: string;
-};
-
-/** 本番用 HubSpot クライアント */
-const prodHubSpotClient: HubSpotClient = {
-  createOrUpdateContact: (contactData, existingContactId) =>
-    createOrUpdateHubSpotContact(contactData, existingContactId),
 };
 
 /** 本番用メールクライアント */
@@ -133,7 +125,6 @@ export async function updateProfile(
   const result = await updateProfileUseCase(
     {
       adminSupabase: supabaseServiceClient,
-      hubspot: prodHubSpotClient,
       mail: prodMailClient,
     },
     {

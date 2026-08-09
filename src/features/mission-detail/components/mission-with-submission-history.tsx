@@ -8,7 +8,7 @@ import QRCodeDisplay from "@/features/mission-detail/components/qr-code-display"
 import { SubmissionHistoryWrapper } from "@/features/mission-detail/components/submission-history-wrapper";
 import { getSubmissionHistory } from "@/features/mission-detail/loaders/mission-detail-loaders";
 import type { SubmissionData } from "@/features/mission-detail/types/detail-types";
-
+import { LineFriendForm } from "@/features/missions/components/line-friend-form";
 import { MissionGuidanceArrow } from "@/features/missions/components/mission-guidance-arrow";
 import { useMissionSubmission } from "@/features/missions/hooks/use-mission-submission";
 import { ARTIFACT_TYPES } from "@/lib/types/artifact-types";
@@ -76,6 +76,7 @@ export function MissionWithSubmissionHistory({
   const isNoGuidanceArrow =
     mission.required_artifact_type === ARTIFACT_TYPES.LINK_ACCESS.key ||
     mission.required_artifact_type === ARTIFACT_TYPES.QUIZ.key ||
+    mission.required_artifact_type === ARTIFACT_TYPES.LINE_FRIEND.key ||
     mission.required_artifact_type === ARTIFACT_TYPES.REFERRAL.key;
 
   // フォームが表示される条件と同じ
@@ -88,6 +89,7 @@ export function MissionWithSubmissionHistory({
     <>
       {/* リンクアクセスのボタンは別で表示しているので、ここでは除外 */}
       {mission.required_artifact_type !== ARTIFACT_TYPES.LINK_ACCESS.key &&
+        mission.required_artifact_type !== ARTIFACT_TYPES.LINE_FRIEND.key &&
         mainLink != null && (
           <MainLinkButton
             mission={mission}
@@ -114,16 +116,26 @@ export function MissionWithSubmissionHistory({
           </div>
         )}
 
-      {mission.required_artifact_type !== "REFERRAL" && (
-        <MissionFormWrapper
-          mission={mission}
-          authUser={authUser}
-          userAchievementCount={userAchievementCount}
-          onSubmissionSuccess={refreshSubmissions}
-          preloadedQuizQuestions={preloadedQuizQuestions}
-          mainLink={mainLink}
-        />
+      {mission.required_artifact_type === ARTIFACT_TYPES.LINE_FRIEND.key && (
+        <div className="bg-white rounded-xl border-2 p-6">
+          <LineFriendForm
+            addFriendUrl={mainLink?.link}
+            returnUrl={`/missions/${mission.slug}`}
+          />
+        </div>
       )}
+
+      {mission.required_artifact_type !== "REFERRAL" &&
+        mission.required_artifact_type !== ARTIFACT_TYPES.LINE_FRIEND.key && (
+          <MissionFormWrapper
+            mission={mission}
+            authUser={authUser}
+            userAchievementCount={userAchievementCount}
+            onSubmissionSuccess={refreshSubmissions}
+            preloadedQuizQuestions={preloadedQuizQuestions}
+            mainLink={mainLink}
+          />
+        )}
 
       {submissions.length > 0 && (
         <SubmissionHistoryWrapper

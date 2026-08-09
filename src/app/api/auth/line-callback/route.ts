@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { type NextRequest, NextResponse } from "next/server";
 import { LINE_LOGIN_COOKIE } from "@/features/auth/constants/line-login";
 import { LineApiClientImpl } from "@/features/auth/services/line-api-client";
+import { grantLineFriendMission } from "@/features/auth/use-cases/grant-line-friend-mission";
 import { lineLogin } from "@/features/auth/use-cases/line-login";
 import { saveCampaignAttribution } from "@/features/campaign-attribution/services/campaign-attribution";
 import { grantReferralReward } from "@/features/referral/services/grant-referral-reward";
@@ -27,6 +28,20 @@ function safeEquals(a: string, b: string) {
   const bufB = Buffer.from(b);
   if (bufA.length !== bufB.length) return false;
   return timingSafeEqual(bufA, bufB);
+}
+
+/**
+ * cookie に保存される際に "/missions/x" が "%2Fmissions%2Fx" へエンコードされる。
+ * 読み出し側が復号するかはランタイム実装に依存するため、
+ * パスとして解釈できない形だったときだけ復号する。
+ */
+function decodeReturnUrl(raw: string | undefined): string | undefined {
+  if (!raw || raw.startsWith("/")) return raw;
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return undefined;
+  }
 }
 
 async function clearFlowCookies() {
@@ -132,12 +147,11 @@ export async function GET(request: NextRequest) {
 
     // Supabase のセッションを張る。cookie は createClient のアダプタ経由で
     // このレスポンスに載る（Supabase 公式のルートハンドラ方式と同じ）
-    const { error: signInError } = await createClient().auth.signInWithPassword(
-      {
-        email: result.email,
-        password: result.tempPassword,
-      },
-    );
+    const userSupabase = createClient();
+    const { error: signInError } = await userSupabase.auth.signInWithPassword({
+      email: result.email,
+      password: result.tempPassword,
+    });
 
     if (signInError) {
       console.error("Failed to sign in with temporary password:", signInError);
@@ -145,8 +159,14 @@ export async function GET(request: NextRequest) {
       return signInRedirect("ログイン処理に失敗しました");
     }
 
+    // 友だちだと判明したら、公式LINE友だち追加ミッションを自動達成させる。
+    // 自己申告ではなく LINE の friendFlag を根拠にできるのがこの導線の利点
+    if (result.isOfficialAccountFriend === true) {
+      await grantLineFriendMission(adminSupabase, userSupabase, result.userId);
+    }
+
     const returnUrl = validateReturnUrl(
-      await getCookie(LINE_LOGIN_COOKIE.returnUrl),
+      decodeReturnUrl(await getCookie(LINE_LOGIN_COOKIE.returnUrl)),
     );
     await clearFlowCookies();
 

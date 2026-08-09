@@ -15,7 +15,10 @@ describe("startLineLogin", () => {
 
   beforeEach(() => {
     setCookieMock.mockReset();
+    // .env の値を引き継ぐとテストが環境依存になるため、明示的に初期化する
     process.env = { ...originalEnv, NEXT_PUBLIC_LINE_CLIENT_ID: "test-client" };
+    process.env.NEXT_PUBLIC_LINE_BOT_PROMPT = undefined;
+    delete process.env.NEXT_PUBLIC_LINE_BOT_PROMPT;
   });
 
   afterEach(() => {

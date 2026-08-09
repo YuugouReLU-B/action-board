@@ -55,6 +55,12 @@ export const ARTIFACT_TYPES = {
     displayName: "リンクアクセス",
     prompt: "リンクをクリックするとミッションが達成されます。",
   },
+  LINE_FRIEND: {
+    key: "LINE_FRIEND",
+    displayName: "公式LINE友だち追加",
+    prompt:
+      "公式LINEを友だち追加すると達成になります。追加後に「追加を確認する」を押してください。",
+  },
   RESIDENTIAL_POSTER: {
     key: "RESIDENTIAL_POSTER",
     displayName: "私有地ポスター",
@@ -93,5 +99,6 @@ export type MissionRequiredArtifactType =
   | "REFERRAL"
   | "POSTING"
   | "POSTER"
+  | "LINE_FRIEND"
   | "RESIDENTIAL_POSTER"
   | "NONE";

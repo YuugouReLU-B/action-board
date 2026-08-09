@@ -219,6 +219,11 @@ const linkAccessArtifactSchema = baseMissionFormSchema.extend({
   requiredArtifactType: z.literal(ARTIFACT_TYPES.LINK_ACCESS.key),
 });
 
+// LINE_FRIENDタイプ用スキーマ（提出物なし。友だち状態はサーバーが判定する）
+const lineFriendArtifactSchema = baseMissionFormSchema.extend({
+  requiredArtifactType: z.literal(ARTIFACT_TYPES.LINE_FRIEND.key),
+});
+
 // 統合スキーマ
 const achieveMissionFormSchema = z.discriminatedUnion("requiredArtifactType", [
   linkArtifactSchema,
@@ -232,6 +237,7 @@ const achieveMissionFormSchema = z.discriminatedUnion("requiredArtifactType", [
   residentialPosterArtifactSchema,
   quizArtifactSchema,
   linkAccessArtifactSchema,
+  lineFriendArtifactSchema,
 ]);
 
 export type AchieveMissionFormData = z.infer<typeof achieveMissionFormSchema>;

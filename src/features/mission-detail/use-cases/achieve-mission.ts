@@ -323,7 +323,8 @@ export async function achieveMission(
   if (
     artifactType &&
     artifactType !== ARTIFACT_TYPES.NONE.key &&
-    artifactType !== ARTIFACT_TYPES.LINK_ACCESS.key
+    artifactType !== ARTIFACT_TYPES.LINK_ACCESS.key &&
+    artifactType !== ARTIFACT_TYPES.LINE_FRIEND.key
   ) {
     const artifactFields = buildArtifactPayload(artifactType, artifactData);
     const artifactTypeLabel = getArtifactTypeLabel(artifactType);

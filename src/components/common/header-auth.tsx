@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { OnboardingButton } from "@/features/onboarding/components/onboarding-button";
 import MyAvatar from "@/features/user-profile/components/my-avatar";
 import { getUser } from "@/features/user-profile/services/profile";
 
@@ -37,35 +36,12 @@ export default async function AuthButton() {
           <DropdownMenuItem asChild>
             <Link href={`/users/${user.id}`}>マイページ</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/map/posting">ポスティングマップ</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/map/poster">ポスター掲示板マップ</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/map/poster-residential">私有地ポスターマップ</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <OnboardingButton
-              variant="link"
-              className="w-full justify-start p-0 h-auto text-sm"
-            >
-              浜通りクエストとは？
-            </OnboardingButton>
-          </DropdownMenuItem>
-          {/*
-          <DropdownMenuItem asChild>
-            <Link href="/missions">ミッション</Link>
-          </DropdownMenuItem>
-          */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link href="/settings/profile">アカウント</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>お知らせ</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <form action={signOutAction}>

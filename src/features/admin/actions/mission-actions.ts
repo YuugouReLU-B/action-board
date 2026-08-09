@@ -172,3 +172,56 @@ export async function issueMissionQrCode(
   revalidatePath(`/admin/missions/${missionId}`);
   return { success: true, missionId };
 }
+
+/**
+ * ミッションを複製する。
+ *
+ * イベントごとにQRチェックインを作るとき、毎回フォームを埋め直すのは手間。
+ * 複製してタイトルと日付だけ書き換える運用を想定している。
+ *
+ * **QRコードは引き継がない。** 同じコードを2つのスポットに配ると、
+ * どちらを読んでも同じミッションが達成されてしまう。
+ * 複製先では改めて発行する。
+ */
+export async function duplicateMission(
+  missionId: string,
+): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const supabase = await createAdminClient();
+  const { data: source, error: fetchError } = await supabase
+    .from("missions")
+    .select("*")
+    .eq("id", missionId)
+    .single();
+
+  if (fetchError || !source) {
+    return { success: false, error: "複製元のミッションが見つかりません" };
+  }
+
+  const id = crypto.randomUUID();
+  const {
+    id: _id,
+    created_at: _createdAt,
+    updated_at: _updatedAt,
+    ...rest
+  } = source;
+
+  const { error } = await supabase.from("missions").insert({
+    ...rest,
+    id,
+    // slug は一意なので必ず変える。作成時刻で衝突を避ける
+    slug: `${source.slug}-copy-${Date.now()}`,
+    title: `${source.title}（コピー）`,
+    // 内容を確認してから公開させる
+    is_hidden: true,
+  });
+
+  if (error) {
+    console.error("ミッションの複製に失敗:", error);
+    return { success: false, error: `複製に失敗しました: ${error.message}` };
+  }
+
+  revalidatePath("/admin/missions");
+  return { success: true, missionId: id };
+}

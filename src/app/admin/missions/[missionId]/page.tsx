@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { updateMission } from "@/features/admin/actions/mission-actions";
+import { DuplicateMissionButton } from "@/features/admin/components/duplicate-mission-button";
 import { MissionForm } from "@/features/admin/components/mission-form";
 import { QrCodePanel } from "@/features/admin/components/qr-code-panel";
 import { getMissionForAdmin } from "@/features/admin/services/admin-missions";
@@ -57,7 +58,10 @@ export default async function EditMissionPage({ params }: PageProps) {
       )}
 
       <div>
-        <h3 className="mb-3 text-base font-bold">内容</h3>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <h3 className="text-base font-bold">内容</h3>
+          <DuplicateMissionButton missionId={mission.id} />
+        </div>
         <MissionForm
           mission={mission}
           action={updateMission.bind(null, mission.id)}

@@ -45,7 +45,12 @@ export default async function AuthButton() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <form action={signOutAction}>
-          <DropdownMenuItem>
+          {/*
+            asChild でボタン自体をメニュー項目にする。ボタンを項目の「中」に
+            置くと、キーボードのEnterはRadixが項目側で処理してしまい、
+            送信ボタンまで届かずログアウトできない
+          */}
+          <DropdownMenuItem asChild>
             <button
               type="submit"
               className="w-full text-left cursor-default"

@@ -1,6 +1,6 @@
 "use server";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { LineApiClientImpl } from "@/features/auth/services/line-api-client";
@@ -14,6 +14,7 @@ import { getCurrentSeasonId } from "@/lib/services/seasons";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 import { createClient } from "@/lib/supabase/client";
 import { validateAge } from "@/lib/utils/age-validation";
+import { isSupabaseAuthCookie } from "@/lib/utils/auth-cookies";
 import { deleteCookie, getCookie } from "@/lib/utils/server-cookies";
 import { calculateAge, encodedRedirect } from "@/lib/utils/utils";
 import {
@@ -198,8 +199,29 @@ export const resetPasswordAction = async (formData: FormData) => {
   encodedRedirect("success", "/sign-in", "パスワードを更新しました");
 };
 
+/**
+ * ログアウトする。
+ *
+ * `signOut()` はリフレッシュトークンの失効をAuth APIに投げるので、通信に
+ * 失敗したりトークンが既に切れていると失敗しうる。**それでもこの端末からは
+ * ログアウトさせなければならない。** 失敗を握って何も起きないと、利用者から
+ * 見ればログアウトボタンが壊れているのと同じなので、cookieは必ず消す。
+ */
 export const signOutAction = async () => {
   const supabase = createClient();
-  await supabase.auth.signOut();
-  return redirect("/sign-in");
+
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error("セッションの失効に失敗しました:", error);
+  }
+
+  // signOut() が cookie を消せていなかった場合の取りこぼしを拾う
+  const cookieStore = await cookies();
+  for (const cookie of cookieStore.getAll()) {
+    if (isSupabaseAuthCookie(cookie.name)) {
+      cookieStore.delete({ name: cookie.name, path: "/" });
+    }
+  }
+
+  redirect("/sign-in");
 };

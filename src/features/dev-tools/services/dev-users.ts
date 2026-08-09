@@ -1,5 +1,6 @@
 import "server-only";
 
+import { LINE_FRIEND_METADATA_KEY } from "@/features/auth/utils/line-friend";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 
 export type DevUser = {
@@ -45,8 +46,8 @@ export async function listUsersForDevTools(): Promise<DevUser[]> {
         provider: (metadata.provider as string) ?? "email",
         lineUserId: (metadata.line_user_id as string) ?? null,
         isOfficialAccountFriend:
-          typeof metadata.line_official_account_friend === "boolean"
-            ? metadata.line_official_account_friend
+          typeof metadata[LINE_FRIEND_METADATA_KEY] === "boolean"
+            ? (metadata[LINE_FRIEND_METADATA_KEY] as boolean)
             : null,
         name: profileMap.get(user.id) ?? null,
         hasProfile: profileMap.has(user.id),

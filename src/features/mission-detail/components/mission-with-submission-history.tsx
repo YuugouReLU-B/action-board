@@ -3,6 +3,7 @@
 import type { User } from "@supabase/supabase-js";
 import { useState } from "react";
 import { CopyReferralButton } from "@/features/mission-detail/components/copy-referral-button";
+import { MissionAchievedPanel } from "@/features/mission-detail/components/mission-achieved-panel";
 import { MissionFormWrapper } from "@/features/mission-detail/components/mission-form-wrapper";
 import QRCodeDisplay from "@/features/mission-detail/components/qr-code-display";
 import { SubmissionHistoryWrapper } from "@/features/mission-detail/components/submission-history-wrapper";
@@ -116,14 +117,19 @@ export function MissionWithSubmissionHistory({
           </div>
         )}
 
-      {mission.required_artifact_type === ARTIFACT_TYPES.LINE_FRIEND.key && (
-        <div className="bg-white rounded-xl border-2 p-6">
-          <LineFriendForm
-            addFriendUrl={mainLink?.link}
-            returnUrl={`/missions/${mission.slug}`}
-          />
-        </div>
-      )}
+      {mission.required_artifact_type === ARTIFACT_TYPES.LINE_FRIEND.key &&
+        (hasReachedUserMaxAchievements ? (
+          // 達成済みなのに「友だち追加する」を出し続けると、
+          // 下の達成履歴と矛盾して何をすればいいのか分からなくなる
+          <MissionAchievedPanel missionSlug={mission.slug} />
+        ) : (
+          <div className="bg-white rounded-xl border-2 p-6">
+            <LineFriendForm
+              addFriendUrl={mainLink?.link}
+              returnUrl={`/missions/${mission.slug}`}
+            />
+          </div>
+        ))}
 
       {mission.required_artifact_type !== "REFERRAL" &&
         mission.required_artifact_type !== ARTIFACT_TYPES.LINE_FRIEND.key && (

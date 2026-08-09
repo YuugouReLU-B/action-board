@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { LINE_FRIEND_METADATA_KEY } from "@/features/auth/utils/line-friend";
 import { parseIdTokenPayload } from "@/lib/utils/jwt-utils";
 import type { LineApiClient } from "../types/line-api-client";
 
@@ -28,7 +29,7 @@ export type LineLoginResult =
 function buildFriendshipMetadata(isFriend: boolean | null) {
   if (isFriend === null) return {};
   return {
-    line_official_account_friend: isFriend,
+    [LINE_FRIEND_METADATA_KEY]: isFriend,
     line_friendship_checked_at: new Date().toISOString(),
   };
 }

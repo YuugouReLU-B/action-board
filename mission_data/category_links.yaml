@@ -8,6 +8,8 @@ category_links:
       - mission_slug: follow-hamadori-x
         sort_no: 100
       - mission_slug: follow-hamadori-instagram
+        sort_no: 150
+      - mission_slug: follow-hamadori-facebook
         sort_no: 200
       - mission_slug: follow-hamadori-note
         sort_no: 300

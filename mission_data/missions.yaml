@@ -957,16 +957,28 @@ missions:
     artifact_label: あなたのXアカウント名
     ogp_image_url: null
   - slug: follow-hamadori-instagram
-    title: Instagramで浜通りクエストをフォローしよう
+    title: Instagramをフォローしよう
     icon_url: /img/mission-icons/actionboard_icon_work_20250713_ol_instagram-like.svg
-    content: 公式Instagramをフォローして、浜通りの風景やイベントの様子をチェックしよう。フォローしたらあなたのアカウント名を入力してください。
+    content: 浜通りサークルの公式Instagram（@hamadoori_circle）をフォローして、浜通りの風景やイベントの様子をチェックしよう。フォローしたらあなたのアカウント名を入力してください。
     difficulty: 1
     required_artifact_type: TEXT
     points: 50
     max_achievement_count: 1
     is_featured: false
-    is_hidden: true
+    is_hidden: false
     artifact_label: あなたのInstagramアカウント名
+    ogp_image_url: null
+  - slug: follow-hamadori-facebook
+    title: Facebookをフォローしよう
+    icon_url: /img/icon-facebook2x.png
+    content: 浜通りサークルの公式Facebookページをフォローして、イベントの告知や活動の報告を受け取ろう。フォローしたらあなたのアカウント名を入力してください。
+    difficulty: 1
+    required_artifact_type: TEXT
+    points: 50
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: false
+    artifact_label: あなたのFacebookアカウント名
     ogp_image_url: null
   - slug: follow-hamadori-note
     title: noteで浜通りクエストをフォローしよう

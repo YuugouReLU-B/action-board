@@ -35,3 +35,9 @@ mission_main_links:
   - mission_slug: watch-anno-welcome-message
     label: ウェルカムメッセージを見る
     link: https://youtu.be/3PFAAYKz_70
+  - mission_slug: follow-hamadori-instagram
+    label: Instagramを開く
+    link: https://www.instagram.com/hamadoori_circle/
+  - mission_slug: follow-hamadori-facebook
+    label: Facebookページを開く
+    link: https://www.facebook.com/profile.php?id=61564139826752

@@ -8,6 +8,7 @@ const TABS = [
   { href: "/dev", label: "ページ一覧" },
   { href: "/dev/missions", label: "ミッション一覧" },
   { href: "/dev/design", label: "デザインの差し替え" },
+  { href: "/dev/login", label: "開発用ログイン" },
 ] as const;
 
 export function DevTabs() {

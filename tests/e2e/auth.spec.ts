@@ -77,75 +77,6 @@ test.describe("新しい認証フロー (Two-Step Signup)", () => {
     await expect(page.getByRole("button", { name: "次へ進む" })).toBeEnabled();
   });
 
-  test("Email Sign-up フォームの入力バリデーション", async ({ page }) => {
-    // 事前にsessionStorageを設定（通常のフローをシミュレート）
-    await page.addInitScript(() => {
-      sessionStorage.setItem(
-        "signupData",
-        JSON.stringify({
-          dateOfBirth: "2001-03-14",
-          referralCode: null,
-        }),
-      );
-    });
-
-    // Email入力ページに直接移動
-    await page.goto("/sign-up-email");
-
-    // 1. 必要な要素が表示されていることを確認
-    await expect(
-      page.getByRole("heading", { name: "メールアドレスとパスワードを入力" }),
-    ).toBeVisible();
-    await expect(
-      page.getByText("メールアドレス", { exact: true }),
-    ).toBeVisible();
-    await expect(page.getByText("パスワード", { exact: true })).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: "アカウントを作成" }),
-    ).toBeVisible();
-
-    // 2. 空の入力ではアカウント作成ボタンが無効化されていることを確認
-    await expect(
-      page.getByRole("button", { name: "アカウントを作成" }),
-    ).toBeDisabled();
-
-    // 3. メールのみを入力して無効化されていることを確認
-    await page.fill('input[name="email"]', "test@example.com");
-    await expect(
-      page.getByRole("button", { name: "アカウントを作成" }),
-    ).toBeDisabled();
-
-    // 4. パスワードのみを入力して無効化されていることを確認
-    await page.fill('input[name="email"]', "");
-    await page.fill('input[name="password"]', "password123");
-    await expect(
-      page.getByRole("button", { name: "アカウントを作成" }),
-    ).toBeDisabled();
-
-    // 5. 両方入力すると有効化されることを確認
-    await page.fill('input[name="email"]', "test@example.com");
-    await page.fill('input[name="password"]', "TestPassword123!");
-    await expect(
-      page.getByRole("button", { name: "アカウントを作成" }),
-    ).toBeEnabled();
-  });
-
-  test("sessionStorageなしでemail-signupページにアクセスすると/sign-upにリダイレクトされる", async ({
-    page,
-  }) => {
-    // sessionStorageを空にする
-    await page.evaluate(() => sessionStorage.clear());
-
-    // Email入力ページに直接移動を試みる
-    await page.goto("/sign-up-email");
-
-    // /sign-upページにリダイレクトされることを確認
-    await page.waitForURL("/sign-up", { timeout: 5000 });
-    await expect(
-      page.getByRole("heading", { name: "アクションボードに登録" }),
-    ).toBeVisible();
-  });
-
   test("Two-Step Signupページの表示と入力検証", async ({ page }) => {
     // サインアップページに移動
     await page.goto("/sign-up");
@@ -187,107 +118,43 @@ test.describe("新しい認証フロー (Two-Step Signup)", () => {
     await expect(page.getByRole("button", { name: "次へ進む" })).toBeEnabled();
   });
 
-  test("Email Sign-up フォームの表示と入力検証", async ({ page }) => {
-    // 事前にsessionStorageを設定（通常のフローをシミュレート）
-    await page.addInitScript(() => {
-      sessionStorage.setItem(
-        "signupData",
-        JSON.stringify({
-          dateOfBirth: "2001-03-14",
-          referralCode: null,
-        }),
-      );
-    });
-
-    // Email入力ページに直接移動
-    await page.goto("/sign-up-email");
-
-    // 1. 必要な要素が表示されていることを確認
-    await expect(
-      page.getByRole("heading", { name: "メールアドレスとパスワードを入力" }),
-    ).toBeVisible();
-    await expect(
-      page.getByText("メールアドレス", { exact: true }),
-    ).toBeVisible();
-    await expect(page.getByText("パスワード", { exact: true })).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: "アカウントを作成" }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("link", { name: "他の方法でアカウント作成" }),
-    ).toBeVisible();
-
-    // 2. 空の入力ではアカウント作成ボタンが無効化されていることを確認
-    await expect(
-      page.getByRole("button", { name: "アカウントを作成" }),
-    ).toBeDisabled();
-
-    // 3. メールのみを入力して無効化されていることを確認
-    await page.fill('input[name="email"]', "test@example.com");
-    await expect(
-      page.getByRole("button", { name: "アカウントを作成" }),
-    ).toBeDisabled();
-
-    // 4. パスワードのみを入力して無効化されていることを確認
-    await page.fill('input[name="email"]', "");
-    await page.fill('input[name="password"]', "password123");
-    await expect(
-      page.getByRole("button", { name: "アカウントを作成" }),
-    ).toBeDisabled();
-
-    // 5. 両方入力すると有効化されることを確認
-    await page.fill('input[name="email"]', "test@example.com");
-    await page.fill('input[name="password"]', "TestPassword123!");
-    await expect(
-      page.getByRole("button", { name: "アカウントを作成" }),
-    ).toBeEnabled();
-  });
-
-  test("サインインページの表示と入力検証", async ({ page }) => {
+  test("サインインページはLINEログインのみを表示する", async ({ page }) => {
     // サインインページに移動
     await page.goto("/sign-in");
 
-    // 1. 必要な要素が表示されていることを確認
+    // 1. LINEログインボタンのみが表示されていることを確認
     await expect(page.getByRole("heading", { name: "ログイン" })).toBeVisible();
-    await expect(
-      page.getByText("メールアドレス", { exact: true }),
-    ).toBeVisible();
-    await expect(page.getByText("パスワード", { exact: true })).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: "ログイン", exact: true }),
-    ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "LINEでログイン" }),
     ).toBeVisible();
-    await expect(page.getByRole("link", { name: "こちら" })).toBeVisible();
+
+    // 2. メールアドレス+パスワードのログインは /dev/login に分離済み
+    await expect(
+      page.getByText("メールアドレス", { exact: true }),
+    ).toBeHidden();
+    await expect(page.getByText("パスワード", { exact: true })).toBeHidden();
+    await expect(
+      page.getByRole("button", { name: "ログイン", exact: true }),
+    ).toBeHidden();
     await expect(
       page.getByRole("link", { name: "パスワードを忘れた方" }),
+    ).toBeHidden();
+  });
+
+  test("開発用ログインページでメールアドレスログインができる", async ({
+    page,
+  }) => {
+    await page.goto("/dev/login");
+
+    await expect(
+      page.getByRole("heading", { name: "開発用ログイン" }),
     ).toBeVisible();
 
-    // 2. 空の入力で送信するとエラーになることを確認
-    await page.getByRole("button", { name: "ログイン", exact: true }).click();
-    // HTML5のバリデーションによりサブミットされないことを確認
-    await expect(page).toHaveURL("/sign-in");
-
-    // 3. メールのみを入力してエラーになることを確認
-    await page.fill('input[name="email"]', "test@example.com");
-    await page.getByRole("button", { name: "ログイン", exact: true }).click();
-    // HTML5のバリデーションによりサブミットされないことを確認
-    await expect(page).toHaveURL("/sign-in");
-
-    // 4. パスワードのみを入力してエラーになることを確認
-    await page.fill('input[name="email"]', "");
-    await page.fill('input[name="password"]', "password123");
-    await page.getByRole("button", { name: "ログイン", exact: true }).click();
-    // HTML5のバリデーションによりサブミットされないことを確認
-    await expect(page).toHaveURL("/sign-in");
-
-    // 5. 不正な認証情報でエラーメッセージが表示されることを確認
+    // 不正な認証情報でエラーメッセージが表示されることを確認
     await page.fill('input[name="email"]', "nonexistent@example.com");
     await page.fill('input[name="password"]', "wrongpassword");
     await page.getByRole("button", { name: "ログイン", exact: true }).click();
 
-    // エラーメッセージが表示されることを確認（タイミングによって表示される内容が異なる可能性があるため、一般的な検証）
     await expect(page.locator('[role="alert"]')).toBeVisible({ timeout: 5000 });
   });
 

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CollapsibleInfo } from "@/components/common/collapsible-info";
 import { FormMessage, type Message } from "@/components/common/form-message";
@@ -215,7 +214,6 @@ function LoginSelectionPhase({
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   const handleLINELogin = async () => {
     try {
@@ -254,36 +252,6 @@ function LoginSelectionPhase({
         className="w-full h-12 bg-[var(--app-vendor-line-green)] hover:bg-[var(--app-vendor-line-green-hover)] text-white"
       >
         {isLoading ? "LINE連携中..." : "LINEでアカウント作成"}
-      </Button>
-
-      <div className="relative my-4">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            または
-          </span>
-        </div>
-      </div>
-
-      {/* Email + Passwordフォームへのリンク */}
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full h-12"
-        onClick={() => {
-          // sessionStorageにデータを保存
-          sessionStorage.setItem(
-            "signupData",
-            JSON.stringify({
-              dateOfBirth: formattedDate,
-            }),
-          );
-          router.push("/sign-up-email");
-        }}
-      >
-        メールアドレスとパスワードで作成
       </Button>
 
       <Button

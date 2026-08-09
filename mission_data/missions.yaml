@@ -284,7 +284,7 @@ missions:
     max_achievement_count: null
     is_featured: true
     featured_importance: 100
-    is_hidden: false
+    is_hidden: true
     artifact_label: イベントの名前
     ogp_image_url: https://tibsocpjqvxxipszbwui.supabase.co/storage/v1/object/public/ogp//4_join_event.png
   - slug: referral
@@ -503,7 +503,7 @@ missions:
     required_artifact_type: TEXT
     max_achievement_count: null
     is_featured: false
-    is_hidden: false
+    is_hidden: true
     artifact_label: イベント名
     ogp_image_url: https://tibsocpjqvxxipszbwui.supabase.co/storage/v1/object/public/ogp//13_event_support.png
   - slug: instagram-like
@@ -941,7 +941,7 @@ missions:
     max_achievement_count: 1
     is_featured: true
     featured_importance: 200
-    is_hidden: false
+    is_hidden: true
     artifact_label: null
     ogp_image_url: null
   - slug: follow-hamadori-x
@@ -1006,4 +1006,89 @@ missions:
     is_featured: false
     is_hidden: false
     artifact_label: 投稿したポストのURL
+    ogp_image_url: null
+  # ── 仮のQRスポット（名前が決まったら管理画面で書き換える） ──
+  - slug: event-a
+    title: イベントAでチェックイン
+    icon_url: /img/mission-icons/actionboard_icon_work_20250713_ol_join-event.svg
+    content: |-
+      会場に掲示されているQRコードを読み取るとチェックイン完了です。
+      ※ 名前は仮です。実際のイベント名・店名が決まったら管理画面で書き換えます。
+    difficulty: 1
+    required_artifact_type: QR
+    points: 200
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: false
+    artifact_label: null
+    ogp_image_url: null
+  - slug: event-b
+    title: イベントBでチェックイン
+    icon_url: /img/mission-icons/actionboard_icon_work_20250713_ol_join-event.svg
+    content: |-
+      会場に掲示されているQRコードを読み取るとチェックイン完了です。
+      ※ 名前は仮です。実際のイベント名・店名が決まったら管理画面で書き換えます。
+    difficulty: 1
+    required_artifact_type: QR
+    points: 200
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: false
+    artifact_label: null
+    ogp_image_url: null
+  - slug: event-c
+    title: イベントCでチェックイン
+    icon_url: /img/mission-icons/actionboard_icon_work_20250713_ol_join-event.svg
+    content: |-
+      会場に掲示されているQRコードを読み取るとチェックイン完了です。
+      ※ 名前は仮です。実際のイベント名・店名が決まったら管理画面で書き換えます。
+    difficulty: 1
+    required_artifact_type: QR
+    points: 200
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: false
+    artifact_label: null
+    ogp_image_url: null
+  - slug: checkpoint-restaurant-a
+    title: 飲食店Aでチェックイン
+    icon_url: /img/mission_fallback.svg
+    content: |-
+      お店に掲示されているQRコードを読み取るとチェックイン完了です。
+      ※ 名前は仮です。実際の店名が決まったら管理画面で書き換えます。
+    difficulty: 1
+    required_artifact_type: QR
+    points: 100
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: false
+    artifact_label: null
+    ogp_image_url: null
+  - slug: checkpoint-restaurant-b
+    title: 飲食店Bでチェックイン
+    icon_url: /img/mission_fallback.svg
+    content: |-
+      お店に掲示されているQRコードを読み取るとチェックイン完了です。
+      ※ 名前は仮です。実際の店名が決まったら管理画面で書き換えます。
+    difficulty: 1
+    required_artifact_type: QR
+    points: 100
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: false
+    artifact_label: null
+    ogp_image_url: null
+  - slug: checkpoint-restaurant-c
+    title: 飲食店Cでチェックイン
+    icon_url: /img/mission_fallback.svg
+    content: |-
+      お店に掲示されているQRコードを読み取るとチェックイン完了です。
+      ※ 名前は仮です。実際の店名が決まったら管理画面で書き換えます。
+    difficulty: 1
+    required_artifact_type: QR
+    points: 100
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: false
+    artifact_label: null
     ogp_image_url: null

@@ -28,12 +28,19 @@ category_links:
         sort_no: 950
   - category_slug: attend-events
     missions:
-      - mission_slug: event-checkin
+      - mission_slug: event-a
         sort_no: 100
-      - mission_slug: join-event
+      - mission_slug: event-b
         sort_no: 200
-      - mission_slug: help-event-operation
+      - mission_slug: event-c
         sort_no: 300
+      # 以下は非表示。event-checkin は複製元のひな形として残している
+      - mission_slug: event-checkin
+        sort_no: 900
+      - mission_slug: join-event
+        sort_no: 910
+      - mission_slug: help-event-operation
+        sort_no: 920
   - category_slug: learn-about-teammirai
     missions:
       - mission_slug: link-official-site
@@ -71,6 +78,14 @@ category_links:
       - mission_slug: note-like
         sort_no: 200
       - mission_slug: instagram-like
+        sort_no: 300
+  - category_slug: visit-checkpoints
+    missions:
+      - mission_slug: checkpoint-restaurant-a
+        sort_no: 100
+      - mission_slug: checkpoint-restaurant-b
+        sort_no: 200
+      - mission_slug: checkpoint-restaurant-c
         sort_no: 300
   - category_slug: share-and-spread
     missions:

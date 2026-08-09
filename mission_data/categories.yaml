@@ -23,6 +23,10 @@ categories:
     title: いいねで応援しよう
     sort_no: 400
     category_kbn: DEFAULT
+  - slug: visit-checkpoints
+    title: チェックポイントを回ろう
+    sort_no: 160
+    category_kbn: DEFAULT
   - slug: share-and-spread
     title: 発信・拡散しよう
     sort_no: 180

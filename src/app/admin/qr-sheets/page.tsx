@@ -14,8 +14,10 @@ export default async function QrSheetsPage({ searchParams }: PageProps) {
   const { missionId } = await searchParams;
   const missions = await listMissionsForAdmin();
 
+  // 非表示のスポットは印刷しない。掲示しても読み取り時に
+  // 「いまは受付していません」になるだけで、貼っても意味がない
   const qrSpots = missions.filter(
-    (m) => m.required_artifact_type === ARTIFACT_TYPES.QR.key,
+    (m) => m.required_artifact_type === ARTIFACT_TYPES.QR.key && !m.is_hidden,
   );
   const target = missionId
     ? qrSpots.filter((m) => m.id === missionId)
@@ -37,7 +39,7 @@ export default async function QrSheetsPage({ searchParams }: PageProps) {
           <div>
             <h2 className="text-lg font-bold">QRシートの印刷</h2>
             <p className="mt-1 text-sm text-gray-600">
-              {missionId ? "このスポット" : "QRスポット全件"}で{" "}
+              {missionId ? "このスポット" : "公開中のQRスポット"}で{" "}
               {printable.length} 枚。1スポットにつき1枚で印刷されます。
             </p>
           </div>

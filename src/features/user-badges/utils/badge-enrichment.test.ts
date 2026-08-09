@@ -40,7 +40,6 @@ describe("mapMissionDataToBadges", () => {
     const badges: UserBadge[] = [
       makeBadge({ badge_type: "DAILY", sub_type: null }),
       makeBadge({ badge_type: "ALL", sub_type: null }),
-      makeBadge({ badge_type: "PREFECTURE", sub_type: "東京都" }),
     ];
     const missionMap = new Map([
       ["slug-a", { title: "ミッションA", id: "id-a" }],

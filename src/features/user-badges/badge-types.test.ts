@@ -32,15 +32,6 @@ describe("badge-types", () => {
         expect(getBadgeTitle(badge)).toBe("総合ランキング 1位");
       });
 
-      it("PREFECTURE: sub_type(都道府県名)ランキング + 順位を返す", () => {
-        const badge = createBadge({
-          badge_type: "PREFECTURE",
-          sub_type: "東京都",
-          rank: 3,
-        });
-        expect(getBadgeTitle(badge)).toBe("東京都ランキング 3位");
-      });
-
       it("MISSION: mission_titleがある場合はそれを使う", () => {
         const badge = createBadge({
           badge_type: "MISSION",
@@ -114,24 +105,6 @@ describe("badge-types", () => {
       it("ALL: /ranking?period=all を返す", () => {
         const badge = createBadge({ badge_type: "ALL" });
         expect(getBadgeRankingUrl(badge)).toBe("/ranking?period=all");
-      });
-
-      it("PREFECTURE: sub_typeがある場合はURLエンコードされた都道府県名を含む", () => {
-        const badge = createBadge({
-          badge_type: "PREFECTURE",
-          sub_type: "東京都",
-        });
-        expect(getBadgeRankingUrl(badge)).toBe(
-          `/ranking/ranking-prefecture?prefecture=${encodeURIComponent("東京都")}`,
-        );
-      });
-
-      it("PREFECTURE: sub_typeがnullの場合は汎用URLを返す", () => {
-        const badge = createBadge({
-          badge_type: "PREFECTURE",
-          sub_type: null,
-        });
-        expect(getBadgeRankingUrl(badge)).toBe("/ranking/ranking-prefecture");
       });
 
       it("MISSION: mission_idがある場合はそのIDを含むURLを返す", () => {

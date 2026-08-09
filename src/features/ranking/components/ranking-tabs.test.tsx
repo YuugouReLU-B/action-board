@@ -132,22 +132,6 @@ describe("RankingTabs", () => {
       expect(tabsContent).toHaveAttribute("data-value", "mission");
     });
 
-    it("都道府県別ランキングページの場合はprefectureが選択される", () => {
-      mockPathname.mockReturnValue("/ranking/ranking-prefecture");
-
-      render(
-        <RankingTabs>
-          <div>テストコンテンツ</div>
-        </RankingTabs>,
-      );
-
-      const tabs = screen.getByTestId("tabs");
-      expect(tabs).toHaveAttribute("data-value", "prefecture");
-
-      const tabsContent = screen.getByTestId("tabs-content");
-      expect(tabsContent).toHaveAttribute("data-value", "prefecture");
-    });
-
     it("ミッション別ランキングページのサブパスでもmissionが選択される", () => {
       mockPathname.mockReturnValue("/ranking/ranking-mission/some-mission");
 
@@ -161,8 +145,8 @@ describe("RankingTabs", () => {
       expect(tabs).toHaveAttribute("data-value", "mission");
     });
 
-    it("都道府県別ランキングページのサブパスでもprefectureが選択される", () => {
-      mockPathname.mockReturnValue("/ranking/ranking-prefecture/tokyo");
+    it("削除した都道府県別ランキングのパスはoverallに落ちる", () => {
+      mockPathname.mockReturnValue("/ranking/ranking-prefecture");
 
       render(
         <RankingTabs>
@@ -170,8 +154,10 @@ describe("RankingTabs", () => {
         </RankingTabs>,
       );
 
-      const tabs = screen.getByTestId("tabs");
-      expect(tabs).toHaveAttribute("data-value", "prefecture");
+      expect(screen.getByTestId("tabs")).toHaveAttribute(
+        "data-value",
+        "overall",
+      );
     });
 
     it("その他のパスの場合はoverallが選択される", () => {

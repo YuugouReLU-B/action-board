@@ -12,14 +12,11 @@ interface RankingTabsProps {
 export function RankingTabs({ children, seasonSlug }: RankingTabsProps) {
   const pathname = usePathname();
   const isMissionPage = pathname.includes("ranking-mission");
-  const isPrefecturePage = pathname.includes("ranking-prefecture");
 
   // パスに基づいてタブの値を決定
   const getTabValue = () => {
     if (isMissionPage || pathname.includes("/ranking/mission"))
       return "mission";
-    if (isPrefecturePage || pathname.includes("/ranking/prefecture"))
-      return "prefecture";
     return "overall";
   };
 
@@ -30,8 +27,6 @@ export function RankingTabs({ children, seasonSlug }: RankingTabsProps) {
       switch (tab) {
         case "overall":
           return `/seasons/${seasonSlug}/ranking`;
-        case "prefecture":
-          return `/seasons/${seasonSlug}/ranking/prefecture`;
         case "mission":
           return `/seasons/${seasonSlug}/ranking/mission`;
         default:
@@ -42,8 +37,6 @@ export function RankingTabs({ children, seasonSlug }: RankingTabsProps) {
     switch (tab) {
       case "overall":
         return "/ranking";
-      case "prefecture":
-        return "/ranking/ranking-prefecture";
       case "mission":
         return "/ranking/ranking-mission";
       default:

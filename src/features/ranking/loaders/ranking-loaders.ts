@@ -10,10 +10,6 @@ import {
   getUserPostingCount as getUserPostingCountService,
 } from "../services/get-missions-ranking";
 import {
-  getPrefecturesRanking as getPrefecturesRankingService,
-  getUserPrefecturesRanking as getUserPrefecturesRankingService,
-} from "../services/get-prefectures-ranking";
-import {
   getRanking as getRankingService,
   getUserPeriodRanking as getUserPeriodRankingService,
 } from "../services/get-ranking";
@@ -80,28 +76,4 @@ export async function getTopUsersPostingCountByMission(
   seasonId?: string,
 ) {
   return getTopUsersPostingCountByMissionService(userIds, missionId, seasonId);
-}
-
-export async function getPrefecturesRanking(
-  prefecture: string,
-  limit?: number,
-  period?: RankingPeriod,
-  seasonId?: string,
-) {
-  return getPrefecturesRankingService(prefecture, limit, period, seasonId);
-}
-
-export async function getUserPrefecturesRanking(
-  prefecture: string,
-  seasonId?: string,
-  period?: RankingPeriod,
-) {
-  const user = await getUser();
-  if (!user) return null;
-  return getUserPrefecturesRankingService(
-    prefecture,
-    user.id,
-    seasonId,
-    period,
-  );
 }

@@ -205,15 +205,8 @@ function LoginSelectionPhase({
     try {
       setIsLoading(true);
       setError(null);
-      // ローカルストレージにサインアップデータを保存（モバイル対応）
-      localStorage.setItem(
-        "lineLoginData",
-        JSON.stringify({
-          dateOfBirth: formattedDate,
-        }),
-      );
-
-      await signInWithLine();
+      // 生年月日はサーバー側で HttpOnly cookie に退避される（startLineLogin）
+      await signInWithLine(undefined, formattedDate);
     } catch (error) {
       setIsLoading(false);
       setError("LINE連携に失敗しました。もう一度お試しください。");

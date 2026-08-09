@@ -158,64 +158,69 @@ test.describe("新しい認証フロー (Two-Step Signup)", () => {
     await expect(page.locator('[role="alert"]')).toBeVisible({ timeout: 5000 });
   });
 
-  test("LINEサインアップボタンクリックでLINE認証が開始される", async ({
+  test("LINEサインアップボタンから正しいauthorize URLへ遷移する", async ({
     page,
   }) => {
-    // 1. サインアップページに移動
+    // LINE への実通信は行わず、遷移先URLだけを検証する
+    const captured: { url?: URL } = {};
+    await page.route("https://access.line.me/**", async (route) => {
+      captured.url = new URL(route.request().url());
+      await route.fulfill({ status: 200, body: "stub" });
+    });
+
     await page.goto("/sign-up");
 
-    // 2. フェーズ1: 生年月日と同意情報を入力
-    const year4 = page.getByTestId("year_select");
-    await year4.press("Enter");
+    const year = page.getByTestId("year_select");
+    await year.press("Enter");
     await page.getByRole("option", { name: "2001年" }).click();
 
-    const month4 = page.getByTestId("month_select");
-    await month4.press("Enter");
+    const month = page.getByTestId("month_select");
+    await month.press("Enter");
     await page.getByRole("option", { name: "3月" }).click();
 
-    const day4 = page.getByTestId("day_select");
-    await day4.press("Enter");
+    const day = page.getByTestId("day_select");
+    await day.press("Enter");
     await page.getByRole("option", { name: "14日" }).click();
 
-    // 利用規約・プライバシーポリシーに同意
     await page.locator("#terms").click();
-
-    // 次へ進む
     await page.getByRole("button", { name: "次へ進む" }).click();
 
-    // 3. フェーズ2: LINEログイン選択ページが表示されることを確認
     await expect(
       page.getByRole("button", { name: "LINEでアカウント作成" }),
     ).toBeVisible();
 
-    // 4. sessionStorageの状態を確認
-    const sessionData = await page.evaluate(() => {
-      return sessionStorage.getItem("signupData");
-    });
-    console.log("Session data before LINE click:", sessionData);
-
-    // 5. ナビゲーション検出用のイベントリスナーを設定
-    let navigationDetected = false;
-    page.on("framenavigated", () => {
-      navigationDetected = true;
-      console.log("Navigation detected to:", page.url());
-    });
-
-    // 6. LINEボタンをクリック
     await page.getByRole("button", { name: "LINEでアカウント作成" }).click();
 
-    // 8. 結果を確認
-    const currentUrl = page.url();
-    console.log("Current URL after LINE button click:", currentUrl);
-    console.log("Navigation was detected:", navigationDetected);
+    await expect
+      .poll(() => captured.url?.pathname, { timeout: 15000 })
+      .toBe("/oauth2/v2.1/authorize");
 
-    // LINE認証が開始されるか、エラーページに移動することを確認
-    // 実際のLINE認証ページまたはエラー処理のいずれかが発生することを期待
-    const isLineAuth =
-      currentUrl.includes("access.line.me") || currentUrl.includes("line.me");
-    const isErrorOrLocal =
-      currentUrl.includes("localhost") || currentUrl.includes("error");
+    const params = captured.url?.searchParams;
+    expect(params?.get("response_type")).toBe("code");
+    expect(params?.get("state")).toBeTruthy();
+    // 個人情報を増やさないため email スコープは要求しない
+    expect(params?.get("scope")).toBe("profile openid");
+    // authorize と token 交換で redirect_uri がズレると invalid_grant になる
+    expect(params?.get("redirect_uri")).toContain("/api/auth/line-callback");
 
-    expect(isLineAuth || isErrorOrLocal).toBe(true);
+    // state はサーバー側で HttpOnly cookie に保存され、
+    // ブラウザのJSからは読めない（旧実装は localStorage に置いていた）
+    const cookies = await page.context().cookies();
+    const stateCookie = cookies.find((c) => c.name === "line_login_state");
+    expect(stateCookie?.httpOnly).toBe(true);
+    expect(stateCookie?.value).toBe(params?.get("state"));
+
+    const localStorageState = await page.evaluate(() =>
+      localStorage.getItem("lineLoginState"),
+    );
+    expect(localStorageState).toBeNull();
+  });
+
+  test("stateが一致しないコールバックは拒否される", async ({ page }) => {
+    // cookie を持たない状態で直接コールバックを叩く
+    await page.goto("/api/auth/line-callback?code=dummy&state=forged");
+
+    await expect(page).toHaveURL(/\/sign-in\?error=/);
+    await expect(page.getByText(/認証状態が無効です/)).toBeVisible();
   });
 });

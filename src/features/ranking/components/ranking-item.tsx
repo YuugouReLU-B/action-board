@@ -32,10 +32,9 @@ export function RankingItem({
       {getRankIcon(user.rank ?? 0)}
       <div className="min-w-0 pl-1">
         <UserName name={user.name ?? ""} nameClassName="font-bold text-lg" />
+        {/* 都道府県は表示しない。浜通り向けでは意味が薄いうえ、
+            未選択の人が北海道として並んでしまっていた */}
         <div className="flex items-center gap-1 mt-0.5">
-          <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
-            {user.address_prefecture}
-          </span>
           <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
             Lv.{user.level}
           </span>

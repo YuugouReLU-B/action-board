@@ -110,7 +110,8 @@ describe("RankingItem", () => {
       render(<RankingItem user={mockUserRanking} />);
 
       expect(screen.getByText("テストユーザー")).toBeInTheDocument();
-      expect(screen.getByText("東京都")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("東京都")).not.toBeInTheDocument();
       expect(screen.getByText("Lv.15")).toBeInTheDocument();
       expect(screen.getByText("1,500pt")).toBeInTheDocument();
       expect(mockUserName).toHaveBeenCalledWith(
@@ -195,7 +196,8 @@ describe("RankingItem", () => {
         />,
       );
 
-      expect(screen.getByText("東京都")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("東京都")).not.toBeInTheDocument();
       expect(screen.getByText("Lv.15")).toBeInTheDocument();
     });
 
@@ -245,7 +247,8 @@ describe("RankingItem", () => {
       const user = { ...mockUserRanking, level: null };
       render(<RankingItem user={user} />);
 
-      expect(screen.getByText("東京都")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("東京都")).not.toBeInTheDocument();
       expect(screen.getByText("Lv.")).toBeInTheDocument();
     });
   });

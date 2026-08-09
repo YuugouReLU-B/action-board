@@ -59,9 +59,6 @@ export function ActivityTimeline({
           {/* 活動内容の表示 */}
           <div className="flex flex-col gap-1">
             <div className="flex flex-wrap items-center text-sm">
-              {activity.address_prefecture ? (
-                <span>{activity.address_prefecture}の</span>
-              ) : null}
               <UserName
                 name={`${activity.name ?? ""}さん`}
                 className="gap-0.5 mr-1"

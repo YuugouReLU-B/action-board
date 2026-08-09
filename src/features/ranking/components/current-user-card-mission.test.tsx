@@ -110,7 +110,8 @@ describe("CurrentUserCardMission", () => {
       );
 
       expect(screen.getByText("テストユーザー")).toBeInTheDocument();
-      expect(screen.getByText("東京都")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("東京都")).not.toBeInTheDocument();
       expect(screen.getByText("1,500pt")).toBeInTheDocument();
       expect(screen.getByText("3")).toBeInTheDocument();
       expect(mockUserName).toHaveBeenCalledWith(
@@ -255,7 +256,8 @@ describe("CurrentUserCardMission", () => {
         />,
       );
 
-      expect(screen.getByText("未設定")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("未設定")).not.toBeInTheDocument();
     });
 
     it("空のバッジテキストが処理される", () => {

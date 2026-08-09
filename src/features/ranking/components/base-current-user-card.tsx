@@ -56,10 +56,8 @@ export const BaseCurrentUserCard: React.FC<BaseCurrentUserCardProps> = ({
                   name={displayUser.name}
                   nameClassName="font-semibold text-gray-900"
                 />
+                {/* 都道府県は表示しない（ranking-item と同じ理由） */}
                 <div className="flex items-center gap-1 mt-0.5">
-                  <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
-                    {displayUser.address_prefecture}
-                  </span>
                   {level != null && (
                     <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
                       Lv.{level}

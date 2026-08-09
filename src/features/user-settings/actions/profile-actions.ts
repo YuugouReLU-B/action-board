@@ -7,6 +7,7 @@ import {
   shouldDeleteOldAvatar,
   validateAvatarFile,
 } from "@/features/user-settings/utils/avatar-helpers";
+import { PREFECTURE_NOT_SELECTED } from "@/lib/constants/prefectures";
 import { sendWelcomeMail } from "@/lib/services/mail";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 import { createClient } from "@/lib/supabase/client";
@@ -47,8 +48,9 @@ export async function updateProfile(
 
   // フォームデータの取得
   const name = formData.get("name")?.toString() ?? "";
+  const rawPrefecture = formData.get("address_prefecture")?.toString() ?? "";
   const address_prefecture =
-    formData.get("address_prefecture")?.toString() ?? "";
+    rawPrefecture === PREFECTURE_NOT_SELECTED ? "" : rawPrefecture;
   const date_of_birth = formData.get("date_of_birth")?.toString() ?? "";
   const x_username = formData.get("x_username")?.toString() || "";
   const github_username = formData.get("github_username")?.toString() || "";

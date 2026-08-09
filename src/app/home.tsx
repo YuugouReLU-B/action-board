@@ -7,6 +7,7 @@ import FirstMissions from "@/features/missions/components/first-missions";
 import MissionsByCategory from "@/features/missions/components/missions-by-category";
 import { hasFeaturedMissions } from "@/features/missions/services/missions";
 import RankingSection from "@/features/ranking/components/ranking-section";
+import { SpotMapEntry } from "@/features/spot-map/components/spot-map-entry";
 import Activities from "@/features/user-activity/components/activities";
 import { getUnnotifiedBadges } from "@/features/user-badges/services/get-unnotified-badges";
 import { BadgeNotificationCheck } from "@/features/user-badges-notification/components/badge-notification-check";
@@ -109,6 +110,12 @@ export default async function Home({
 
         {/* ミッションセクション */}
       </div>
+
+      {/* スポットマップへの入口（地図に出せるスポットが無いときは出ない） */}
+      <div className="py-6">
+        <SpotMapEntry userId={user?.id} />
+      </div>
+
       <section className="py-12 md:py-16 bg-background">
         <MissionsByCategory
           userId={user?.id}

@@ -145,6 +145,10 @@
     --app-map-location-fill: #60a5fa;
     --app-map-spider-leg: #222222;
 
+    /* --- 地図: スポットマップのピン -------------------------- */
+    --app-map-spot-todo: #ef4444;
+    --app-map-spot-done: #10b981;
+
     /* --- 地図: ポスター掲示板ステータス ---------------------- */
     --app-poster-not-yet: #6b7280;
     --app-poster-reserved: #f59e0b;

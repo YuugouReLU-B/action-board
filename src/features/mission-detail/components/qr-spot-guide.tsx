@@ -1,7 +1,9 @@
-import { MapPin, QrCode } from "lucide-react";
+import { MapIcon, MapPin, QrCode } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SCAN_PATH } from "@/features/qr-spot/constants/qr-scan";
+import { SPOT_MAP_PATH } from "@/features/spot-map/constants/spot-map-path";
+import { googleMapsSearchUrl } from "@/lib/utils/map-links";
 
 type QrSpotGuideProps = {
   latitude: number | null;
@@ -36,17 +38,27 @@ export function QrSpotGuide({ latitude, longitude }: QrSpotGuideProps) {
           スマホの標準カメラアプリで読み取っても同じように進めます。
         </p>
 
-        {hasLocation && (
-          <a
-            href={`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-1 inline-flex items-center gap-1 text-sm underline underline-offset-2"
+        <div className="mt-1 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+          {hasLocation && (
+            <a
+              href={googleMapsSearchUrl(latitude, longitude)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-sm underline underline-offset-2"
+            >
+              <MapPin className="h-4 w-4" aria-hidden="true" />
+              地図で場所を見る
+            </a>
+          )}
+
+          <Link
+            href={SPOT_MAP_PATH}
+            className="inline-flex items-center gap-1 text-sm underline underline-offset-2"
           >
-            <MapPin className="h-4 w-4" aria-hidden="true" />
-            地図で場所を見る
-          </a>
-        )}
+            <MapIcon className="h-4 w-4" aria-hidden="true" />
+            ほかのスポットも見る
+          </Link>
+        </div>
       </div>
     </div>
   );

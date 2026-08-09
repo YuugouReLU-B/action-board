@@ -142,6 +142,16 @@ export const APP_COLOR_TOKEN_GROUPS: ColorTokenGroup[] = [
     ],
   },
   {
+    id: "spot-map",
+    label: "スポットマップ",
+    description:
+      "スポットマップのピン色。未達成を目立たせ、達成済みは落ち着かせる。",
+    tokens: [
+      hex("--app-map-spot-todo", "未達成のスポット", "#ef4444"),
+      hex("--app-map-spot-done", "達成済みのスポット", "#10b981"),
+    ],
+  },
+  {
     id: "poster-status",
     label: "ポスター掲示板ステータス",
     description:

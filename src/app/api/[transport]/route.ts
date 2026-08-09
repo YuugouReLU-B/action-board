@@ -8,10 +8,11 @@ import {
   buildCampaignStatsResponse,
   DEFAULT_CAMPAIGN_STATS_LIMIT,
 } from "@/features/campaign-attribution/utils/campaign-stats-response";
+import { APP_ORIGIN } from "@/lib/constants/app-origin";
 import { verifyBearerToken } from "@/lib/utils/bearer-token";
 import { isValidCampaignCodeFormat } from "@/lib/validation/campaign-attribution";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = APP_ORIGIN;
 
 /**
  * 問い合わせ対応ボット（みらいいぬ）などの外部クライアント向けMCPサーバー

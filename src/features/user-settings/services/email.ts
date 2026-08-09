@@ -1,3 +1,4 @@
+import { APP_ORIGIN } from "@/lib/constants/app-origin";
 import { createClient } from "@/lib/supabase/client";
 
 /**
@@ -12,8 +13,10 @@ export async function requestEmailChange(
 
   try {
     // Supabaseでメールアドレスを更新
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-    const redirectUrl = new URL("/settings/profile?type=email_change", baseUrl);
+    const redirectUrl = new URL(
+      "/settings/profile?type=email_change",
+      APP_ORIGIN,
+    );
 
     const { error } = await supabaseClient.auth.updateUser(
       {

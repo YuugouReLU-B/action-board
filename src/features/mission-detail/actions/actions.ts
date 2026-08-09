@@ -258,6 +258,19 @@ export const achieveMissionAction = async (formData: FormData) => {
   const supabase = createClient();
   const missionId = formData.get("missionId")?.toString();
   const requiredArtifactType = formData.get("requiredArtifactType")?.toString();
+
+  // QRスポットは現地のコードを読んだときだけ達成させる。
+  // このアクションから通してしまうと、ミッション画面のボタンを押すだけで
+  // 現地に行かずにポイントを取れてしまい、QRである意味が無くなる。
+  if (requiredArtifactType === ARTIFACT_TYPES.QR.key) {
+    // success を literal にしないと戻り値の型が boolean に広がり、
+    // 呼び出し側の success === true での絞り込みが効かなくなる
+    return {
+      success: false as const,
+      error: "このミッションは現地のQRコードを読み取ると達成になります",
+    };
+  }
+
   const artifactLink = formData.get("artifactLink")?.toString();
   const artifactText = formData.get("artifactText")?.toString();
   const artifactEmail = formData.get("artifactEmail")?.toString();

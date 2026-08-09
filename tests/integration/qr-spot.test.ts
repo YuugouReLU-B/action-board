@@ -180,4 +180,20 @@ describe("QRスポット", () => {
     );
     expect(withNewCode.status).toBe("granted");
   });
+  test("achieveMission を直接呼んでも、QRを読まずに達成できてはいけない経路を塞いでいる", async () => {
+    // ミッション画面の汎用フォームから achieveMissionAction を叩かれると、
+    // 現地に行かずにポイントを取れてしまう。アクション側で QR を弾いている。
+    // ここではアクションの入口を直接検査する
+    const actions = await import("@/features/mission-detail/actions/actions");
+    const form = new FormData();
+    form.set("missionId", crypto.randomUUID());
+    form.set("requiredArtifactType", ARTIFACT_TYPES.QR.key);
+
+    const result = await actions.achieveMissionAction(form);
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toContain("現地のQRコード");
+    }
+  });
 });

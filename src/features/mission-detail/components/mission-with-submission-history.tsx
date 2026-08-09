@@ -6,6 +6,7 @@ import { CopyReferralButton } from "@/features/mission-detail/components/copy-re
 import { MissionAchievedPanel } from "@/features/mission-detail/components/mission-achieved-panel";
 import { MissionFormWrapper } from "@/features/mission-detail/components/mission-form-wrapper";
 import QRCodeDisplay from "@/features/mission-detail/components/qr-code-display";
+import { QrSpotGuide } from "@/features/mission-detail/components/qr-spot-guide";
 import { SubmissionHistoryWrapper } from "@/features/mission-detail/components/submission-history-wrapper";
 import { getSubmissionHistory } from "@/features/mission-detail/loaders/mission-detail-loaders";
 import type { SubmissionData } from "@/features/mission-detail/types/detail-types";
@@ -78,6 +79,7 @@ export function MissionWithSubmissionHistory({
     mission.required_artifact_type === ARTIFACT_TYPES.LINK_ACCESS.key ||
     mission.required_artifact_type === ARTIFACT_TYPES.QUIZ.key ||
     mission.required_artifact_type === ARTIFACT_TYPES.LINE_FRIEND.key ||
+    mission.required_artifact_type === ARTIFACT_TYPES.QR.key ||
     mission.required_artifact_type === ARTIFACT_TYPES.REFERRAL.key;
 
   // フォームが表示される条件と同じ
@@ -131,8 +133,19 @@ export function MissionWithSubmissionHistory({
           </div>
         ))}
 
+      {mission.required_artifact_type === ARTIFACT_TYPES.QR.key &&
+        (hasReachedUserMaxAchievements ? (
+          <MissionAchievedPanel missionSlug={mission.slug} />
+        ) : (
+          <QrSpotGuide
+            latitude={mission.latitude}
+            longitude={mission.longitude}
+          />
+        ))}
+
       {mission.required_artifact_type !== "REFERRAL" &&
-        mission.required_artifact_type !== ARTIFACT_TYPES.LINE_FRIEND.key && (
+        mission.required_artifact_type !== ARTIFACT_TYPES.LINE_FRIEND.key &&
+        mission.required_artifact_type !== ARTIFACT_TYPES.QR.key && (
           <MissionFormWrapper
             mission={mission}
             authUser={authUser}

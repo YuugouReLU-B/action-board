@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { updateMission } from "@/features/admin/actions/mission-actions";
 import { MissionForm } from "@/features/admin/components/mission-form";
 import { QrCodePanel } from "@/features/admin/components/qr-code-panel";
@@ -45,6 +46,13 @@ export default async function EditMissionPage({ params }: PageProps) {
             missionTitle={mission.title}
             qrUrl={mission.qrCode ? buildQrUrl(mission.qrCode) : null}
           />
+          {mission.qrCode && (
+            <Button asChild variant="outline" size="sm" className="mt-3">
+              <Link href={`/admin/qr-sheets?missionId=${mission.id}`}>
+                掲示用のQRシートを印刷
+              </Link>
+            </Button>
+          )}
         </div>
       )}
 

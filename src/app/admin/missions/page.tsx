@@ -23,9 +23,16 @@ export default async function AdminMissionsPage() {
             {qrSpots.length}）
           </p>
         </div>
-        <Button asChild size="sm">
-          <Link href="/admin/missions/new">新しく作る</Link>
-        </Button>
+        <div className="flex gap-2">
+          {qrSpots.length > 0 && (
+            <Button asChild size="sm" variant="outline">
+              <Link href="/admin/qr-sheets">QRシートを印刷</Link>
+            </Button>
+          )}
+          <Button asChild size="sm">
+            <Link href="/admin/missions/new">新しく作る</Link>
+          </Button>
+        </div>
       </div>
 
       {qrWithoutCode.length > 0 && (

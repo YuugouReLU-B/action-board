@@ -28,8 +28,8 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-6xl px-4 py-8">
-        <header className="mb-6 flex flex-wrap items-center gap-3">
+      <div className="mx-auto max-w-6xl px-4 py-8 print:max-w-none print:p-0">
+        <header className="mb-6 flex flex-wrap items-center gap-3 print:hidden">
           <h1 className="text-2xl font-extrabold">
             <Link href="/admin/missions">管理画面</Link>
           </h1>

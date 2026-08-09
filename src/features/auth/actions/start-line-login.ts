@@ -2,6 +2,7 @@
 
 import { randomBytes } from "node:crypto";
 import {
+  getBotPrompt,
   LINE_AUTHORIZE_ENDPOINT,
   LINE_LOGIN_COOKIE,
   LINE_LOGIN_COOKIE_MAX_AGE,
@@ -67,6 +68,12 @@ export async function startLineLogin({
   authorizeUrl.searchParams.set("redirect_uri", LINE_REDIRECT_URI);
   authorizeUrl.searchParams.set("state", state);
   authorizeUrl.searchParams.set("scope", LINE_LOGIN_SCOPE);
+
+  // 公式アカウントの友だち追加を認証フローの中で促す
+  const botPrompt = getBotPrompt();
+  if (botPrompt) {
+    authorizeUrl.searchParams.set("bot_prompt", botPrompt);
+  }
 
   return { success: true, authorizeUrl: authorizeUrl.toString() };
 }

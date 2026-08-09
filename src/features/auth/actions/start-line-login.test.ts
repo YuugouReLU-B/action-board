@@ -104,6 +104,28 @@ describe("startLineLogin", () => {
     ).toBe("/missions/foo");
   });
 
+  test("NEXT_PUBLIC_LINE_BOT_PROMPT 未設定なら bot_prompt を付けない", async () => {
+    // 公式アカウント未リンクの状態で bot_prompt を付けると動かないため、
+    // 明示的に設定されたときだけ付与する
+    const url = getUrl(await startLineLogin());
+
+    expect(url.searchParams.get("bot_prompt")).toBeNull();
+  });
+
+  test("bot_prompt=aggressive を設定すると authorize URL に付く", async () => {
+    process.env.NEXT_PUBLIC_LINE_BOT_PROMPT = "aggressive";
+    const url = getUrl(await startLineLogin());
+
+    expect(url.searchParams.get("bot_prompt")).toBe("aggressive");
+  });
+
+  test("不正な bot_prompt の値は無視する", async () => {
+    process.env.NEXT_PUBLIC_LINE_BOT_PROMPT = "yes-please";
+    const url = getUrl(await startLineLogin());
+
+    expect(url.searchParams.get("bot_prompt")).toBeNull();
+  });
+
   test("client_id 未設定ならエラーを返す", async () => {
     process.env.NEXT_PUBLIC_LINE_CLIENT_ID = "";
     const result = await startLineLogin();

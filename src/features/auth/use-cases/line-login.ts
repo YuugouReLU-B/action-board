@@ -17,8 +17,22 @@ export type LineLoginResult =
       email: string;
       isNewUser: boolean;
       tempPassword: string;
+      /** リンクされたLINE公式アカウントと友だちか。判定できない場合は null */
+      isOfficialAccountFriend: boolean | null;
     }
   | { success: false; error: string };
+
+/**
+ * 友だち状態が判定できたときだけメタデータに書く。
+ * 取得失敗（null）で既存の値を上書きして false にしないための分岐。
+ */
+function buildFriendshipMetadata(isFriend: boolean | null) {
+  if (isFriend === null) return {};
+  return {
+    line_official_account_friend: isFriend,
+    line_friendship_checked_at: new Date().toISOString(),
+  };
+}
 
 export async function lineLogin(
   adminSupabase: SupabaseClient,
@@ -40,6 +54,12 @@ export async function lineLogin(
   if (!lineUserId) {
     return { success: false, error: "LINEユーザーIDが取得できませんでした" };
   }
+
+  // 公式アカウントの友だち状態。bot_prompt で友だち追加した場合はここで true になる。
+  // 未リンクや取得失敗時は null（ログインは止めない）
+  const isOfficialAccountFriend = await lineApiClient.getFriendshipStatus(
+    tokens.access_token,
+  );
 
   const email = (userInfo.email as string) || `line-${lineUserId}@line.local`;
   const name = (userInfo.name as string) || "LINEユーザー";
@@ -79,6 +99,7 @@ export async function lineLogin(
           line_user_id: lineUserId,
           line_linked_at: new Date().toISOString(),
           picture: image || metadata?.picture,
+          ...buildFriendshipMetadata(isOfficialAccountFriend),
         },
       });
     } else {
@@ -113,6 +134,7 @@ export async function lineLogin(
           line_linked_at: new Date().toISOString(),
           phone_verified: false,
           picture: image,
+          ...buildFriendshipMetadata(isOfficialAccountFriend),
         },
       });
 
@@ -151,5 +173,12 @@ export async function lineLogin(
     console.error("Failed to set temporary password:", passwordError);
   }
 
-  return { success: true, userId, email: loginEmail, isNewUser, tempPassword };
+  return {
+    success: true,
+    userId,
+    email: loginEmail,
+    isNewUser,
+    tempPassword,
+    isOfficialAccountFriend,
+  };
 }

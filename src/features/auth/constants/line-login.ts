@@ -31,3 +31,18 @@ export const LINE_AUTHORIZE_ENDPOINT =
  * line-{lineUserId}@line.local を合成して使う（line-login.ts 参照）。
  */
 export const LINE_LOGIN_SCOPE = "profile openid";
+
+/**
+ * 認証フロー中に公式アカウントの友だち追加を促すかどうか。
+ *
+ * - `aggressive`: 同意後に友だち追加専用の画面を出す（取りこぼしが少ない）
+ * - `normal`: 同意画面にチェックボックスを出す
+ * - 未設定: 何もしない
+ *
+ * **LINEログインチャネルに公式アカウントがリンクされていないと機能しない**ため、
+ * リンクが済むまでは未設定にしておく（環境変数で切り替える）。
+ */
+export function getBotPrompt(): "aggressive" | "normal" | null {
+  const value = process.env.NEXT_PUBLIC_LINE_BOT_PROMPT;
+  return value === "aggressive" || value === "normal" ? value : null;
+}

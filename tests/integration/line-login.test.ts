@@ -153,4 +153,96 @@ describe("lineLogin ユースケース", () => {
     const found = await findUserByLineId(lineUserId);
     expect(found).toBeNull();
   });
+  test("公式アカウントと友だちならメタデータに記録される", async () => {
+    const lineUserId = `U_test_${Date.now()}_friend`;
+    const fakeClient = new FakeLineApiClient(
+      lineUserId,
+      "友だち太郎",
+      undefined,
+      undefined,
+      true,
+    );
+
+    const result = await lineLogin(adminClient, fakeClient, {
+      code: "fake-code",
+      redirectUri: "http://localhost:3000/api/auth/line-callback",
+      dateOfBirth: "1990-01-15",
+    });
+
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    createdUserIds.push(result.userId);
+
+    expect(result.isOfficialAccountFriend).toBe(true);
+
+    const user = await getUserById(result.userId);
+    expect(user.user_metadata.line_official_account_friend).toBe(true);
+    expect(user.user_metadata.line_friendship_checked_at).toBeDefined();
+  });
+
+  test("友だちでない場合はfalseで記録される", async () => {
+    const lineUserId = `U_test_${Date.now()}_notfriend`;
+    const fakeClient = new FakeLineApiClient(
+      lineUserId,
+      "未追加太郎",
+      undefined,
+      undefined,
+      false,
+    );
+
+    const result = await lineLogin(adminClient, fakeClient, {
+      code: "fake-code",
+      redirectUri: "http://localhost:3000/api/auth/line-callback",
+      dateOfBirth: "1990-01-15",
+    });
+
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    createdUserIds.push(result.userId);
+
+    expect(result.isOfficialAccountFriend).toBe(false);
+
+    const user = await getUserById(result.userId);
+    expect(user.user_metadata.line_official_account_friend).toBe(false);
+  });
+
+  test("友だち状態が取得できない場合は既存の値を壊さない", async () => {
+    // 公式アカウント未リンク時などは null が返る。
+    // このとき true だった記録を false で上書きしてはいけない
+    const lineUserId = `U_test_${Date.now()}_unknown`;
+
+    const friendClient = new FakeLineApiClient(
+      lineUserId,
+      "太郎",
+      undefined,
+      undefined,
+      true,
+    );
+    const first = await lineLogin(adminClient, friendClient, {
+      code: "fake-code",
+      redirectUri: "http://localhost:3000/api/auth/line-callback",
+      dateOfBirth: "1990-01-15",
+    });
+    expect(first.success).toBe(true);
+    if (!first.success) return;
+    createdUserIds.push(first.userId);
+
+    const unknownClient = new FakeLineApiClient(
+      lineUserId,
+      "太郎",
+      undefined,
+      undefined,
+      null,
+    );
+    const second = await lineLogin(adminClient, unknownClient, {
+      code: "fake-code",
+      redirectUri: "http://localhost:3000/api/auth/line-callback",
+    });
+    expect(second.success).toBe(true);
+    if (!second.success) return;
+    expect(second.isOfficialAccountFriend).toBeNull();
+
+    const user = await getUserById(first.userId);
+    expect(user.user_metadata.line_official_account_friend).toBe(true);
+  });
 });

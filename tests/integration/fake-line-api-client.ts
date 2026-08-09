@@ -15,6 +15,7 @@ export class FakeLineApiClient implements LineApiClient {
     private readonly name?: string,
     private readonly email?: string,
     private readonly picture?: string,
+    private readonly friendFlag: boolean | null = null,
   ) {}
 
   async exchangeCodeForTokens(
@@ -40,5 +41,9 @@ export class FakeLineApiClient implements LineApiClient {
       token_type: "Bearer",
       id_token: idToken,
     };
+  }
+
+  async getFriendshipStatus(_accessToken: string): Promise<boolean | null> {
+    return this.friendFlag;
   }
 }

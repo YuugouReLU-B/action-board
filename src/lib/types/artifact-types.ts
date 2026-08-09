@@ -61,6 +61,11 @@ export const ARTIFACT_TYPES = {
     prompt:
       "公式LINEを友だち追加すると達成になります。追加後に「追加を確認する」を押してください。",
   },
+  QR: {
+    key: "QR",
+    displayName: "QRスポット",
+    prompt: "現地のQRコードを読み取ると達成になります。",
+  },
   RESIDENTIAL_POSTER: {
     key: "RESIDENTIAL_POSTER",
     displayName: "私有地ポスター",
@@ -72,6 +77,21 @@ export const ARTIFACT_TYPES = {
     prompt: "このミッションでは添付データの投稿は不要です。",
   },
 } as const;
+
+/**
+ * 提出物を保存しない達成の種類。
+ *
+ * 達成の記録とXP付与だけを行い、mission_artifacts には何も入れない。
+ * mission_artifacts には「link_url / text_content / image_storage_path の
+ * いずれかが必須」というCHECK制約があるため、ここに入れ忘れると
+ * 達成しようとした瞬間に制約違反で失敗する。
+ */
+export const ARTIFACT_TYPES_WITHOUT_SUBMISSION: ReadonlySet<string> = new Set([
+  ARTIFACT_TYPES.NONE.key,
+  ARTIFACT_TYPES.LINK_ACCESS.key,
+  ARTIFACT_TYPES.LINE_FRIEND.key,
+  ARTIFACT_TYPES.QR.key,
+]);
 
 export type ArtifactTypeKey = keyof typeof ARTIFACT_TYPES;
 
@@ -100,5 +120,6 @@ export type MissionRequiredArtifactType =
   | "POSTING"
   | "POSTER"
   | "LINE_FRIEND"
+  | "QR"
   | "RESIDENTIAL_POSTER"
   | "NONE";

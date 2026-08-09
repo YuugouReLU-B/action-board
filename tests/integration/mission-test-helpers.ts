@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { defaultPointsForDifficulty } from "@/features/user-level/utils/level-calculator";
 import { adminClient } from "../supabase/utils";
 
 export type TestMission = {
@@ -15,6 +16,8 @@ export async function createTestMission(params?: {
   slug?: string;
   title?: string;
   difficulty?: number;
+  /** 省略すると difficulty の既定値。0 のままだとXPが入らずテストが黙って壊れる */
+  points?: number;
   requiredArtifactType?: string;
   maxAchievementCount?: number | null;
   isFeatured?: boolean;
@@ -43,6 +46,8 @@ export async function createTestMission(params?: {
       slug,
       title,
       difficulty: params?.difficulty ?? 1,
+      points:
+        params?.points ?? defaultPointsForDifficulty(params?.difficulty ?? 1),
       required_artifact_type: params?.requiredArtifactType ?? "NONE",
       max_achievement_count:
         params?.maxAchievementCount !== undefined

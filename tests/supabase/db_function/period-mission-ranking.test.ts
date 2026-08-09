@@ -32,6 +32,7 @@ describe("get_period_mission_ranking 関数のテスト", () => {
       title: "テストミッション",
       content: "これはテスト用のミッションです",
       difficulty: 1,
+      points: 50,
       slug: `test-mission-${crypto.randomUUID()}`,
     };
 
@@ -170,6 +171,7 @@ describe("get_period_mission_ranking 関数のテスト", () => {
       title: "ポスティングミッション",
       content: "ポスティングテスト",
       difficulty: 1,
+      points: 50,
       slug: `posting-mission-${crypto.randomUUID()}`,
       required_artifact_type: "POSTING",
     });
@@ -266,6 +268,7 @@ describe("get_period_mission_ranking 関数のテスト", () => {
       title: "50XPミッション",
       content: "テスト",
       difficulty: 1,
+      points: 50,
       slug: `test-50xp-${crypto.randomUUID()}`,
     });
 
@@ -379,6 +382,7 @@ describe("get_user_period_mission_ranking 関数のテスト", () => {
       title: "テストミッション",
       content: "テスト",
       difficulty: 1,
+      points: 50,
       slug: `test-mission-${crypto.randomUUID()}`,
     });
   });

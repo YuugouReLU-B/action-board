@@ -224,6 +224,11 @@ const lineFriendArtifactSchema = baseMissionFormSchema.extend({
   requiredArtifactType: z.literal(ARTIFACT_TYPES.LINE_FRIEND.key),
 });
 
+// QRタイプ用スキーマ（提出物なし。読み取ったコードの正当性はサーバーが判定する）
+const qrArtifactSchema = baseMissionFormSchema.extend({
+  requiredArtifactType: z.literal(ARTIFACT_TYPES.QR.key),
+});
+
 // 統合スキーマ
 const achieveMissionFormSchema = z.discriminatedUnion("requiredArtifactType", [
   linkArtifactSchema,
@@ -238,6 +243,7 @@ const achieveMissionFormSchema = z.discriminatedUnion("requiredArtifactType", [
   quizArtifactSchema,
   linkAccessArtifactSchema,
   lineFriendArtifactSchema,
+  qrArtifactSchema,
 ]);
 
 export type AchieveMissionFormData = z.infer<typeof achieveMissionFormSchema>;

@@ -21,6 +21,7 @@ describe("achievements テーブルのRLSテスト", () => {
       title: "テストミッション",
       content: "これはテスト用のミッションです",
       difficulty: 1,
+      points: 50,
       slug: `test-mission-${crypto.randomUUID()}`,
     };
 

@@ -16,6 +16,7 @@ describe("checkQuizAnswers ユースケース", () => {
     testMission = await createTestMission({
       requiredArtifactType: "QUIZ",
       difficulty: 1,
+      points: 50,
     });
     questionIds = await createTestQuizQuestions(testMission.id);
   });
@@ -99,6 +100,7 @@ describe("checkQuizAnswers ユースケース", () => {
     const noQuizMission = await createTestMission({
       requiredArtifactType: "QUIZ",
       difficulty: 1,
+      points: 50,
       slug: `no-quiz-${Date.now()}`,
     });
 

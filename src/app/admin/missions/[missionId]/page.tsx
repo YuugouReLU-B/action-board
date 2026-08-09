@@ -5,6 +5,7 @@ import { updateMission } from "@/features/admin/actions/mission-actions";
 import { DuplicateMissionButton } from "@/features/admin/components/duplicate-mission-button";
 import { MissionForm } from "@/features/admin/components/mission-form";
 import { QrCodePanel } from "@/features/admin/components/qr-code-panel";
+import { listCategoriesForAdmin } from "@/features/admin/services/admin-categories";
 import { getMissionForAdmin } from "@/features/admin/services/admin-missions";
 import { buildQrUrl } from "@/features/qr-spot/services/qr-code";
 import { ARTIFACT_TYPES } from "@/lib/types/artifact-types";
@@ -15,7 +16,10 @@ type PageProps = { params: Promise<{ missionId: string }> };
 
 export default async function EditMissionPage({ params }: PageProps) {
   const { missionId } = await params;
-  const mission = await getMissionForAdmin(missionId);
+  const [mission, categories] = await Promise.all([
+    getMissionForAdmin(missionId),
+    listCategoriesForAdmin(),
+  ]);
 
   if (!mission) {
     notFound();
@@ -64,6 +68,8 @@ export default async function EditMissionPage({ params }: PageProps) {
         </div>
         <MissionForm
           mission={mission}
+          categories={categories}
+          selectedCategoryIds={mission.categoryIds}
           action={updateMission.bind(null, mission.id)}
           submitLabel="保存する"
         />

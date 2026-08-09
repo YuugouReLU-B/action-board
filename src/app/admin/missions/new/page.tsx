@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { createMission } from "@/features/admin/actions/mission-actions";
 import { MissionForm } from "@/features/admin/components/mission-form";
+import { listCategoriesForAdmin } from "@/features/admin/services/admin-categories";
 
 export const dynamic = "force-dynamic";
 
-export default function NewMissionPage() {
+export default async function NewMissionPage() {
+  const categories = await listCategoriesForAdmin();
+
   return (
     <section>
       <div className="mb-4">
@@ -21,7 +24,11 @@ export default function NewMissionPage() {
         </p>
       </div>
 
-      <MissionForm action={createMission} submitLabel="作成する" />
+      <MissionForm
+        categories={categories}
+        action={createMission}
+        submitLabel="作成する"
+      />
     </section>
   );
 }

@@ -182,18 +182,33 @@ async function syncMissions(
   console.log(`  📊 反映 ${inserted} 件 / スキップ ${skipped} 件`);
 }
 
+/**
+ * カテゴリの紐付けを同期する。
+ *
+ * **既定では既存の紐付けを消さない。** カテゴリの割り当ては管理画面
+ * （/admin）からも編集できるので、毎回 yaml で全消し＆再作成すると
+ * 画面で設定したカテゴリが消える。yaml に無いミッションの紐付けも失われる。
+ *
+ * yaml の内容を正として作り直したいときだけ `--overwrite` を付ける。
+ */
 async function syncCategoryLinks(
   categoryLinks: CategoryLink[],
   dryRun: boolean,
+  overwrite: boolean,
 ) {
   console.log("\n🔗 Syncing category links...");
+  if (!overwrite) {
+    console.log(
+      "  （既存の紐付けは消しません。yaml を正として作り直す場合は --overwrite）",
+    );
+  }
   const supabase = await createAdminClient();
 
   const categoryMap = await getCategorySlugToIdMap();
   const missionMap = await getMissionSlugToIdMap();
 
-  // First, delete all existing links if not dry run
-  if (!dryRun) {
+  // --overwrite のときだけ全消しして yaml の内容で作り直す
+  if (!dryRun && overwrite) {
     const { error } = await supabase
       .from("mission_category_link")
       .delete()
@@ -226,11 +241,17 @@ async function syncCategoryLinks(
           `  [DRY RUN] Would link: ${mission.mission_slug} -> ${categoryLink.category_slug} (sort: ${mission.sort_no})`,
         );
       } else {
-        const { error } = await supabase.from("mission_category_link").insert({
-          mission_id: missionId,
-          category_id: categoryId,
-          sort_no: mission.sort_no,
-        });
+        // 全消ししない運用なので、既にある紐付けは insert すると衝突する。
+        // yaml に書かれている並び順を正として上書きする
+        const { error } = await supabase.from("mission_category_link").upsert(
+          {
+            mission_id: missionId,
+            category_id: categoryId,
+            sort_no: mission.sort_no,
+            del_flg: false,
+          },
+          { onConflict: "mission_id,category_id" },
+        );
 
         if (error) {
           console.error(
@@ -494,7 +515,11 @@ async function main() {
       const { category_links } = await loadYamlFile<{
         category_links: CategoryLink[];
       }>("category_links.yaml");
-      await syncCategoryLinks(category_links, options.dryRun);
+      await syncCategoryLinks(
+        category_links,
+        options.dryRun,
+        options.overwrite,
+      );
     }
 
     if (!options.only || options.only === "quiz-categories") {

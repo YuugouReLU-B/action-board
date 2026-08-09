@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import type { AdminActionResult } from "@/features/admin/actions/mission-actions";
+import type { AdminCategory } from "@/features/admin/services/admin-categories";
 import { defaultPointsForDifficulty } from "@/features/user-level/utils/level-calculator";
 import { ARTIFACT_TYPES } from "@/lib/types/artifact-types";
 import type { Tables } from "@/lib/types/supabase";
@@ -11,6 +12,9 @@ import type { Tables } from "@/lib/types/supabase";
 type MissionFormProps = {
   /** 編集時は既存のミッション。新規作成時は undefined */
   mission?: Tables<"missions">;
+  categories: AdminCategory[];
+  /** 編集時に既に紐付いているカテゴリ */
+  selectedCategoryIds?: string[];
   action: (formData: FormData) => Promise<AdminActionResult>;
   submitLabel: string;
 };
@@ -48,12 +52,15 @@ const inputClass =
 
 export function MissionForm({
   mission,
+  categories,
+  selectedCategoryIds = [],
   action,
   submitLabel,
 }: MissionFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [categoryIds, setCategoryIds] = useState<string[]>(selectedCategoryIds);
   const [artifactType, setArtifactType] = useState(
     mission?.required_artifact_type ?? ARTIFACT_TYPES.NONE.key,
   );
@@ -64,6 +71,14 @@ export function MissionForm({
   );
 
   const isQrSpot = artifactType === ARTIFACT_TYPES.QR.key;
+
+  const toggleCategory = (categoryId: string) => {
+    setCategoryIds((current) =>
+      current.includes(categoryId)
+        ? current.filter((id) => id !== categoryId)
+        : [...current, categoryId],
+    );
+  };
 
   const handleSubmit = (formData: FormData) => {
     setError(null);
@@ -113,6 +128,56 @@ export function MissionForm({
           />
         </Field>
       </div>
+
+      <fieldset className="rounded-lg border border-gray-200 p-4">
+        <legend className="px-2 text-sm font-bold">出すカテゴリ</legend>
+        <p className="mb-3 text-xs text-gray-500">
+          トップページはカテゴリごとにミッションを並べています。
+          どれも選ばないと、公開にしてもトップページには出ません。
+        </p>
+
+        {categories.length === 0 ? (
+          <p className="text-sm text-gray-500">
+            カテゴリがまだありません（mission_data/categories.yaml で作ります）
+          </p>
+        ) : (
+          <div className="grid gap-2 sm:grid-cols-2">
+            {categories.map((category) => (
+              <label
+                key={category.id}
+                className="flex items-center gap-2 text-sm"
+              >
+                <input
+                  type="checkbox"
+                  name="category_ids"
+                  value={category.id}
+                  checked={categoryIds.includes(category.id)}
+                  onChange={() => toggleCategory(category.id)}
+                />
+                <span
+                  className={
+                    category.visibleMissionCount === 0 ? "text-gray-400" : ""
+                  }
+                >
+                  {category.title}
+                  <span className="ml-1 text-xs text-gray-500">
+                    {category.visibleMissionCount === 0
+                      ? "（未使用）"
+                      : `（公開 ${category.visibleMissionCount}）`}
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
+        )}
+
+        {categories.length > 0 && categoryIds.length === 0 && (
+          <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-900">
+            カテゴリを選んでいないので、トップページには出ません。
+            URLを直接開いた人だけが見られる状態になります。
+          </p>
+        )}
+      </fieldset>
 
       <Field htmlFor="content" label="説明" hint="HTMLを書ける">
         <textarea

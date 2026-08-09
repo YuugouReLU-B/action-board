@@ -12,6 +12,10 @@ export default async function AdminMissionsPage() {
     (m) => m.required_artifact_type === ARTIFACT_TYPES.QR.key,
   );
   const qrWithoutCode = qrSpots.filter((m) => !m.qrCode);
+  // 公開にしただけではトップページに出ない。カテゴリに入れて初めて並ぶ
+  const visibleWithoutCategory = visible.filter(
+    (m) => m.categoryTitles.length === 0,
+  );
 
   return (
     <section>
@@ -47,11 +51,25 @@ export default async function AdminMissionsPage() {
         </div>
       )}
 
+      {visibleWithoutCategory.length > 0 && (
+        <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <p className="text-sm font-bold text-amber-900">
+            カテゴリに入っていない公開ミッションが{" "}
+            {visibleWithoutCategory.length} 件あります
+          </p>
+          <p className="mt-1 text-sm text-amber-800">
+            トップページはカテゴリごとに並ぶので、このままでは一覧に出ません:{" "}
+            {visibleWithoutCategory.map((m) => m.title).join(" / ")}
+          </p>
+        </div>
+      )}
+
       <div className="overflow-x-auto rounded-lg border border-gray-200">
         <table className="w-full min-w-[880px] text-sm">
           <thead className="bg-gray-50 text-left">
             <tr>
               <th className="px-4 py-2.5 font-bold">タイトル</th>
+              <th className="px-4 py-2.5 font-bold">カテゴリ</th>
               <th className="px-4 py-2.5 font-bold">達成の種類</th>
               <th className="px-4 py-2.5 text-right font-bold">ポイント</th>
               <th className="px-4 py-2.5 text-center font-bold">公開</th>
@@ -75,6 +93,13 @@ export default async function AdminMissionsPage() {
                     <div className="font-mono text-xs text-gray-500">
                       {mission.slug}
                     </div>
+                  </td>
+                  <td className="px-4 py-2.5 text-gray-700">
+                    {mission.categoryTitles.length > 0 ? (
+                      mission.categoryTitles.join(" / ")
+                    ) : (
+                      <span className="text-amber-700">未設定</span>
+                    )}
                   </td>
                   <td className="px-4 py-2.5 text-gray-700">
                     {getArtifactConfig(mission.required_artifact_type)

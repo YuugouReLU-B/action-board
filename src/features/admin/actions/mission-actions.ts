@@ -2,6 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import {
+  copyMissionCategories,
+  setMissionCategories,
+} from "@/features/admin/services/admin-categories";
 import { requireAdmin } from "@/features/admin/services/authorize-admin";
 import { issueQrCode } from "@/features/qr-spot/services/qr-code";
 import { createAdminClient } from "@/lib/supabase/adminClient";
@@ -46,6 +50,21 @@ export type MissionInput = z.input<typeof missionSchema>;
 function emptyToNull(value: FormDataEntryValue | null): string | null {
   const text = typeof value === "string" ? value.trim() : "";
   return text === "" ? null : text;
+}
+
+/**
+ * チェックされたカテゴリを取り出す。
+ *
+ * 1つも選ばれていなければ空配列になり、紐付けは全解除される。
+ * 「どのカテゴリにも入れない＝トップページに出さない」を意図した操作として扱う。
+ */
+function parseCategoryIds(formData: FormData): string[] {
+  const ids = formData
+    .getAll("category_ids")
+    .filter(
+      (value): value is string => typeof value === "string" && value !== "",
+    );
+  return Array.from(new Set(ids));
 }
 
 function parseMissionForm(formData: FormData) {
@@ -95,6 +114,19 @@ export async function createMission(
     return { success: false, error: `作成に失敗しました: ${error.message}` };
   }
 
+  const linked = await setMissionCategories(
+    supabase,
+    id,
+    parseCategoryIds(formData),
+  );
+
+  if (linked.error) {
+    // カテゴリが付かないミッションはトップページに出ない。中途半端な状態を
+    // 残すと原因が分かりにくいので、作ったミッションごと取り消してやり直させる
+    await supabase.from("missions").delete().eq("id", id);
+    return { success: false, error: linked.error };
+  }
+
   revalidatePath("/admin/missions");
   return { success: true, missionId: id };
 }
@@ -122,6 +154,16 @@ export async function updateMission(
       return { success: false, error: "そのslugは既に使われています" };
     }
     return { success: false, error: `更新に失敗しました: ${error.message}` };
+  }
+
+  const linked = await setMissionCategories(
+    supabase,
+    missionId,
+    parseCategoryIds(formData),
+  );
+
+  if (linked.error) {
+    return { success: false, error: linked.error };
   }
 
   revalidatePath("/admin/missions");
@@ -182,6 +224,8 @@ export async function issueMissionQrCode(
  * **QRコードは引き継がない。** 同じコードを2つのスポットに配ると、
  * どちらを読んでも同じミッションが達成されてしまう。
  * 複製先では改めて発行する。
+ *
+ * カテゴリの紐付けは引き継ぐ。同じカテゴリに並べるための複製だから。
  */
 export async function duplicateMission(
   missionId: string,
@@ -220,6 +264,12 @@ export async function duplicateMission(
   if (error) {
     console.error("ミッションの複製に失敗:", error);
     return { success: false, error: `複製に失敗しました: ${error.message}` };
+  }
+
+  const copied = await copyMissionCategories(supabase, missionId, id);
+  if (copied.error) {
+    // ミッション自体は作れている。カテゴリだけ画面で選び直せば済むので消さない
+    console.error("複製先へのカテゴリのコピーに失敗:", copied.error);
   }
 
   revalidatePath("/admin/missions");

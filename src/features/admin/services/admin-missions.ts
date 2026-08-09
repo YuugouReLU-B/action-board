@@ -1,13 +1,29 @@
 import "server-only";
 
+import {
+  getCategoryIdsForMission,
+  getCategoryTitleMap,
+} from "@/features/admin/services/admin-categories";
 import { getQrCodeMap } from "@/features/qr-spot/services/qr-code";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 import type { Tables } from "@/lib/types/supabase";
 
-export type AdminMission = Tables<"missions"> & {
+export type AdminMissionListItem = Tables<"missions"> & {
   /** 発行済みのQRコード。QRタイプでも未発行なら null */
   qrCode: string | null;
   achievementCount: number;
+  /**
+   * 属しているカテゴリ名。
+   *
+   * **空ならトップページに出ない。** 一覧はカテゴリ経由で組まれているため、
+   * 公開にしただけでは表示されない。
+   */
+  categoryTitles: string[];
+};
+
+/** 編集画面用。フォームの初期選択に categoryIds が要る */
+export type AdminMission = AdminMissionListItem & {
+  categoryIds: string[];
 };
 
 /**
@@ -16,13 +32,15 @@ export type AdminMission = Tables<"missions"> & {
  * 非表示のものも含めて全件返す。達成数は運用判断（このスポットは
  * 回られているか）に要るので一緒に引く。
  */
-export async function listMissionsForAdmin(): Promise<AdminMission[]> {
+export async function listMissionsForAdmin(): Promise<AdminMissionListItem[]> {
   const supabase = await createAdminClient();
 
-  const [{ data: missions, error }, qrCodes] = await Promise.all([
-    supabase.from("missions").select("*").order("title"),
-    getQrCodeMap(supabase),
-  ]);
+  const [{ data: missions, error }, qrCodes, categoryTitles] =
+    await Promise.all([
+      supabase.from("missions").select("*").order("title"),
+      getQrCodeMap(supabase),
+      getCategoryTitleMap(supabase),
+    ]);
 
   if (error) {
     console.error("管理用ミッション一覧の取得に失敗:", error);
@@ -43,6 +61,7 @@ export async function listMissionsForAdmin(): Promise<AdminMission[]> {
     ...mission,
     qrCode: qrCodes.get(mission.id) ?? null,
     achievementCount: counts.get(mission.id) ?? 0,
+    categoryTitles: categoryTitles.get(mission.id) ?? [],
   }));
 }
 
@@ -62,15 +81,21 @@ export async function getMissionForAdmin(
     return null;
   }
 
-  const qrCodes = await getQrCodeMap(supabase);
-  const { count } = await supabase
-    .from("achievements")
-    .select("id", { count: "exact", head: true })
-    .eq("mission_id", missionId);
+  const [qrCodes, { count }, categoryIds, categoryTitles] = await Promise.all([
+    getQrCodeMap(supabase),
+    supabase
+      .from("achievements")
+      .select("id", { count: "exact", head: true })
+      .eq("mission_id", missionId),
+    getCategoryIdsForMission(supabase, missionId),
+    getCategoryTitleMap(supabase),
+  ]);
 
   return {
     ...mission,
     qrCode: qrCodes.get(mission.id) ?? null,
     achievementCount: count ?? 0,
+    categoryIds,
+    categoryTitles: categoryTitles.get(mission.id) ?? [],
   };
 }

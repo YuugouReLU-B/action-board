@@ -1,9 +1,9 @@
 mission_main_links:
   - mission_slug: link-official-site
-    label: チームみらい公式サイトを見る
+    label: 浜通りクエスト公式サイトを見る
     link: https://team-mir.ai
   - mission_slug: read-manifest
-    label: チームみらいのマニフェストを読む
+    label: 浜通りクエストのマニフェストを読む
     link: https://policy.team-mir.ai
   - mission_slug: check-mirai-gikai
     label: みらい議会を見る
@@ -24,13 +24,13 @@ mission_main_links:
     label: 都道府県別LINEオープンチャットはこちら
     link: https://team-mirai.notion.site/1f9f6f56bae180d19ebcf176d8338ba3
   - mission_slug: join-slack
-    label: チームみらいサポーターSlackはこちら
+    label: 浜通りクエストサポーターSlackはこちら
     link: https://team-mirai.notion.site/Slack-25bf6f56bae1807582edde6f29562d0b
   - mission_slug: youtube-clip
     label: 動画切り抜きガイドはこちら
     link: https://team-mirai.notion.site/255f6f56bae1804cbdecdd7b81f9e591
   - mission_slug: join-planning-team
-    label: チームみらいサポーターSlackはこちら
+    label: 浜通りクエストサポーターSlackはこちら
     link: https://team-mirai.notion.site/Slack-25bf6f56bae1807582edde6f29562d0b
   - mission_slug: watch-anno-welcome-message
     label: ウェルカムメッセージを見る

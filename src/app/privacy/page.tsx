@@ -1,3 +1,5 @@
+import { OPERATOR } from "@/lib/constants/operator";
+
 export default function PrivacyPolicy() {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white">
@@ -6,7 +8,8 @@ export default function PrivacyPolicy() {
           プライバシーポリシー
         </h1>
         <p className="text-sm-custom font-normal text-black text-justify">
-          政治団体「チームみらい」（以下「当団体」といいます）は、当団体が提供するウェブサービス「浜通りクエスト」（以下「本サービス」といいます）において取得する個人情報を、以下の方針に基づき適切に取り扱います。
+          {OPERATOR.name}
+          （以下「当団体」といいます）は、当団体が提供するウェブサービス「浜通りクエスト」（以下「本サービス」といいます）において取得する個人情報を、以下の方針に基づき適切に取り扱います。
         </p>
       </div>
 
@@ -134,12 +137,12 @@ export default function PrivacyPolicy() {
             <p className="text-sm-custom font-normal text-black text-justify">
               当団体は、本サービスの一部のソースコードをOSSとして公開する場合があります。そのため、当団体以外の者による非公式サービスが存在する可能性があります。公式のサービスは、公式ドメイン（
               <a
-                href="https://action.team-mir.ai/"
+                href={OPERATOR.officialUrl}
                 className="text-black hover:text-black underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                https://action.team-mir.ai/
+                {OPERATOR.officialUrl}
               </a>
               ）でのみ提供されます。
               <span className="text-red-600 font-medium">
@@ -167,15 +170,21 @@ export default function PrivacyPolicy() {
               本ポリシーに関するお問い合わせは、以下の連絡先までお願いいたします。
             </p>
             <div className="space-y-1">
-              <p className="font-medium text-gray-900">チームみらい</p>
-              <p className="text-gray-700">
-                <a
-                  href="mailto:info@team-mir.ai"
-                  className="text-black hover:text-black underline"
-                >
-                  info@team-mir.ai
-                </a>
-              </p>
+              <p className="font-medium text-gray-900">{OPERATOR.name}</p>
+              {OPERATOR.contactEmail ? (
+                <p className="text-gray-700">
+                  <a
+                    href={`mailto:${OPERATOR.contactEmail}`}
+                    className="text-black hover:text-black underline"
+                  >
+                    {OPERATOR.contactEmail}
+                  </a>
+                </p>
+              ) : (
+                <p className="text-gray-700">
+                  お問い合わせ先は決定次第記載します。
+                </p>
+              )}
             </div>
           </div>
         </section>

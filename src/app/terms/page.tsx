@@ -1,10 +1,13 @@
+import { OPERATOR } from "@/lib/constants/operator";
+
 export default function TermsOfService() {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white">
       <div className="mb-8">
         <h1 className="text-2xl-custom font-bold text-black mb-4">利用規約</h1>
         <p className="text-sm-custom font-normal text-black text-justify">
-          この利用規約（以下「本規約」といいます）は、政治団体「チームみらい」（以下「当団体」といいます）が提供するウェブサービス「浜通りクエスト」（以下「本サービス」といいます）の利用条件を定めるものです。本サービスのご利用にあたっては、本規約に同意いただく必要があります。同意いただけない場合は、本サービスをご利用いただけません。
+          この利用規約（以下「本規約」といいます）は、{OPERATOR.name}
+          （以下「当団体」といいます）が提供するウェブサービス「浜通りクエスト」（以下「本サービス」といいます）の利用条件を定めるものです。本サービスのご利用にあたっては、本規約に同意いただく必要があります。同意いただけない場合は、本サービスをご利用いただけません。
         </p>
       </div>
 
@@ -101,12 +104,12 @@ export default function TermsOfService() {
             <p>
               本サービスの一部はオープンソースソフトウェア（OSS）として公開される場合があります。OSS部分はライセンスに従い利用可能ですが、当団体が公式に提供するサービスは、公式ドメイン（
               <a
-                href="https://action.team-mir.ai/"
+                href={OPERATOR.officialUrl}
                 className="text-black hover:text-black underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                https://action.team-mir.ai/
+                {OPERATOR.officialUrl}
               </a>
               ）を通じてのみ提供されます。
             </p>

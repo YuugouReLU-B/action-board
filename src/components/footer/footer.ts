@@ -9,5 +9,5 @@ export const FOOTER_BUTTON_STYLES = {
 
 export const FOOTER_IMAGE_SIZES = {
   socialIcon: { width: 48, height: 48 },
-  logo: { width: 80, height: 71 },
+  logo: { width: 96, height: 96 },
 } as const;

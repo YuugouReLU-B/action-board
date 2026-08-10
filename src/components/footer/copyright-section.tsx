@@ -3,7 +3,8 @@ import { EXTERNAL_LINKS } from "@/lib/constants/external-links";
 
 export function CopyrightSection() {
   return (
-    <div className="bg-background py-8">
+    // 背景は footer 側で敷いた風景を透かす
+    <div className="py-8">
       <div className="px-4 md:container md:mx-auto">
         <div className="text-center">
           {/* Desktop layout - single row */}

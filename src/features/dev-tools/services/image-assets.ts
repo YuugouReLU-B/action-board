@@ -174,7 +174,6 @@ export async function listImageAssets(): Promise<{
 
     if (publicPath.startsWith(MISSION_ICON_PREFIX)) {
       const missions = iconUsage.get(publicPath) ?? [];
-      const isDerivedLogo = publicPath.includes("TeamMirai-logo");
       assets.push({
         path: publicPath,
         // actionboard_icon_work_20250713_ol_add-line-friend.svg → add-line-friend
@@ -182,18 +181,12 @@ export async function listImageAssets(): Promise<{
           .basename(publicPath, path.extname(publicPath))
           .replace(/^.*_ol_/, ""),
         group: "mission-icon",
-        // 派生元のロゴそのものは作り直し。それ以外は青緑を差し替えれば流用できる
-        status: isDerivedLogo
-          ? "replace"
-          : missions.length
-            ? "recolor"
-            : "keep",
+        // 使われているアイコンは青緑を差し替えれば流用できる。
+        // 派生元のロゴそのものはファイルごと削除済み
+        status: missions.length ? "recolor" : "keep",
         usedIn: missions.length
           ? missions
           : ["どのミッションからも参照されていない"],
-        note: isDerivedLogo
-          ? "派生元のロゴそのもの。流用できない。"
-          : undefined,
         bytes: stat.size,
         dimensions,
       });

@@ -183,14 +183,6 @@ export const IMAGE_ASSETS: ImageAssetEntry[] = [
     usedIn: ["レベルアップのダイアログ"],
   },
   {
-    path: "/img/close_image_a1.png",
-    label: "サービス停止のお知らせ画像",
-    group: "ui",
-    status: "undecided",
-    usedIn: ["サービス停止バナー"],
-    note: "派生元の停止告知用。この機能自体を使うかから決める。",
-  },
-  {
     path: "/img/icon-Shere2x.png",
     label: "共有アイコン",
     group: "ui",

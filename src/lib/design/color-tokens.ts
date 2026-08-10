@@ -261,16 +261,7 @@ export const APP_COLOR_TOKEN_GROUPS: ColorTokenGroup[] = [
     label: "演出エフェクト",
     description:
       "canvas で描画される演出。JS から CSS 変数を読むため、反映にはリロードが必要な場合がある。",
-    tokens: [
-      hex("--app-winter-petal-1", "花びら 1", "#f5a0b8"),
-      hex("--app-winter-petal-2", "花びら 2", "#e87da0"),
-      hex("--app-winter-petal-3", "花びら 3", "#fcdce8"),
-      hex("--app-winter-star", "星", "#fff3b0"),
-      hex("--app-winter-text", "テキスト", "#ffffff"),
-      hex("--app-winter-surface", "面", "#ffffff"),
-      hex("--app-fireworks-text", "花火テキスト", "#ffffff"),
-      hex("--app-service-stop-bg", "サービス停止画面の背景", "#0a0a1a"),
-    ],
+    tokens: [hex("--app-fireworks-text", "花火テキスト", "#ffffff")],
   },
   {
     id: "palette-remap",

@@ -30,15 +30,6 @@ export function CopyrightSection() {
             >
               ご意見箱
             </Link>
-            <span className="text-black">|</span>
-            <Link
-              href={EXTERNAL_LINKS.faq}
-              className="hover:opacity-70 transition-opacity duration-200"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              よくあるご質問
-            </Link>
           </div>
 
           {/* Mobile layout - two rows for screens ≤570px */}
@@ -69,15 +60,6 @@ export function CopyrightSection() {
                 rel="noopener noreferrer"
               >
                 ご意見箱
-              </Link>
-              <span className="text-black">|</span>
-              <Link
-                href={EXTERNAL_LINKS.faq}
-                className="hover:opacity-70 transition-opacity duration-200"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                よくあるご質問
               </Link>
             </div>
           </div>

@@ -16,14 +16,15 @@ export type Message =
   | { type: MessageType };
 
 const getMessageContent = (type: MessageType) => {
-  const faqLink = (
+  // FAQはまだ無いので問い合わせ先を案内する。派生元のFAQへ送るのは筋が違う
+  const contactLink = (
     <a
-      href={EXTERNAL_LINKS.faq}
+      href={EXTERNAL_LINKS.feedback_action_board}
       target="_blank"
       rel="noopener noreferrer"
       className="text-teal-600 hover:text-teal-700 underline"
     >
-      よくあるご質問 ↗
+      お問い合わせ ↗
     </a>
   );
 
@@ -40,7 +41,7 @@ const getMessageContent = (type: MessageType) => {
           なお、迷惑メールフォルダに振り分けられている場合がありますので、そちらもあわせてご確認ください。
           <br />
           <br />
-          会員登録でお困りの方は{faqLink}をご確認ください。
+          会員登録でお困りの方は{contactLink}からご連絡ください。
         </div>
       );
     case "password-reset-success":
@@ -49,7 +50,7 @@ const getMessageContent = (type: MessageType) => {
           パスワードリセット用のリンクをメールでお送りしました。
           <br />
           <br />
-          パスワードリセットでお困りの方は{faqLink}をご確認ください。
+          パスワードリセットでお困りの方は{contactLink}からご連絡ください。
         </div>
       );
     case "login-error":
@@ -58,7 +59,7 @@ const getMessageContent = (type: MessageType) => {
           メールアドレスまたはパスワードが間違っています
           <br />
           <br />
-          ログインでお困りの方は{faqLink}をご確認ください。
+          ログインでお困りの方は{contactLink}からご連絡ください。
         </div>
       );
     default:

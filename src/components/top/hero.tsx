@@ -13,8 +13,8 @@ export default async function Hero() {
     try {
       return (
         <section className="relative mt-[-96px] pt-24 pb-8 bg-gradient-hero">
-          {/* ヘッダーの下まで風景を敷き、ぼかしてカードを浮かせる */}
-          <HeroBackdrop blur priority overlayClassName="bg-white/55" />
+          {/* ヘッダーの下まで風景を敷き、白を重ねてカードを浮かせる */}
+          <HeroBackdrop priority overlayClassName="bg-white/55" />
           <div className="relative z-10">
             <Levels userId={user.id} clickable={true} showBadge={true} />
           </div>

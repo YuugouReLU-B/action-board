@@ -1,11 +1,6 @@
 import Image from "next/image";
 
 type HeroBackdropProps = {
-  /**
-   * ぼかして背景に沈める。カードやテキストを重ねる面で使う。
-   * ぼかすと端が透けるので scale で少し外へ逃がしている。
-   */
-  blur?: boolean;
   /** ファーストビューに出る面だけ true にする */
   priority?: boolean;
   /** 画像の上に重ねるスクリム。可読性の要求が面ごとに違うので呼び出し側で決める */
@@ -18,7 +13,6 @@ type HeroBackdropProps = {
  * 画像は 1742×903 を object-cover で敷いているため、狭い画面では左右が切れる。
  */
 export function HeroBackdrop({
-  blur = false,
   priority = false,
   overlayClassName,
 }: HeroBackdropProps) {
@@ -30,7 +24,7 @@ export function HeroBackdrop({
         fill
         sizes="100vw"
         priority={priority}
-        className={`object-cover object-bottom ${blur ? "blur-md scale-110" : ""}`}
+        className="object-cover object-bottom"
       />
       {overlayClassName && (
         <div className={`absolute inset-0 ${overlayClassName}`} />

@@ -12,8 +12,8 @@ export default function Footer() {
       </div>
 
       <div className="relative w-full bg-linear-to-b from-[var(--app-brand-light)] to-[var(--app-brand-pale)] overflow-hidden">
-        {/* トップと同じ風景を、ぼかして footer の地に敷く */}
-        <HeroBackdrop blur overlayClassName="bg-white/55" />
+        {/* トップと同じ風景を footer の地に敷く */}
+        <HeroBackdrop overlayClassName="bg-white/55" />
 
         <div className="relative z-10 pb-4">
           <LogoSection />

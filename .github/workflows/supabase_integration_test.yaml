@@ -48,6 +48,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # 新規DBには種データが入っていない。add-supporter-line-friend 等を前提にした
+      # テストがあるため、初期投入用の mission:sync を1回だけ流す
+      - name: Sync mission data
+        run: pnpm run mission:sync
+
       - name: Run Supabase RLS tests
         run: pnpm run test:ci:supabase
 

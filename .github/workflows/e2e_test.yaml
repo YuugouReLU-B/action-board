@@ -97,6 +97,11 @@ jobs:
       - name: Load poster CSV data
         run: pnpm run poster:load-csv
 
+      # 新規DBには種データが入っていない。add-supporter-line-friend 等を前提にした
+      # テストがあるため、初期投入用の mission:sync を1回だけ流す
+      - name: Sync mission data
+        run: pnpm run mission:sync
+
       - name: Run E2E tests
         run: pnpm run test:ci:e2e
         env:

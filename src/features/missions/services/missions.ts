@@ -231,6 +231,7 @@ export async function getMissionCategoryView(): Promise<
       points,
       latitude,
       longitude,
+      radius_meters,
       content,
       created_at,
       artifact_label,

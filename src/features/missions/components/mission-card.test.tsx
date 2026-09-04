@@ -146,6 +146,7 @@ const mockMission: Tables<"missions"> = {
   points: 50,
   latitude: null,
   longitude: null,
+  radius_meters: null,
   icon_url: "/test-icon.svg",
   event_date: "2025-06-22",
   max_achievement_count: 3,

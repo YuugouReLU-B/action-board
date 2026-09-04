@@ -107,6 +107,10 @@ missions:
       友だち追加が確認できると自動で達成になります。
     difficulty: 1
     required_artifact_type: LINE_FRIEND
+    # 500pt: 基礎ポイントとして扱う（企画側の要望）。
+    # 既にDBにある既存ミッションのため mission:sync（挿入のみ）では反映されない。
+    # 管理画面（/admin/missions）でこのミッションのポイントを500に更新すること。
+    points: 500
     max_achievement_count: 1
     is_featured: true
     is_hidden: false
@@ -1090,5 +1094,78 @@ missions:
     max_achievement_count: 1
     is_featured: false
     is_hidden: false
+    artifact_label: null
+    ogp_image_url: null
+  # ── 位置情報チェックイン（GEO_CHECKIN）のひな形 ─────────────────────
+  # 挿入時点では緯度・経度・判定半径が未設定のため is_hidden: true。
+  # 管理画面（/admin）で座標と半径を入れてから公開する。
+  - slug: visit-hamafes
+    title: 浜フェスに来訪
+    icon_url: /img/mission_fallback.svg
+    content: |-
+      浜フェスの会場に着いたら「イベントに来た」ボタンを押してください。
+      位置情報を確認してミッション達成になります。
+    difficulty: 1
+    required_artifact_type: GEO_CHECKIN
+    points: 200
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: true
+    artifact_label: null
+    ogp_image_url: null
+  - slug: visit-kitaizumi-surfing
+    title: 北泉サーフィン大会を見学
+    icon_url: /img/mission_fallback.svg
+    content: |-
+      北泉サーフィン大会の会場に着いたら「イベントに来た」ボタンを押してください。
+      位置情報を確認してミッション達成になります。
+    difficulty: 1
+    required_artifact_type: GEO_CHECKIN
+    points: 200
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: true
+    artifact_label: null
+    ogp_image_url: null
+  - slug: visit-hamakaido-trail
+    title: 浜街道トレイルに参加
+    icon_url: /img/mission_fallback.svg
+    content: |-
+      浜街道トレイルの会場に着いたら「イベントに来た」ボタンを押してください。
+      位置情報を確認してミッション達成になります。
+    difficulty: 1
+    required_artifact_type: GEO_CHECKIN
+    points: 200
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: true
+    artifact_label: null
+    ogp_image_url: null
+  - slug: visit-tokichiro-kiln
+    title: 藤吉郎窯を訪問して、ビール専用相馬焼を見る
+    icon_url: /img/mission_fallback.svg
+    content: |-
+      藤吉郎窯に着いたら「イベントに来た」ボタンを押してください。
+      位置情報を確認してミッション達成になります。
+    difficulty: 1
+    required_artifact_type: GEO_CHECKIN
+    points: 100
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: true
+    artifact_label: null
+    ogp_image_url: null
+  - slug: visit-noma-valley
+    title: ノーマの谷を訪問して、馬と触れ合う
+    icon_url: /img/mission_fallback.svg
+    content: |-
+      ノーマの谷に着いたら「イベントに来た」ボタンを押してください。
+      位置情報を確認してミッション達成になります。
+    difficulty: 1
+    required_artifact_type: GEO_CHECKIN
+    points: 100
+    max_achievement_count: 1
+    is_featured: false
+    is_hidden: true
     artifact_label: null
     ogp_image_url: null

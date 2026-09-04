@@ -388,6 +388,7 @@ export type Database = {
           max_achievement_count: number | null;
           ogp_image_url: string | null;
           points: number;
+          radius_meters: number | null;
           required_artifact_type: string;
           slug: string;
           title: string;
@@ -409,6 +410,7 @@ export type Database = {
           max_achievement_count?: number | null;
           ogp_image_url?: string | null;
           points?: number;
+          radius_meters?: number | null;
           required_artifact_type?: string;
           slug: string;
           title: string;
@@ -430,6 +432,7 @@ export type Database = {
           max_achievement_count?: number | null;
           ogp_image_url?: string | null;
           points?: number;
+          radius_meters?: number | null;
           required_artifact_type?: string;
           slug?: string;
           title?: string;
@@ -1857,6 +1860,7 @@ export type Database = {
           mission_id: string | null;
           ogp_image_url: string | null;
           points: number | null;
+          radius_meters: number | null;
           required_artifact_type: string | null;
           slug: string | null;
           title: string | null;

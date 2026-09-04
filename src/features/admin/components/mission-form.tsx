@@ -71,6 +71,8 @@ export function MissionForm({
   );
 
   const isQrSpot = artifactType === ARTIFACT_TYPES.QR.key;
+  const isGeoCheckin = artifactType === ARTIFACT_TYPES.GEO_CHECKIN.key;
+  const hasLocationFields = isQrSpot || isGeoCheckin;
 
   const toggleCategory = (categoryId: string) => {
     setCategoryIds((current) =>
@@ -304,12 +306,13 @@ export function MissionForm({
         </Field>
       </div>
 
-      {isQrSpot && (
+      {hasLocationFields && (
         <fieldset className="rounded-lg border border-gray-200 p-4">
           <legend className="px-2 text-sm font-bold">スポットの位置</legend>
           <p className="mb-3 text-xs text-gray-500">
-            ベータでは位置による判定はしません。周遊の集計と、あとから
-            「スポットの近くでしか読めない」を足すために記録しておきます。
+            {isGeoCheckin
+              ? "「イベントに来た」ボタンを押した位置から、この座標を中心とした半径以内なら達成になります。"
+              : "ベータでは位置による判定はしません。周遊の集計と、あとから「スポットの近くでしか読めない」を足すために記録しておきます。"}
           </p>
           <div className="grid gap-5 sm:grid-cols-2">
             <Field htmlFor="latitude" label="緯度">
@@ -318,6 +321,7 @@ export function MissionForm({
                 id="latitude"
                 type="number"
                 step="any"
+                required={isGeoCheckin}
                 defaultValue={mission?.latitude ?? ""}
                 className={inputClass}
                 placeholder="37.4917"
@@ -329,21 +333,45 @@ export function MissionForm({
                 id="longitude"
                 type="number"
                 step="any"
+                required={isGeoCheckin}
                 defaultValue={mission?.longitude ?? ""}
                 className={inputClass}
                 placeholder="141.0000"
               />
             </Field>
           </div>
+
+          {isGeoCheckin && (
+            <div className="mt-5">
+              <Field
+                htmlFor="radius_meters"
+                label="判定半径（m）"
+                hint="この距離以内なら達成になる。会場の広さに合わせて調整する"
+              >
+                <input
+                  name="radius_meters"
+                  id="radius_meters"
+                  type="number"
+                  min={1}
+                  required
+                  defaultValue={mission?.radius_meters ?? 300}
+                  className={inputClass}
+                  placeholder="300"
+                />
+              </Field>
+            </div>
+          )}
         </fieldset>
       )}
 
-      {!isQrSpot && (
+      {!hasLocationFields && (
         <>
           <input type="hidden" name="latitude" value="" />
           <input type="hidden" name="longitude" value="" />
         </>
       )}
+
+      {!isGeoCheckin && <input type="hidden" name="radius_meters" value="" />}
 
       <div className="flex flex-wrap gap-6">
         <label className="flex items-center gap-2 text-sm">

@@ -21,6 +21,7 @@ function createMissionCategoryView(
     points: 50,
     latitude: null,
     longitude: null,
+    radius_meters: null,
     icon_url: null,
     artifact_label: null,
     max_achievement_count: null,

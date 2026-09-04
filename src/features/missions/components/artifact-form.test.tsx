@@ -15,6 +15,7 @@ const baseMission: Tables<"missions"> = {
   points: 50,
   latitude: null,
   longitude: null,
+  radius_meters: null,
   icon_url: "/test-icon.svg",
   event_date: null,
   max_achievement_count: null,

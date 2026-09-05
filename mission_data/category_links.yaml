@@ -41,6 +41,13 @@ category_links:
         sort_no: 910
       - mission_slug: help-event-operation
         sort_no: 920
+      # 以下は非表示。位置情報チェックイン(GEO_CHECKIN)のひな形。座標設定後に公開する
+      - mission_slug: visit-hamafes
+        sort_no: 930
+      - mission_slug: visit-kitaizumi-surfing
+        sort_no: 940
+      - mission_slug: visit-hamakaido-trail
+        sort_no: 950
   - category_slug: learn-about-teammirai
     missions:
       - mission_slug: link-official-site
@@ -87,6 +94,11 @@ category_links:
         sort_no: 200
       - mission_slug: checkpoint-restaurant-c
         sort_no: 300
+      # 以下は非表示。位置情報チェックイン(GEO_CHECKIN)のひな形。座標設定後に公開する
+      - mission_slug: visit-tokichiro-kiln
+        sort_no: 400
+      - mission_slug: visit-noma-valley
+        sort_no: 500
   - category_slug: share-and-spread
     missions:
       - mission_slug: post-hamadori-x

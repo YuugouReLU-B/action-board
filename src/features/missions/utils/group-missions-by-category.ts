@@ -92,6 +92,7 @@ export function groupMissionsByCategory(
           points: m.points ?? 0,
           latitude: m.latitude,
           longitude: m.longitude,
+          radius_meters: m.radius_meters,
           content: m.content || "",
           created_at: m.created_at || new Date().toISOString(),
           artifact_label: m.artifact_label,

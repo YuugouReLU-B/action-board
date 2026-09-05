@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import type { Message } from "@/components/common/form-message";
+import { LotteryEntryPanel } from "@/features/lottery/components/lottery-entry-panel";
 import { getFirstMissionPath } from "@/features/missions/services/first-mission";
 import {
   getMyProfile,
@@ -68,6 +69,12 @@ export default async function ProfileSettingsPage({
             user={user}
             isEmailChangeSuccessful={isEmailChangeSuccessful}
           />
+        </div>
+      )}
+
+      {!isNew && (
+        <div className="w-full max-w-md pt-4">
+          <LotteryEntryPanel />
         </div>
       )}
 

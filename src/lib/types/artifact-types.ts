@@ -66,6 +66,12 @@ export const ARTIFACT_TYPES = {
     displayName: "QRスポット",
     prompt: "現地のQRコードを読み取ると達成になります。",
   },
+  GEO_CHECKIN: {
+    key: "GEO_CHECKIN",
+    displayName: "位置情報チェックイン",
+    prompt:
+      "現地に着いたら「イベントに来た」ボタンを押すと、位置情報を判定して達成になります。",
+  },
   RESIDENTIAL_POSTER: {
     key: "RESIDENTIAL_POSTER",
     displayName: "私有地ポスター",
@@ -91,6 +97,7 @@ export const ARTIFACT_TYPES_WITHOUT_SUBMISSION: ReadonlySet<string> = new Set([
   ARTIFACT_TYPES.LINK_ACCESS.key,
   ARTIFACT_TYPES.LINE_FRIEND.key,
   ARTIFACT_TYPES.QR.key,
+  ARTIFACT_TYPES.GEO_CHECKIN.key,
 ]);
 
 export type ArtifactTypeKey = keyof typeof ARTIFACT_TYPES;
@@ -121,5 +128,6 @@ export type MissionRequiredArtifactType =
   | "POSTER"
   | "LINE_FRIEND"
   | "QR"
+  | "GEO_CHECKIN"
   | "RESIDENTIAL_POSTER"
   | "NONE";

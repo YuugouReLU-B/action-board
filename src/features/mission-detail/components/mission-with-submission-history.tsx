@@ -3,6 +3,7 @@
 import type { User } from "@supabase/supabase-js";
 import { useState } from "react";
 import { CopyReferralButton } from "@/features/mission-detail/components/copy-referral-button";
+import { GeoCheckinButton } from "@/features/mission-detail/components/geo-checkin-button";
 import { MissionAchievedPanel } from "@/features/mission-detail/components/mission-achieved-panel";
 import { MissionFormWrapper } from "@/features/mission-detail/components/mission-form-wrapper";
 import QRCodeDisplay from "@/features/mission-detail/components/qr-code-display";
@@ -80,6 +81,7 @@ export function MissionWithSubmissionHistory({
     mission.required_artifact_type === ARTIFACT_TYPES.QUIZ.key ||
     mission.required_artifact_type === ARTIFACT_TYPES.LINE_FRIEND.key ||
     mission.required_artifact_type === ARTIFACT_TYPES.QR.key ||
+    mission.required_artifact_type === ARTIFACT_TYPES.GEO_CHECKIN.key ||
     mission.required_artifact_type === ARTIFACT_TYPES.REFERRAL.key;
 
   // フォームが表示される条件と同じ
@@ -143,9 +145,22 @@ export function MissionWithSubmissionHistory({
           />
         ))}
 
+      {mission.required_artifact_type === ARTIFACT_TYPES.GEO_CHECKIN.key &&
+        (hasReachedUserMaxAchievements ? (
+          <MissionAchievedPanel missionSlug={mission.slug} />
+        ) : (
+          <GeoCheckinButton
+            missionId={mission.id}
+            latitude={mission.latitude}
+            longitude={mission.longitude}
+            onSuccess={refreshSubmissions}
+          />
+        ))}
+
       {mission.required_artifact_type !== "REFERRAL" &&
         mission.required_artifact_type !== ARTIFACT_TYPES.LINE_FRIEND.key &&
-        mission.required_artifact_type !== ARTIFACT_TYPES.QR.key && (
+        mission.required_artifact_type !== ARTIFACT_TYPES.QR.key &&
+        mission.required_artifact_type !== ARTIFACT_TYPES.GEO_CHECKIN.key && (
           <MissionFormWrapper
             mission={mission}
             authUser={authUser}

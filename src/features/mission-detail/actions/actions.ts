@@ -229,6 +229,11 @@ const qrArtifactSchema = baseMissionFormSchema.extend({
   requiredArtifactType: z.literal(ARTIFACT_TYPES.QR.key),
 });
 
+// GEO_CHECKINタイプ用スキーマ（提出物なし。位置情報の判定は専用アクションで行う）
+const geoCheckinArtifactSchema = baseMissionFormSchema.extend({
+  requiredArtifactType: z.literal(ARTIFACT_TYPES.GEO_CHECKIN.key),
+});
+
 // 統合スキーマ
 const achieveMissionFormSchema = z.discriminatedUnion("requiredArtifactType", [
   linkArtifactSchema,
@@ -244,6 +249,7 @@ const achieveMissionFormSchema = z.discriminatedUnion("requiredArtifactType", [
   linkAccessArtifactSchema,
   lineFriendArtifactSchema,
   qrArtifactSchema,
+  geoCheckinArtifactSchema,
 ]);
 
 export type AchieveMissionFormData = z.infer<typeof achieveMissionFormSchema>;
@@ -268,6 +274,17 @@ export const achieveMissionAction = async (formData: FormData) => {
     return {
       success: false as const,
       error: "このミッションは現地のQRコードを読み取ると達成になります",
+    };
+  }
+
+  // GEO_CHECKINも同様に、位置情報を判定する専用アクション（geoCheckinAction）
+  // からしか達成させない。ここを通してしまうと、ボタンを押すだけで
+  // 現地に行かずにポイントを取れてしまう。
+  if (requiredArtifactType === ARTIFACT_TYPES.GEO_CHECKIN.key) {
+    return {
+      success: false as const,
+      error:
+        "このミッションは現地で「イベントに来た」ボタンを押すと達成になります",
     };
   }
 

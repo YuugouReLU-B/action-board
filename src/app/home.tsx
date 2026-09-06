@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import Hero from "@/components/top/hero";
+import { syncPointMilestoneAudience } from "@/features/line-notification/use-cases/sync-point-milestone-audience";
 import { LotteryAnnouncementBanner } from "@/features/lottery/components/lottery-announcement-banner";
 import { MetricsWithSuspense } from "@/features/metrics/components/metrics-with-suspense";
 import FeaturedMissions from "@/features/missions/components/featured-missions";
@@ -15,6 +16,7 @@ import {
   hasPrivateProfile,
 } from "@/features/user-profile/services/profile";
 import { getCurrentSeasonId } from "@/lib/loaders/seasons-loaders";
+import { createAdminClient } from "@/lib/supabase/adminClient";
 import { generateRootMetadata } from "@/lib/utils/metadata";
 
 // メタデータ生成を外部関数に委譲
@@ -50,6 +52,9 @@ export default async function Home({
     if (unnotifiedBadges.length > 0) {
       badgeNotifications = unnotifiedBadges;
     }
+
+    // 累計ポイントが閾値に到達していればLINEオーディエンスへ追加（画面表示への影響なし）
+    await syncPointMilestoneAudience(await createAdminClient(), user.id);
   }
 
   //フューチャードミッションの存在確認

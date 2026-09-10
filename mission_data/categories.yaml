@@ -1,5 +1,6 @@
 categories:
   # ── 1000pt到達までの3ステップ（浜通りクエスト運用の主要導線） ──
+  # 運用計画に無いカテゴリはすべて削除済み（2026-09-11 削減）
   - slug: official-line-registration
     title: 公式LINE登録をしよう
     sort_no: 10
@@ -11,68 +12,4 @@ categories:
   - slug: attend-events
     title: イベントに参加しよう
     sort_no: 30
-    category_kbn: DEFAULT
-  - slug: learn-teammirai-supporter
-    title: サポーター活動について知ろう
-    sort_no: 50
-    category_kbn: DEFAULT
-  - slug: follow-teammirai
-    title: SNSをフォローしよう
-    sort_no: 100
-    category_kbn: DEFAULT
-  - slug: learn-about-teammirai
-    title: 浜通りクエストのことを知ろう
-    sort_no: 200
-    category_kbn: DEFAULT
-  - slug: join-community
-    title: コミュニティに参加しよう
-    sort_no: 300
-    category_kbn: DEFAULT
-  - slug: support-with-likes
-    title: いいねで応援しよう
-    sort_no: 400
-    category_kbn: DEFAULT
-  - slug: share-and-spread
-    title: 発信・拡散しよう
-    sort_no: 180
-    category_kbn: DEFAULT
-  - slug: local-activities
-    title: 地域で活動しよう
-    sort_no: 600
-    category_kbn: DEFAULT
-  - slug: learn-with-quiz
-    title: クイズで学ぼう
-    sort_no: 700
-    category_kbn: DEFAULT
-  - slug: improve-policies
-    title: 政策を見てみよう
-    sort_no: 800
-    category_kbn: DEFAULT
-  - slug: support-on-youtube
-    title: YouTubeで応援しよう
-    sort_no: 900
-    category_kbn: DEFAULT
-  - slug: support-on-tiktok
-    title: TikTokで応援しよう
-    sort_no: 1000
-    category_kbn: DEFAULT
-  - slug: support-on-x
-    title: Xで応援しよう
-    sort_no: 1100
-    category_kbn: DEFAULT
-  - slug: support-on-note
-    title: noteで応援しよう
-    sort_no: 1200
-    category_kbn: DEFAULT
-  - slug: support-on-threads
-    title: Threadsで応援しよう
-    sort_no: 1250
-    category_kbn: DEFAULT
-  - slug: create-and-support
-    title: 作って応援しよう
-    sort_no: 1300
-    category_kbn: DEFAULT
-  - slug: vote-in-various-ways
-    title: 投票しよう
-    sort_no: 1400
     category_kbn: DEFAULT

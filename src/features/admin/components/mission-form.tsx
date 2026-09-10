@@ -62,7 +62,7 @@ export function MissionForm({
   const [error, setError] = useState<string | null>(null);
   const [categoryIds, setCategoryIds] = useState<string[]>(selectedCategoryIds);
   const [artifactType, setArtifactType] = useState(
-    mission?.required_artifact_type ?? ARTIFACT_TYPES.NONE.key,
+    mission?.required_artifact_type ?? ARTIFACT_TYPES.GEO_CHECKIN.key,
   );
   const [difficulty, setDifficulty] = useState(mission?.difficulty ?? 1);
   // 新規作成時だけ難易度に追従させる。既存の値を勝手に書き換えない

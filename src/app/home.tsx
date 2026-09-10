@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import NoticeBoardAlert from "@/components/common/notice-board-alert";
 import Hero from "@/components/top/hero";
+import { LotteryAnnouncementBanner } from "@/features/lottery/components/lottery-announcement-banner";
 import { MetricsWithSuspense } from "@/features/metrics/components/metrics-with-suspense";
 import FeaturedMissions from "@/features/missions/components/featured-missions";
 import FirstMissions from "@/features/missions/components/first-missions";
@@ -68,6 +69,9 @@ export default async function Home({
 
   return (
     <div className="flex flex-col min-h-screen w-full">
+      {/* 抽選応募対象になったことのお知らせ */}
+      <LotteryAnnouncementBanner />
+
       {/* レベルアップ通知 */}
       {levelUpNotification && (
         <LevelUpCheck levelUpData={levelUpNotification} />

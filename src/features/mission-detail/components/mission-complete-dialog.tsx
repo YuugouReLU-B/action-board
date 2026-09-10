@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,6 +16,8 @@ import { ShareFacebookButton } from "@/features/mission-detail/components/share-
 import { ShareLineButton } from "@/features/mission-detail/components/share-buttons/share-line-button";
 import { ShareTwitterButton } from "@/features/mission-detail/components/share-buttons/share-twitter-button";
 import { ShareUrlButton } from "@/features/mission-detail/components/share-buttons/share-url-button";
+import { loadSuggestedEvent } from "@/features/mission-detail/loaders/suggested-events-loaders";
+import type { SuggestedEvent } from "@/features/mission-detail/services/suggested-events";
 import type { Tables } from "@/lib/types/supabase";
 
 type Props = {
@@ -25,6 +29,21 @@ type Props = {
 export function MissionCompleteDialog({ isOpen, onClose, mission }: Props) {
   const message = `「${mission.title}」を達成しました！`;
   const shareMessage = `浜通りクエストで${message} #浜通りクエスト\n`;
+
+  const [suggestedEvent, setSuggestedEvent] = useState<SuggestedEvent | null>(
+    null,
+  );
+
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    loadSuggestedEvent(mission.id).then((event) => {
+      if (!cancelled) setSuggestedEvent(event);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, mission.id]);
 
   // OGP画像付きURLを生成（slugベース）
   const shareUrl =
@@ -77,6 +96,35 @@ export function MissionCompleteDialog({ isOpen, onClose, mission }: Props) {
             <ShareUrlButton url={shareUrl} />
           </div>
         </section>
+
+        {suggestedEvent && (
+          <section className="py-4 border-t">
+            <header className="text-center mb-3">
+              <p className="text-sm font-medium">他のイベントもチェック！</p>
+            </header>
+            <Link
+              href={`/missions/${suggestedEvent.slug}`}
+              onClick={onClose}
+              className="flex items-center gap-3 rounded-lg border p-3 hover:bg-gray-50"
+            >
+              <img
+                src={suggestedEvent.icon_url ?? "/img/mission_fallback.svg"}
+                alt=""
+                width={40}
+                height={40}
+                className="size-10 shrink-0 rounded-full object-cover"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-bold">
+                  {suggestedEvent.title}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {suggestedEvent.points}ポイント
+                </p>
+              </div>
+            </Link>
+          </section>
+        )}
 
         <DialogFooter className="pt-4">
           <Button onClick={onClose} className="w-full">

@@ -715,7 +715,7 @@ export default function PostingPageClient({
   const textMarkerStyles = `
     .pm-text {
       font-size:14px;
-      color:#000;
+      color: var(--app-print-text);
     }
     /* Geoman アクションボタンを非表示 */
     .leaflet-pm-action.action-finish,
@@ -1004,7 +1004,7 @@ export default function PostingPageClient({
 
         .leaflet-pm-icon {
           background-color: white !important;
-          border: 1px solid #ccc !important;
+          border: 1px solid var(--app-print-border) !important;
         }
 
         /* ツールバーボタンにテキストラベルを追加 */
@@ -1020,7 +1020,7 @@ export default function PostingPageClient({
           font-weight: 900;
           line-height: 1;
           white-space: nowrap;
-          color: #333;
+          color: var(--app-print-label);
         }
         .leaflet-pm-toolbar .leaflet-pm-icon {
           flex-shrink: 0;

@@ -1,11 +1,11 @@
 import {
-  enrichTimelineItemsWithMemberships,
   extractValidUserIds,
   mapAchievementsToTimeline,
   mapAchievementToTimeline,
   mapActivitiesToTimeline,
   mapActivityToTimeline,
   mergeAndSortTimeline,
+  toActivityTimelineItems,
 } from "./timeline-transforms";
 
 const mockProfile = {
@@ -34,12 +34,7 @@ describe("mapAchievementToTimeline", () => {
       missions: { title: "First Mission", slug: "first-mission" },
     };
 
-    const result = mapAchievementToTimeline(
-      achievement,
-      "user-1",
-      mockProfile,
-      mockPartyMembership,
-    );
+    const result = mapAchievementToTimeline(achievement, "user-1", mockProfile);
 
     expect(result).toEqual({
       id: "achievement_ach-1",
@@ -52,7 +47,6 @@ describe("mapAchievementToTimeline", () => {
       mission_slug: "first-mission",
       created_at: "2025-06-01T10:00:00Z",
       activity_type: "mission_achievement",
-      party_membership: mockPartyMembership,
     });
   });
 
@@ -65,18 +59,17 @@ describe("mapAchievementToTimeline", () => {
       missions: { title: "Mission", slug: "mission" },
     };
 
-    const result = mapAchievementToTimeline(achievement, "user-1", null, null);
+    const result = mapAchievementToTimeline(achievement, "user-1", null);
 
     expect(result.name).toBe("");
     expect(result.address_prefecture).toBeNull();
     expect(result.avatar_url).toBeNull();
-    expect(result.party_membership).toBeNull();
   });
 });
 
 describe("mapAchievementsToTimeline", () => {
   it("returns empty array for empty input", () => {
-    const result = mapAchievementsToTimeline([], "user-1", mockProfile, null);
+    const result = mapAchievementsToTimeline([], "user-1", mockProfile);
     expect(result).toEqual([]);
   });
 
@@ -95,7 +88,6 @@ describe("mapAchievementsToTimeline", () => {
       achievements,
       "user-1",
       mockProfile,
-      mockPartyMembership,
     );
 
     expect(result).toHaveLength(1);
@@ -110,7 +102,6 @@ describe("mapAchievementsToTimeline", () => {
       mission_slug: "first-mission",
       created_at: "2025-06-01T10:00:00Z",
       activity_type: "mission_achievement",
-      party_membership: mockPartyMembership,
     });
   });
 
@@ -125,17 +116,11 @@ describe("mapAchievementsToTimeline", () => {
       },
     ];
 
-    const result = mapAchievementsToTimeline(
-      achievements,
-      "user-1",
-      null,
-      null,
-    );
+    const result = mapAchievementsToTimeline(achievements, "user-1", null);
 
     expect(result[0].name).toBe("");
     expect(result[0].address_prefecture).toBeNull();
     expect(result[0].avatar_url).toBeNull();
-    expect(result[0].party_membership).toBeNull();
   });
 });
 
@@ -149,7 +134,7 @@ describe("mapActivityToTimeline", () => {
       user_id: "user-1",
     };
 
-    const result = mapActivityToTimeline(activity, "user-1", mockProfile, null);
+    const result = mapActivityToTimeline(activity, "user-1", mockProfile);
 
     expect(result).toEqual({
       id: "activity_act-1",
@@ -162,7 +147,6 @@ describe("mapActivityToTimeline", () => {
       mission_slug: null,
       created_at: "2025-06-02T12:00:00Z",
       activity_type: "signup",
-      party_membership: null,
     });
   });
 
@@ -175,7 +159,7 @@ describe("mapActivityToTimeline", () => {
       user_id: "user-1",
     };
 
-    const result = mapActivityToTimeline(activity, "user-1", mockProfile, null);
+    const result = mapActivityToTimeline(activity, "user-1", mockProfile);
 
     expect(result.mission_id).toBeNull();
     expect(result.mission_slug).toBeNull();
@@ -190,7 +174,7 @@ describe("mapActivityToTimeline", () => {
       user_id: "user-1",
     };
 
-    const result = mapActivityToTimeline(activity, "user-1", null, null);
+    const result = mapActivityToTimeline(activity, "user-1", null);
 
     expect(result.name).toBe("");
     expect(result.address_prefecture).toBeNull();
@@ -200,7 +184,7 @@ describe("mapActivityToTimeline", () => {
 
 describe("mapActivitiesToTimeline", () => {
   it("returns empty array for empty input", () => {
-    const result = mapActivitiesToTimeline([], "user-1", mockProfile, null);
+    const result = mapActivitiesToTimeline([], "user-1", mockProfile);
     expect(result).toEqual([]);
   });
 
@@ -215,12 +199,7 @@ describe("mapActivitiesToTimeline", () => {
       },
     ];
 
-    const result = mapActivitiesToTimeline(
-      activities,
-      "user-1",
-      mockProfile,
-      null,
-    );
+    const result = mapActivitiesToTimeline(activities, "user-1", mockProfile);
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
@@ -234,7 +213,6 @@ describe("mapActivitiesToTimeline", () => {
       mission_slug: null,
       created_at: "2025-06-02T12:00:00Z",
       activity_type: "signup",
-      party_membership: null,
     });
   });
 
@@ -249,7 +227,7 @@ describe("mapActivitiesToTimeline", () => {
       },
     ];
 
-    const result = mapActivitiesToTimeline(activities, "user-1", null, null);
+    const result = mapActivitiesToTimeline(activities, "user-1", null);
 
     expect(result[0].name).toBe("");
     expect(result[0].address_prefecture).toBeNull();
@@ -360,7 +338,7 @@ describe("extractValidUserIds", () => {
   });
 });
 
-describe("enrichTimelineItemsWithMemberships", () => {
+describe("toActivityTimelineItems", () => {
   const baseMembership = {
     user_id: "user-1",
     plan: "supporter",
@@ -386,7 +364,7 @@ describe("enrichTimelineItemsWithMemberships", () => {
       },
     ];
 
-    const result = enrichTimelineItemsWithMemberships(items, {});
+    const result = toActivityTimelineItems(items);
 
     expect(result[0]).toEqual({
       id: "",
@@ -399,7 +377,6 @@ describe("enrichTimelineItemsWithMemberships", () => {
       mission_slug: null,
       created_at: "",
       activity_type: "",
-      party_membership: null,
     });
   });
 
@@ -418,11 +395,7 @@ describe("enrichTimelineItemsWithMemberships", () => {
       },
     ];
 
-    const result = enrichTimelineItemsWithMemberships(items, {
-      "user-1": baseMembership,
-    });
-
-    expect(result[0].party_membership).toEqual(baseMembership);
+    const result = toActivityTimelineItems(items);
   });
 
   it("sets party_membership to null when user has no membership", () => {
@@ -440,11 +413,7 @@ describe("enrichTimelineItemsWithMemberships", () => {
       },
     ];
 
-    const result = enrichTimelineItemsWithMemberships(items, {
-      "user-1": baseMembership,
-    });
-
-    expect(result[0].party_membership).toBeNull();
+    const result = toActivityTimelineItems(items);
   });
 
   it("handles mission_slug string values", () => {
@@ -463,7 +432,7 @@ describe("enrichTimelineItemsWithMemberships", () => {
       },
     ];
 
-    const result = enrichTimelineItemsWithMemberships(items, {});
+    const result = toActivityTimelineItems(items);
     expect(result[0].mission_slug).toBe("my-mission");
   });
 
@@ -483,7 +452,7 @@ describe("enrichTimelineItemsWithMemberships", () => {
       },
     ];
 
-    const result = enrichTimelineItemsWithMemberships(items, {});
+    const result = toActivityTimelineItems(items);
     expect(result[0].mission_slug).toBeNull();
   });
 
@@ -502,7 +471,7 @@ describe("enrichTimelineItemsWithMemberships", () => {
       },
     ];
 
-    const result = enrichTimelineItemsWithMemberships(items, {});
+    const result = toActivityTimelineItems(items);
     expect(result[0].mission_slug).toBeNull();
   });
 });

@@ -307,7 +307,7 @@ export async function grantMissionCompletionXp(
     // ミッション情報を取得して難易度と注目ミッションフラグを確認
     const { data: mission, error: missionError } = await supabase
       .from("missions")
-      .select("difficulty, title, is_featured")
+      .select("difficulty, points, title, is_featured")
       .eq("id", missionId)
       .single();
 
@@ -316,11 +316,8 @@ export async function grantMissionCompletionXp(
       return { success: false, error: "ミッション情報の取得に失敗しました" };
     }
 
-    // 難易度に基づくXP計算（注目ミッションは2倍）
-    const xpToGrant = calculateMissionXp(
-      mission.difficulty,
-      mission.is_featured,
-    );
+    // ミッションに設定されたポイント（注目ミッションは2倍）
+    const xpToGrant = calculateMissionXp(mission);
     const description = `ミッション「${mission.title}」達成による経験値獲得`;
 
     // 共通のXP処理を実行

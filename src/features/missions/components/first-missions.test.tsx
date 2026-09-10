@@ -65,7 +65,7 @@ describe("FirstMissions", () => {
     const { getByTestId } = render(component);
 
     expect(getByTestId("filter-slugs")).toHaveTextContent(
-      "watch-anno-welcome-message,add-supporter-line-friend,join-prefecture-openchat,join-slack",
+      "add-supporter-line-friend",
     );
   });
 
@@ -82,7 +82,7 @@ describe("FirstMissions", () => {
       new Map([["mission-1", 1]]),
     );
     mockGetMissionsWithFilter.mockResolvedValue([
-      missionOf("mission-2", "join-prefecture-openchat"),
+      missionOf("mission-2", "add-supporter-line-friend"),
     ]);
 
     const component = await FirstMissions({ userId: "test-user-id" });
@@ -129,11 +129,8 @@ describe("FirstMissions", () => {
   });
 
   it("FIRST_MISSION_SLUGSの並び順が仕様どおりである", () => {
-    expect([...FIRST_MISSION_SLUGS]).toEqual([
-      "watch-anno-welcome-message",
-      "add-supporter-line-friend",
-      "join-prefecture-openchat",
-      "join-slack",
-    ]);
+    // 派生元固有のミッション（安野氏の動画・Slack・都道府県オープンチャット）は
+    // 非表示にしたため、公式LINE友だち追加の1本だけになった
+    expect([...FIRST_MISSION_SLUGS]).toEqual(["add-supporter-line-friend"]);
   });
 });

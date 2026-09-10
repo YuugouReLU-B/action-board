@@ -16,11 +16,13 @@ type AchievementWithMission = {
         id: string;
         title: string;
         difficulty: number;
+        points: number;
       }
     | {
         id: string;
         title: string;
         difficulty: number;
+        points: number;
       }[];
 };
 
@@ -63,7 +65,8 @@ export async function POST(request: NextRequest) {
         missions!inner(
           id,
           title,
-          difficulty
+          difficulty,
+          points
         )
       `)
         .order("created_at", { ascending: true });
@@ -192,7 +195,7 @@ export async function POST(request: NextRequest) {
         continue;
       }
 
-      const xpToGrant = calculateMissionXp(mission.difficulty);
+      const xpToGrant = calculateMissionXp({ points: mission.points });
       const description = `ミッション「${mission.title}」達成による経験値獲得`;
 
       batchTransactions.push({

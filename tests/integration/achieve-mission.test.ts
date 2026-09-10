@@ -49,6 +49,7 @@ describe("achieveMission ユースケース", () => {
     testMission = await createTestMission({
       requiredArtifactType: "NONE",
       difficulty: 1,
+      points: 50,
     });
 
     const result = await achieveMission(adminClient, testUserClient, {
@@ -86,6 +87,7 @@ describe("achieveMission ユースケース", () => {
     testMission = await createTestMission({
       requiredArtifactType: "TEXT",
       difficulty: 2,
+      points: 100,
     });
 
     const result = await achieveMission(adminClient, testUserClient, {
@@ -120,6 +122,7 @@ describe("achieveMission ユースケース", () => {
     testMission = await createTestMission({
       requiredArtifactType: "LINK",
       difficulty: 1,
+      points: 50,
       maxAchievementCount: null,
     });
 
@@ -153,6 +156,7 @@ describe("achieveMission ユースケース", () => {
     testMission = await createTestMission({
       requiredArtifactType: "LINK",
       difficulty: 1,
+      points: 50,
       maxAchievementCount: null,
     });
 
@@ -190,6 +194,7 @@ describe("achieveMission ユースケース", () => {
     testMission = await createTestMission({
       requiredArtifactType: "NONE",
       difficulty: 1,
+      points: 50,
       maxAchievementCount: 1,
     });
 
@@ -234,6 +239,7 @@ describe("achieveMission ユースケース", () => {
     testMission = await createTestMission({
       requiredArtifactType: "NONE",
       difficulty: 1,
+      points: 50,
     });
 
     // ミッション達成
@@ -292,6 +298,7 @@ describe("achieveMission ユースケース", () => {
     testMission = await createTestMission({
       requiredArtifactType: "POSTING",
       difficulty: 1,
+      points: 50,
       isFeatured: false,
     });
 
@@ -350,6 +357,7 @@ describe("achieveMission ユースケース", () => {
     testMission = await createTestMission({
       requiredArtifactType: "POSTER",
       difficulty: 1,
+      points: 50,
       isFeatured: false,
     });
 
@@ -407,6 +415,7 @@ describe("achieveMission ユースケース", () => {
     testMission = await createTestMission({
       requiredArtifactType: "POSTING",
       difficulty: 1,
+      points: 50,
       isFeatured: true,
     });
 
@@ -489,6 +498,7 @@ describe("cancelSubmission ユースケース - 追加テスト", () => {
       testMission = await createTestMission({
         requiredArtifactType: "POSTING",
         difficulty: 1,
+        points: 50,
         slug: bonusSlug,
         isFeatured: false,
       });
@@ -561,6 +571,7 @@ describe("cancelSubmission ユースケース - 追加テスト", () => {
     testMission = await createTestMission({
       requiredArtifactType: "NONE",
       difficulty: 1,
+      points: 50,
     });
 
     const nonExistentId = "00000000-0000-0000-0000-000000000000";

@@ -3,12 +3,7 @@ import { getUserMissionAchievements } from "@/features/user-achievements/loaders
 import Missions from "./mission-list";
 
 // はじめのミッションに表示するミッション（この配列の並び順で表示される）
-export const FIRST_MISSION_SLUGS = [
-  "watch-anno-welcome-message",
-  "add-supporter-line-friend",
-  "join-prefecture-openchat",
-  "join-slack",
-] as const;
+export const FIRST_MISSION_SLUGS = ["add-supporter-line-friend"] as const;
 
 // 見出し下の説明文。スマホで折り返さず1行に収めるため 20 文字以内に保つ
 // （text-sm = 14px の全角 1 文字 ≒ 14px、コンテナ幅は viewport - 32px の

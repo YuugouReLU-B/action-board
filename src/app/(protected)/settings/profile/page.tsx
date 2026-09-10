@@ -1,10 +1,7 @@
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Message } from "@/components/common/form-message";
-import { PartyBadgeVisibilityToggle } from "@/features/party-membership/components/party-badge-visibility-toggle";
-import { getPartyMembership } from "@/features/party-membership/loaders/memberships-loaders";
-import { TikTokIcon } from "@/features/tiktok/components";
+import { LotteryEntryPanel } from "@/features/lottery/components/lottery-entry-panel";
+import { getFirstMissionPath } from "@/features/missions/services/first-mission";
 import {
   getMyProfile,
   getProfile,
@@ -13,7 +10,7 @@ import {
 import { AccountDeletionSection } from "@/features/user-settings/components/account-deletion-section";
 import { LoginSection } from "@/features/user-settings/components/login-section";
 import ProfileForm from "@/features/user-settings/components/profile-form";
-import { YouTubeIcon } from "@/features/youtube/components";
+import { createAdminClient } from "@/lib/supabase/adminClient";
 
 type ProfileSettingsPageSearchParams = {
   new: string;
@@ -36,13 +33,18 @@ export default async function ProfileSettingsPage({
   // ユーザー情報を取得
   const privateUser = await getMyProfile();
   const publicUser = await getProfile(user.id);
-  const partyMembership = await getPartyMembership(user.id);
 
   // 新規ユーザーかどうか判定
   const isNew = Boolean(params?.new);
 
   // メールアドレス変更成功メッセージ
   const isEmailChangeSuccessful = params?.type === "email_change";
+
+  // 登録直後はトップではなく最初のミッションへ送る
+  const nextUrlAfterSignup = await getFirstMissionPath(
+    await createAdminClient(),
+    user.id,
+  );
 
   return (
     <div className="flex flex-col items-center justify-center py-2">
@@ -58,14 +60,8 @@ export default async function ProfileSettingsPage({
           github_username: publicUser?.github_username || null,
           avatar_url: publicUser?.avatar_url || null,
         }}
-        initialPrivateUser={privateUser}
+        nextUrlAfterSignup={nextUrlAfterSignup}
       />
-
-      {partyMembership && (
-        <div className="pt-4 border-gray-200 space-y-3">
-          <PartyBadgeVisibilityToggle membership={partyMembership} />
-        </div>
-      )}
 
       {!isNew && (
         <div className="w-full max-w-md pt-4 ">
@@ -77,40 +73,8 @@ export default async function ProfileSettingsPage({
       )}
 
       {!isNew && (
-        <div className="w-full max-w-md mt-6 pt-6 border-t border-gray-200">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">
-            外部サービス連携
-          </h3>
-          <div className="space-y-2">
-            {process.env.NEXT_PUBLIC_TIKTOK_CLIENT_KEY && (
-              <Link
-                href="/settings/tiktok"
-                className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <TikTokIcon className="w-5 h-5" />
-                  <span className="text-sm font-medium text-gray-900">
-                    TikTok連携
-                  </span>
-                </div>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </Link>
-            )}
-            {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID && (
-              <Link
-                href="/settings/youtube"
-                className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <YouTubeIcon className="w-5 h-5 text-red-600" />
-                  <span className="text-sm font-medium text-gray-900">
-                    YouTube連携
-                  </span>
-                </div>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </Link>
-            )}
-          </div>
+        <div className="w-full max-w-md pt-4">
+          <LotteryEntryPanel />
         </div>
       )}
 

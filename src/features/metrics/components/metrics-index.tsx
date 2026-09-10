@@ -1,16 +1,16 @@
 import { Separator } from "@/components/ui/separator";
 import {
   fetchAchievementData,
-  fetchSupporterData,
+  fetchRegistrationData,
 } from "@/features/metrics/loaders/metrics-loaders";
-import type { AchievementData } from "@/features/metrics/types/metrics-types";
-import { getTikTokStatsSummary } from "@/features/tiktok-stats/loaders/tiktok-stats-loaders";
-import { getYouTubeStatsSummary } from "@/features/youtube-stats/loaders/youtube-stats-loaders";
+import type {
+  AchievementData,
+  RegistrationData,
+} from "@/features/metrics/types/metrics-types";
 import { formatUpdateTime } from "@/lib/utils/metrics-formatter";
 import { AchievementMetric } from "./achievement-metric";
 import { MetricsLayout } from "./metrics-layout";
-import { SupporterMetric } from "./supporter-metric";
-import { VideoMetric } from "./video-metric";
+import { RegistrationMetric } from "./registration-metric";
 
 export { MetricsErrorBoundary } from "./metrics-error-boundary";
 export { MetricsWithSuspense } from "./metrics-with-suspense";
@@ -18,88 +18,43 @@ export { MetricsWithSuspense } from "./metrics-with-suspense";
 /**
  * メトリクス表示コンポーネント
  *
- * チームみらいの活動状況を表示するメインコンポーネント
+ * 浜通りクエストの活動状況を表示するメインコンポーネント
  * 以下のデータを統合して表示：
- * 1. サポーター数（外部API）
+ * 1. 登録者数（Supabase）
  * 2. アクション達成数（Supabase、今年のデータのみ）
- * 3. YouTube + TikTok動画再生数（Supabase、今年のデータのみ）
+ *
+ * どちらも自前DBの集計であり、外部APIには依存しない。
  */
 export async function Metrics() {
   // 今年の1月1日以降のデータのみ取得
   const thisYear = new Date().getFullYear();
   const startOfYear = new Date(`${thisYear}-01-01`);
 
-  // サポーター数とアクション数を取得
-  let supporterData = null;
+  // 登録者数とアクション数を取得
+  let registrationData: RegistrationData | null = null;
   let achievementData: AchievementData | null = null;
   try {
-    [supporterData, achievementData] = await Promise.all([
-      fetchSupporterData(),
+    [registrationData, achievementData] = await Promise.all([
+      fetchRegistrationData(),
       fetchAchievementData(startOfYear),
     ]);
   } catch (error) {
     console.error("Failed to fetch metrics data:", error);
   }
-  let combinedVideoStats = {
-    totalVideos: 0,
-    totalViews: 0,
-    dailyViewsIncrease: 0,
-    dailyVideosIncrease: 0,
-  };
-  try {
-    const [youtubeStats, tiktokStats] = await Promise.all([
-      getYouTubeStatsSummary(startOfYear),
-      getTikTokStatsSummary(startOfYear),
-    ]);
-    combinedVideoStats = {
-      totalVideos: youtubeStats.totalVideos + tiktokStats.totalVideos,
-      totalViews: youtubeStats.totalViews + tiktokStats.totalViews,
-      dailyViewsIncrease:
-        (youtubeStats.dailyViewsIncrease ?? 0) +
-        (tiktokStats.dailyViewsIncrease ?? 0),
-      dailyVideosIncrease:
-        (youtubeStats.dailyVideosIncrease ?? 0) +
-        (tiktokStats.dailyVideosIncrease ?? 0),
-    };
-  } catch (error) {
-    console.error("Failed to fetch video stats:", error);
-  }
 
-  const fallbackSupporterCount =
-    Number(process.env.FALLBACK_SUPPORTER_COUNT) || 0;
-  const fallbackSupporterIncrease =
-    Number(process.env.FALLBACK_SUPPORTER_INCREASE) || 0;
-
-  const lastUpdated = supporterData?.updatedAt
-    ? formatUpdateTime(supporterData.updatedAt)
-    : process.env.FALLBACK_UPDATE_DATE || "2025.07.03 02:20";
+  // 自前DBのリアルタイム集計のため、描画時刻をそのまま更新時刻として表示する
+  const lastUpdated = formatUpdateTime(new Date().toISOString());
 
   return (
-    <MetricsLayout title="チームみらいの活動状況🚀" lastUpdated={lastUpdated}>
-      {/* サポーター数 */}
-      <SupporterMetric
-        data={supporterData}
-        fallbackCount={fallbackSupporterCount}
-        fallbackIncrease={fallbackSupporterIncrease}
-      />
+    <MetricsLayout title="浜通りクエストの活動状況🚀" lastUpdated={lastUpdated}>
+      {/* 登録者数 */}
+      <RegistrationMetric data={registrationData} />
 
       {/* 水平セパレーター */}
       <Separator orientation="horizontal" className="my-4" />
 
       {/* アクション達成数（今年のデータのみ） */}
       <AchievementMetric data={achievementData} startDate={startOfYear} />
-
-      {/* 水平セパレーター */}
-      <Separator orientation="horizontal" className="my-4" />
-
-      {/* 動画統計（YouTube + TikTok） */}
-      <VideoMetric
-        totalViews={combinedVideoStats.totalViews}
-        totalVideos={combinedVideoStats.totalVideos}
-        dailyViewsIncrease={combinedVideoStats.dailyViewsIncrease}
-        dailyVideosIncrease={combinedVideoStats.dailyVideosIncrease}
-        startDate={startOfYear}
-      />
     </MetricsLayout>
   );
 }

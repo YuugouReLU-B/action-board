@@ -33,15 +33,27 @@
 }
 
 @utility bg-mirai-gradient {
-  background: linear-gradient(135deg, #64d8c6, #bcecd3);
+  background: linear-gradient(
+    135deg,
+    var(--app-brand-light),
+    var(--app-brand-pale)
+  );
 }
 
 @utility bg-gradient-hero {
-  background: linear-gradient(90deg, #64d8c6, #bcecd3);
+  background: linear-gradient(
+    90deg,
+    var(--app-brand-light),
+    var(--app-brand-pale)
+  );
 }
 
 @utility bg-gradient-level {
-  background: linear-gradient(90deg, #30baa7, #47c991);
+  background: linear-gradient(
+    90deg,
+    var(--app-brand-primary),
+    var(--app-brand-level-end)
+  );
 }
 
 @utility bg-gradient-radial {
@@ -67,40 +79,177 @@
 
 @utility mission-content {
   & a {
-    @apply text-primary underline transition-colors duration-200;
+    @apply text-brand-ink underline transition-colors duration-200;
   }
 }
 
 @layer base {
   :root {
-    --background: 40 27% 95%;
-    --foreground: 0 0% 4%;
+    --background: 48 38% 97%;
+    --foreground: 13 25% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 4%;
+    --card-foreground: 13 25% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 4%;
-    --primary: 168 59% 41%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 9%;
+    --popover-foreground: 13 25% 11%;
+    --primary: 55 100% 50%;
+    --primary-foreground: 13 25% 11%;
+    --secondary: 48 20% 95%;
+    --secondary-foreground: 13 25% 11%;
+    --muted: 48 20% 95%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 55 100% 82%;
+    --accent-foreground: 13 25% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 0 0% 63%;
+    --ring: 13 25% 11%;
     --radius: 0.625rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --TM-accent-light: #64d8c6;
-    --TM-gradient-end: #bcecd3;
-    --TM-secondary: #e2f6f3;
+
+    /* ==========================================================
+       アプリ固有のカラートークン
+       ----------------------------------------------------------
+       ここが全ハードコード色の唯一の定義元。
+       メタデータ（表示名・グループ・変更可否）は
+       src/lib/design/color-tokens.ts が持ち、
+       color-tokens.test.ts がこのファイルとの同期を検証する。
+       /dev の「デザイン差し替え」タブはこの変数を上書きする。
+       ========================================================== */
+
+    /* --- ブランド ------------------------------------------- */
+    --app-brand-primary: #ffea00;
+    /* リンクや強調文字に使う「読ませる」ブランド色。
+       --primary はボタンの塗りにも使われるため、彩度の高い色を入れると
+       文字が読めなくなる。文字用途はこちらに分離している。
+       既定値は従来 text-brand-ink が解決していた hsl(168 59% 41%) と同じ */
+    --app-brand-ink: #736000;
+    --app-brand-primary-strong: #b38f00;
+    --app-brand-deep: #8a7300;
+    --app-brand-link-hover: #6b5900;
+    --app-brand-light: #ffea00;
+    --app-brand-pale: #fffbe6;
+    --app-brand-level-end: #ffd400;
+    --app-brand-surface: #fff8a3;
+
+    /* --- オンボーディング ------------------------------------ */
+    --app-onboarding-from: #ffea00;
+    --app-onboarding-to: #fffbe6;
+
+    /* --- 地図: 現在地マーカー -------------------------------- */
+    --app-map-location-stroke: #2563eb;
+    --app-map-location-fill: #60a5fa;
+    --app-map-spider-leg: #222222;
+
+    /* --- 地図: スポットマップのピン -------------------------- */
+    --app-map-spot-todo: #ef4444;
+    --app-map-spot-done: #10b981;
+
+    /* --- 地図: ポスター掲示板ステータス ---------------------- */
+    --app-poster-not-yet: #6b7280;
+    --app-poster-reserved: #f59e0b;
+    --app-poster-done: #10b981;
+    --app-poster-error: #ef4444;
+    --app-poster-other: #8b5cf6;
+
+    /* --- 地図: ポスティングステータス ------------------------ */
+    --app-posting-planned: #3b82f6;
+    --app-posting-planned-fill: #93c5fd;
+    --app-posting-completed: #10b981;
+    --app-posting-completed-fill: #6ee7b7;
+    --app-posting-unavailable: #ef4444;
+    --app-posting-unavailable-fill: #fca5a5;
+    --app-posting-other: #8b5cf6;
+    --app-posting-other-fill: #c4b5fd;
+
+    /* --- 地図: 戸別ポスター密度 ------------------------------ */
+    --app-density-low: #60a5fa;
+    --app-density-mid: #34d399;
+    --app-density-high: #fbbf24;
+    --app-density-very-high: #f87171;
+
+    /* --- 都道府県ランキング配色（濃い順の9段階） ------------- */
+    --app-rank-scale-1: #08306b;
+    --app-rank-scale-2: #08519c;
+    --app-rank-scale-3: #2171b5;
+    --app-rank-scale-4: #4292c6;
+    --app-rank-scale-5: #6baed6;
+    --app-rank-scale-6: #9ecae1;
+    --app-rank-scale-7: #c6dbef;
+    --app-rank-scale-8: #deebf7;
+    --app-rank-scale-9: #f7fbff;
+    --app-rank-no-data: #e5e7eb;
+
+    /* --- 都道府県マップUI ------------------------------------ */
+    --app-prefecture-title: #1f2937;
+    --app-prefecture-value: #059669;
+    --app-prefecture-muted: #6b7280;
+    --app-prefecture-label: #374151;
+    --app-prefecture-spinner-track: #e5e7eb;
+    --app-prefecture-spinner-head: #3b82f6;
+
+    /* --- 地図操作パネル -------------------------------------- */
+    --app-panel-text: #333333;
+    --app-panel-text-muted: #666666;
+    --app-panel-text-disabled: #999999;
+    --app-panel-divider: #eeeeee;
+    --app-panel-hover-bg: #f3f4f6;
+    --app-panel-active: #2563eb;
+
+    /* --- 印刷用 ---------------------------------------------- */
+    --app-print-text: #000000;
+    --app-print-border: #cccccc;
+    --app-print-label: #333333;
+
+    /* --- スクロールバー -------------------------------------- */
+    --app-scrollbar-track: #f1f1f1;
+    --app-scrollbar-thumb: #888888;
+    --app-scrollbar-thumb-hover: #555555;
+
+    /* --- 花火エフェクト -------------------------------------- */
+    --app-fireworks-text: #ffffff;
+
+    /* --- 外部サービスのブランド色（変更不可） -----------------
+       Google / LINE のブランドガイドライン上、色の改変は認めら
+       れていない。定義元を一元化する目的でのみ変数化しており、
+       /dev の差し替えUIではロック表示にすること。
+       -------------------------------------------------------- */
+    --app-vendor-google-blue: #4285f4;
+    --app-vendor-google-green: #34a853;
+    --app-vendor-google-yellow: #fbbc05;
+    --app-vendor-google-red: #ea4335;
+    --app-vendor-google-border: #747775;
+    --app-vendor-google-text: #1f1f1f;
+    --app-vendor-line-green: #00b900;
+    --app-vendor-line-green-hover: #00a000;
+
+    /* --- Tailwind パレットの緑系を金系へ写像 -----------------
+       コード中に text-emerald-700 / bg-emerald-100 / text-teal-600 のように
+       ブランドトークンを経由せず Tailwind のパレットを直接指定した箇所が
+       約180ある。ティールのまま残ると黄色の基調から浮くため、
+       「元の色と同じ相対輝度」の金系に置き換える。
+       輝度を合わせているので、既存のコントラスト比はほぼそのまま保たれる
+       （例: emerald-700 on emerald-100 は 4.78:1 -> 4.77:1）。
+       成功表示に使う green 系は意味を持つ色なので変換しない。
+       -------------------------------------------------------- */
+    --color-emerald-50: #fdfae8;
+    --color-emerald-100: #faf2c5;
+    --color-emerald-200: #f6e58e;
+    --color-emerald-500: #c2a100;
+    --color-emerald-600: #9c8200;
+    --color-emerald-700: #7d6900;
+    --color-emerald-800: #625100;
+    --color-teal-50: #fdfbec;
+    --color-teal-200: #f7e796;
+    --color-teal-400: #deb900;
+    --color-teal-500: #c3a300;
+    --color-teal-600: #9d8200;
+    --color-teal-700: #7d6900;
+    --color-teal-800: #645400;
   }
 
   .dark-unused {
@@ -155,5 +304,5 @@
 }
 
 .rdp-root {
-  --rdp-accent-color: #0d9488 !important;
+  --rdp-accent-color: var(--app-brand-deep) !important;
 }

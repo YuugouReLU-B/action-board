@@ -51,7 +51,7 @@ export async function achievePosterPlacementMission(
   // 1. ミッションを slug で検索
   const { data: mission, error: missionError } = await adminSupabase
     .from("missions")
-    .select("id, difficulty, is_featured, title")
+    .select("id, difficulty, points, is_featured, title")
     .eq("slug", POSTER_PLACEMENT_MISSION_SLUG)
     .single();
 
@@ -125,7 +125,7 @@ export async function achievePosterPlacementMission(
   }
 
   // 5. XP を付与
-  const xpToGrant = calculateMissionXp(mission.difficulty, mission.is_featured);
+  const xpToGrant = calculateMissionXp(mission);
   const xpDescription = `ミッション「${mission.title}」達成による経験値獲得`;
 
   const { error: xpTransactionError } = await adminSupabase

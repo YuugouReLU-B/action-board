@@ -8,7 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PREFECTURES } from "@/lib/constants/prefectures";
+import {
+  PREFECTURE_NOT_SELECTED,
+  PREFECTURES,
+} from "@/lib/constants/prefectures";
 
 type PrefectureSelectProps = {
   name: string;
@@ -32,7 +35,7 @@ export const PrefectureSelect: React.FC<PrefectureSelectProps> = ({
   return (
     <Select
       name={name}
-      defaultValue={defaultValue}
+      defaultValue={defaultValue || PREFECTURE_NOT_SELECTED}
       required={required}
       disabled={disabled}
       onValueChange={onValueChange}
@@ -41,6 +44,10 @@ export const PrefectureSelect: React.FC<PrefectureSelectProps> = ({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
+        {/* 未選択のまま送信されると、フォーム用の hidden な select が
+            先頭の選択肢（北海道）を送ってしまう。明示的な「選択しない」を
+            先頭に置いて、意図しない都道府県が保存されるのを防ぐ */}
+        <SelectItem value={PREFECTURE_NOT_SELECTED}>選択しない</SelectItem>
         {PREFECTURES.map((pref) => (
           <SelectItem value={pref} key={pref}>
             {pref}

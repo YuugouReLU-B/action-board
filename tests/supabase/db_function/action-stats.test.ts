@@ -16,6 +16,7 @@ describe("get_action_stats_summary 関数のテスト", () => {
       title: "統計テストミッション",
       content: "テスト",
       difficulty: 1,
+      points: 50,
       slug: `test-stats-${crypto.randomUUID()}`,
     });
   });
@@ -102,6 +103,7 @@ describe("get_daily_action_history 関数のテスト", () => {
       title: "日別統計テスト",
       content: "テスト",
       difficulty: 1,
+      points: 50,
       slug: `test-daily-${crypto.randomUUID()}`,
     });
   });
@@ -188,6 +190,7 @@ describe("get_mission_action_ranking 関数のテスト", () => {
         title: "人気ミッション",
         content: "テスト",
         difficulty: 1,
+        points: 50,
         slug: `test-popular-${crypto.randomUUID()}`,
         is_hidden: false,
       },
@@ -196,6 +199,7 @@ describe("get_mission_action_ranking 関数のテスト", () => {
         title: "普通ミッション",
         content: "テスト",
         difficulty: 1,
+        points: 50,
         slug: `test-normal-${crypto.randomUUID()}`,
         is_hidden: false,
       },

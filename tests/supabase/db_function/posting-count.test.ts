@@ -15,6 +15,7 @@ describe("get_user_posting_count 関数のテスト", () => {
       title: "ポスティングミッション",
       content: "テスト",
       difficulty: 1,
+      points: 50,
       slug: `test-posting-${crypto.randomUUID()}`,
       required_artifact_type: "POSTING",
     });
@@ -185,6 +186,7 @@ describe("get_top_users_posting_count 関数のテスト", () => {
       title: "ポスティングミッション",
       content: "テスト",
       difficulty: 1,
+      points: 50,
       slug: `test-posting-${crypto.randomUUID()}`,
       required_artifact_type: "POSTING",
     });

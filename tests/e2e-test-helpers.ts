@@ -21,7 +21,10 @@ export const test = base.extend<TestFixtures>({
   },
 
   signedInPage: async ({ page, testUser }, use) => {
-    await page.goto("/sign-in");
+    // /sign-in はLINEログインのみになったため、メール+パスワードでログイン
+    // できる唯一の手段である /dev/login を使う（本番ビルドでは
+    // ALLOW_DEV_ROUTES_FOR_E2E が立っているときだけ到達できる）
+    await page.goto("/dev/login");
     await page.fill('input[name="email"]', testUser.email);
     await page.fill('input[name="password"]', testUser.password);
     await page.click('button[type="submit"]');

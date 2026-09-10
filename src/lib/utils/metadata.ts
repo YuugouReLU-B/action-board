@@ -4,18 +4,18 @@
 
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
+import { APP_ORIGIN } from "@/lib/constants/app-origin";
 
-export const defaultUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+export const defaultUrl = APP_ORIGIN;
 
 // ==========================================
 // 基本設定
 // ==========================================
 
 export const config = {
-  title: "チームみらい アクションボード",
+  title: "浜通りクエスト",
   description:
-    "政治活動をもっと身近に。楽しく政治参加に取り組める、チームみらいのアクションボード。",
+    "政治活動をもっと身近に。楽しく政治参加に取り組める、浜通りクエスト。",
   defaultImage: "/img/ogp-default.png?v=20250714",
   icons: {
     icon: [

@@ -10,8 +10,6 @@ import type { Tables } from "@/lib/types/supabase";
 import { PosterForm } from "./poster-form";
 import { PostingForm } from "./posting-form";
 import { ResidentialPosterMissionForm } from "./residential-poster-form";
-import { YouTubeCommentForm } from "./youtube-comment-form";
-import { YouTubeForm } from "./youtube-form";
 
 type ArtifactFormProps = {
   mission: Tables<"missions">;
@@ -131,16 +129,6 @@ export function ArtifactForm({
             disabled={disabled}
             onValidityChange={onValidityChange}
           />
-        )}
-
-        {/* YouTube入力フォーム */}
-        {artifactConfig.key === ARTIFACT_TYPES.YOUTUBE.key && (
-          <YouTubeForm disabled={disabled} />
-        )}
-
-        {/* YouTubeコメント入力フォーム */}
-        {artifactConfig.key === ARTIFACT_TYPES.YOUTUBE_COMMENT.key && (
-          <YouTubeCommentForm disabled={disabled} />
         )}
 
         {/* 補足説明テキストエリア */}

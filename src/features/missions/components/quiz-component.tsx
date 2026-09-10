@@ -70,8 +70,8 @@ export default function QuizComponent({
     switch (categoryName) {
       case "政策・マニフェスト":
         return "ミッション達成！政策・マニフェストマスターですね！";
-      case "チームみらい":
-        return "ミッション達成！チームみらいマスターですね！";
+      case "浜通りクエスト":
+        return "ミッション達成！浜通りクエストマスターですね！";
       case "公職選挙法":
         return "ミッション達成！公職選挙法マスターですね！";
       default:
@@ -367,7 +367,7 @@ export default function QuizComponent({
             <div className="space-y-2">
               <div className="text-xl font-bold flex mb-6">
                 <div>結果: {result.totalQuestions}問中</div>
-                <div className="ml-2 text-primary">
+                <div className="ml-2 text-brand-ink">
                   {result.correctAnswers}問正解
                 </div>
               </div>

@@ -1,9 +1,23 @@
-# アクションボード
+# 浜通りクエスト
 
-[![Check code with Biome and tsc](https://github.com/team-mirai/action-board/actions/workflows/check_code.yaml/badge.svg)](https://github.com/team-mirai/action-board/actions/workflows/check_code.yaml)
-[![Build & Test E2E/RLS](https://github.com/team-mirai/action-board/actions/workflows/e2e_test.yaml/badge.svg)](https://github.com/team-mirai/action-board/actions/workflows/e2e_test.yaml)
-[![codecov](https://codecov.io/gh/team-mirai-volunteer/action-board/graph/badge.svg)](https://codecov.io/gh/team-mirai-volunteer/action-board)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/team-mirai-volunteer/action-board)
+## 本リポジトリについて
+
+本リポジトリは [team-mirai-volunteer/action-board](https://github.com/team-mirai-volunteer/action-board) から派生した独立プロジェクトです。
+
+- **ライセンス**: 派生元と同じ [GNU Affero General Public License v3.0](./LICENSE)（AGPL-3.0）
+- **派生元**: team-mirai-volunteer/action-board — Copyright (c) チームみらい およびコントリビューターの皆さま
+- **派生時点**: commit [`8f5cd6c0`](https://github.com/team-mirai-volunteer/action-board/commit/8f5cd6c022d877b872969f9ec5eba674ca72a19d)（2026-08-08）
+- 本リポジトリでの変更点は、派生時点以降のコミット履歴（`git log 8f5cd6c0..`）をご参照ください。
+
+AGPL-3.0 第13条に基づき、本ソフトウェアの改変版をネットワーク経由で提供する場合は、利用者に対して改変版の完全なソースコードを提供する必要があります。
+
+### 派生元の名称・ロゴ・コンテンツについて
+
+AGPL-3.0 が許諾するのはソースコードの利用であり、商標権は含まれません（AGPL-3.0 第7条）。
+「チームみらい」の名称・ロゴ・アイコン類・ミッションコンテンツ等は派生元に帰属するものであり、
+本リポジトリを利用したサービスを公開する際は、これらを自身のものへ差し替える必要があります。
+
+---
 
 ## コントリビュートについて
 
@@ -408,7 +422,7 @@ RLSテストは以下のテーブルに対して実装されています:
 
 設定しなくとも動きますが、HubSpotまでの連携が見たい方はHubSpotでアカウントを作成してください。
 
-アクションボードでは、ユーザーのプロフィール更新時に自動的にHubSpotのコンタクトリストに登録する機能を実装しています。
+浜通りクエストでは、ユーザーのプロフィール更新時に自動的にHubSpotのコンタクトリストに登録する機能を実装しています。
 
 ### HubSpot API の設定
 
@@ -446,13 +460,13 @@ HUBSPOT_CONTACT_LIST_ID=123456
 2. **リストを作成** をクリック
 3. **コンタクトベースのリスト** を選択
 4. **静的リスト** を選択
-5. リスト名を入力（例：「アクションボードユーザー」）
+5. リスト名を入力（例：「浜通りクエストユーザー」）
 6. リストを作成後、URLからリストIDを取得（例：`/contacts/list/123456` の `123456` 部分）
 7. 取得したIDを環境変数 `HUBSPOT_CONTACT_LIST_ID` に設定
 
 ### データマッピング仕様
 
-アクションボードのユーザー情報は以下のようにHubSpotのコンタクトプロパティにマッピングされます：
+浜通りクエストのユーザー情報は以下のようにHubSpotのコンタクトプロパティにマッピングされます：
 
 | アプリケーション項目 | HubSpotプロパティ | HubSpot表示名 | データ型 | ステータス |
 | -------------------- | ----------------- | ------------- | -------- | ---------- |

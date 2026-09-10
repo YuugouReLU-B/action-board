@@ -1,6 +1,6 @@
 "use server";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { LineApiClientImpl } from "@/features/auth/services/line-api-client";
@@ -14,6 +14,7 @@ import { getCurrentSeasonId } from "@/lib/services/seasons";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 import { createClient } from "@/lib/supabase/client";
 import { validateAge } from "@/lib/utils/age-validation";
+import { isSupabaseAuthCookie } from "@/lib/utils/auth-cookies";
 import { deleteCookie, getCookie } from "@/lib/utils/server-cookies";
 import { calculateAge, encodedRedirect } from "@/lib/utils/utils";
 import {
@@ -26,208 +27,6 @@ import {
   isValidReferralCode,
 } from "@/lib/validation/referral";
 import { validateReturnUrl } from "@/lib/validation/url";
-
-// useActionState用のサインアップアクション
-export const signUpActionWithState = async (
-  _prevState: {
-    error?: string;
-    success?: string;
-    message?: string;
-    formData?: {
-      email: string;
-      password: string;
-      date_of_birth: string;
-      terms_agreed: boolean;
-      privacy_agreed: boolean;
-    };
-  } | null,
-  formData: FormData,
-) => {
-  const email = formData.get("email")?.toString();
-  const password = formData.get("password")?.toString();
-  const date_of_birth = formData.get("date_of_birth")?.toString();
-  const terms_agreed = formData.get("terms_agreed")?.toString();
-  const privacy_agreed = formData.get("privacy_agreed")?.toString();
-
-  //クエリストリングからリファラルコードを取得（フォームから）
-  const rawReferral = formData.get("ref");
-  let referralCode =
-    typeof rawReferral === "string" ? rawReferral.trim() : null;
-
-  // フォームにリファラルコードがない場合はcookieから取得
-  if (!referralCode) {
-    referralCode = (await getCookie("referral_code")) || null;
-  }
-
-  // キャンペーンコード（キャラバン会場QR等の ?cv= 経由）をcookieから取得
-  const campaignCode = (await getCookie("campaign_code")) || null;
-
-  // フォームデータを保存（エラー時の状態復元用）
-  const currentFormData = {
-    email: email || "",
-    password: password || "",
-    date_of_birth: date_of_birth || "",
-    terms_agreed: terms_agreed === "true",
-    privacy_agreed: privacy_agreed === "true",
-  };
-
-  const validatedFields = signUpAndLoginFormSchema.safeParse({
-    email,
-    password,
-    date_of_birth,
-  });
-  if (!validatedFields.success) {
-    return {
-      error: validatedFields.error.errors
-        .map((error) => error.message)
-        .join("\n"),
-      formData: currentFormData,
-    };
-  }
-
-  const supabase = createClient();
-  const origin = (await headers()).get("origin");
-
-  if (!email || !password) {
-    return {
-      error: "メールアドレスとパスワードが必要です",
-      formData: currentFormData,
-    };
-  }
-
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        date_of_birth, // 生年月日をユーザーデータに保存。プロフィール作成時に固定で設定される
-      },
-      emailRedirectTo: `${origin}/api/auth/callback`,
-    },
-  });
-
-  if (error) {
-    // メールアドレスが既に使用されている場合
-    if (
-      error.message.includes("already registered") ||
-      error.message.includes("already exists")
-    ) {
-      return {
-        error:
-          "このメールアドレスは既に登録されています。ログインページからログインしてください。",
-        formData: currentFormData,
-      };
-    }
-    console.error("サインアップに失敗しました:", error);
-    return {
-      error: "ユーザー登録に失敗しました",
-      formData: currentFormData,
-    };
-  }
-
-  //サインアップ完了後にuserIdを取得
-  const userId = data?.user?.id;
-  if (!userId) {
-    return {
-      error:
-        "アカウント作成処理でエラーが発生しました。しばらく時間をおいて再度お試しください。",
-      formData: currentFormData,
-    };
-  }
-
-  //紹介URLから遷移した場合のみ以下を実行
-  if (referralCode) {
-    const serviceSupabase = await createAdminClient();
-    let shouldInsertReferral = false;
-    let referrerUserId: string | null = null;
-    let referralMissionId: string | null = null;
-
-    try {
-      const [isValid, isDuplicate] = await Promise.all([
-        isValidReferralCode(referralCode),
-        isEmailAlreadyUsedInReferral(email?.toLowerCase() ?? ""),
-      ]);
-
-      if (isValid && !isDuplicate) {
-        const { data: mission } = await serviceSupabase
-          .from("missions")
-          .select("id")
-          .eq("required_artifact_type", "REFERRAL")
-          .maybeSingle();
-
-        const { data: referrerRecord } = await serviceSupabase
-          .from("user_referral")
-          .select("user_id")
-          .eq("referral_code", referralCode)
-          .maybeSingle();
-
-        if (mission && referrerRecord?.user_id) {
-          shouldInsertReferral = true;
-          referrerUserId = referrerRecord.user_id;
-          referralMissionId = mission.id;
-        }
-      }
-    } catch (e) {
-      // ログだけ残す（ユーザーには知らせない）
-      console.warn("紹介コード処理エラー:", e);
-    }
-
-    if (shouldInsertReferral && referrerUserId && referralMissionId) {
-      try {
-        const { data: achievement, error: achievementError } =
-          await serviceSupabase
-            .from("achievements")
-            .insert({
-              user_id: referrerUserId,
-              mission_id: referralMissionId,
-              season_id: await getCurrentSeasonId(),
-            })
-            .select("id")
-            .single();
-
-        if (achievement && !achievementError) {
-          await serviceSupabase.from("mission_artifacts").insert({
-            user_id: referrerUserId,
-            achievement_id: achievement.id,
-            artifact_type: "REFERRAL",
-            text_content: email.toLowerCase(),
-          });
-          // ミッション達成時にXPを付与
-          await grantMissionCompletionXp(
-            referrerUserId,
-            referralMissionId,
-            achievement.id,
-          );
-        } else {
-          console.warn("achievements挿入エラー:", achievementError);
-        }
-      } catch (e) {
-        console.warn("紹介ミッション登録処理に失敗:", e);
-      }
-    }
-
-    // 紹介コード処理完了後、cookieを削除
-    await deleteCookie("referral_code");
-  }
-
-  // キャンペーンコード付きURL経由で遷移した場合、登録者本人に紐づけて保存
-  if (campaignCode) {
-    const serviceSupabase = await createAdminClient();
-    await saveCampaignAttribution(serviceSupabase, userId, campaignCode);
-    await deleteCookie("campaign_code");
-  }
-
-  if (data.user?.id) {
-    try {
-      await getOrInitializeUserLevel(data.user.id);
-    } catch (levelError) {
-      console.error("Failed to initialize user level:", levelError);
-    }
-  }
-
-  // 成功時はリダイレクトする
-  return encodedRedirect("success", "/sign-up-success", "登録が完了しました。");
-};
 
 // useActionState用のサインインアクション
 export const signInActionWithState = async (
@@ -400,252 +199,29 @@ export const resetPasswordAction = async (formData: FormData) => {
   encodedRedirect("success", "/sign-in", "パスワードを更新しました");
 };
 
+/**
+ * ログアウトする。
+ *
+ * `signOut()` はリフレッシュトークンの失効をAuth APIに投げるので、通信に
+ * 失敗したりトークンが既に切れていると失敗しうる。**それでもこの端末からは
+ * ログアウトさせなければならない。** 失敗を握って何も起きないと、利用者から
+ * 見ればログアウトボタンが壊れているのと同じなので、cookieは必ず消す。
+ */
 export const signOutAction = async () => {
   const supabase = createClient();
-  await supabase.auth.signOut();
-  return redirect("/sign-in");
+
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error("セッションの失効に失敗しました:", error);
+  }
+
+  // signOut() が cookie を消せていなかった場合の取りこぼしを拾う
+  const cookieStore = await cookies();
+  for (const cookie of cookieStore.getAll()) {
+    if (isSupabaseAuthCookie(cookie.name)) {
+      cookieStore.delete({ name: cookie.name, path: "/" });
+    }
+  }
+
+  redirect("/sign-in");
 };
-
-// Email + Password専用サインアップアクション（Two-Step Signup用）
-export const emailSignUpActionWithState = async (
-  _prevState: {
-    error?: string;
-    success?: string;
-    message?: string;
-    formData?: {
-      email: string;
-      password: string;
-    };
-  } | null,
-  formData: FormData,
-) => {
-  const email = formData.get("email")?.toString();
-  const password = formData.get("password")?.toString();
-  const dateOfBirth = formData.get("date_of_birth")?.toString();
-  const referralCode = formData.get("ref")?.toString();
-
-  // フォームデータを保存（エラー時の状態復元用）
-  const currentFormData = {
-    email: email || "",
-    password: "",
-  };
-
-  if (!dateOfBirth) {
-    return {
-      error: "セッション情報が見つかりません。最初からやり直してください。",
-      formData: currentFormData,
-    };
-  }
-
-  // サーバーサイドで年齢チェック（LINEログインと同様）
-  const ageError = validateAge(dateOfBirth);
-  if (ageError) {
-    return {
-      error: ageError,
-      formData: currentFormData,
-    };
-  }
-
-  // 新しいFormDataを作成して、既存のsignUpActionWithStateを呼び出し
-  const newFormData = new FormData();
-  newFormData.set("email", email || "");
-  newFormData.set("password", password || "");
-  newFormData.set("date_of_birth", dateOfBirth);
-  newFormData.set("terms_agreed", "true"); // 事前に同意済み
-  newFormData.set("privacy_agreed", "true"); // 事前に同意済み
-  if (referralCode) {
-    newFormData.set("ref", referralCode);
-  }
-
-  return signUpActionWithState(null, newFormData);
-};
-
-// LINE認証用のバリデーションスキーマ
-const lineAuthSchema = z.object({
-  code: z.string().nonempty({ message: "Authorization code is required" }),
-  dateOfBirth: z
-    .string()
-    .optional()
-    .refine(
-      (value) => {
-        if (!value) return true; // 新規ユーザーでない場合はオプショナル
-        const age = calculateAge(value);
-        return age >= 18;
-      },
-      {
-        message: "18歳未満の方は登録できません",
-      },
-    ),
-  referralCode: z.string().optional().nullable(),
-  returnUrl: z.string().optional().nullable(),
-});
-
-// LINE認証処理のServer Action
-export async function handleLineAuthAction(
-  code: string,
-  dateOfBirth?: string,
-  referralCode?: string | null,
-  returnUrl?: string | null,
-): Promise<
-  { success: true; redirectTo: string } | { success: false; error: string }
-> {
-  try {
-    // 1. バリデーション
-    const validationResult = lineAuthSchema.safeParse({
-      code,
-      dateOfBirth,
-      referralCode,
-      returnUrl,
-    });
-
-    if (!validationResult.success) {
-      return { success: false, error: "認証データが無効です" };
-    }
-
-    const {
-      code: validatedCode,
-      dateOfBirth: validatedDateOfBirth,
-      referralCode: validatedReferralCode,
-      returnUrl: validatedReturnUrl,
-    } = validationResult.data;
-
-    // 2. リファラルコードが渡されていない場合はcookieから取得
-    let finalReferralCode = validatedReferralCode;
-    if (!finalReferralCode) {
-      const cookieReferralCode = await getCookie("referral_code");
-      finalReferralCode = cookieReferralCode || null;
-    }
-
-    // 3. 依存の組み立て
-    const clientId = process.env.NEXT_PUBLIC_LINE_CLIENT_ID;
-    const clientSecret = process.env.LINE_CLIENT_SECRET;
-    if (!clientId || !clientSecret) {
-      throw new Error("LINE認証の環境変数が設定されていません");
-    }
-
-    const origin = (await headers()).get("origin");
-    const redirectUri = `${origin || "http://localhost:3000"}/api/auth/line-callback`;
-    const adminSupabase = await createAdminClient();
-    const lineApiClient = new LineApiClientImpl(clientId, clientSecret);
-
-    // 4. ユースケース実行
-    const result = await lineLogin(adminSupabase, lineApiClient, {
-      code: validatedCode,
-      redirectUri,
-      dateOfBirth: validatedDateOfBirth,
-      onUserCreated: async (userId) => {
-        await getOrInitializeUserLevel(userId);
-      },
-    });
-
-    if (!result.success) {
-      return { success: false, error: result.error };
-    }
-
-    // 5. 紹介コード処理（新規ユーザーのみ）
-    if (result.isNewUser && finalReferralCode && result.email) {
-      await handleReferralCode(finalReferralCode, result.email);
-      await deleteCookie("referral_code");
-    }
-
-    // キャンペーンコード処理（新規ユーザーのみ・キャラバン会場QR等の流入元計測）
-    if (result.isNewUser) {
-      const campaignCode = await getCookie("campaign_code");
-      if (campaignCode) {
-        await saveCampaignAttribution(
-          adminSupabase,
-          result.userId,
-          campaignCode,
-        );
-        await deleteCookie("campaign_code");
-      }
-    }
-
-    // 6. Supabaseセッション作成
-    const clientSupabase = createClient();
-    const { error: signInError } = await clientSupabase.auth.signInWithPassword(
-      {
-        email: result.email,
-        password: result.tempPassword,
-      },
-    );
-
-    if (signInError) {
-      console.error("Failed to sign in with temporary password:", signInError);
-      throw new Error("Supabaseログインに失敗しました");
-    }
-
-    // 7. リダイレクト先を返す
-    const safeReturnUrl = validateReturnUrl(validatedReturnUrl || undefined);
-
-    if (result.isNewUser) {
-      return { success: true, redirectTo: "/settings/profile?new=true" };
-    }
-
-    return { success: true, redirectTo: safeReturnUrl || "/?login=success" };
-  } catch (error) {
-    return {
-      success: false,
-      error:
-        error instanceof Error ? error.message : "ログイン処理に失敗しました",
-    };
-  }
-}
-
-// 紹介コード処理
-async function handleReferralCode(referralCode: string, email: string) {
-  const serviceSupabase = await createAdminClient();
-
-  try {
-    // 紹介コードの検証
-    const [isValid, isDuplicate] = await Promise.all([
-      isValidReferralCode(referralCode),
-      isEmailAlreadyUsedInReferral(email?.toLowerCase() ?? ""),
-    ]);
-
-    if (isValid && !isDuplicate) {
-      const { data: mission } = await serviceSupabase
-        .from("missions")
-        .select("id")
-        .eq("required_artifact_type", "REFERRAL")
-        .maybeSingle();
-
-      const { data: referrerRecord } = await serviceSupabase
-        .from("user_referral")
-        .select("user_id")
-        .eq("referral_code", referralCode)
-        .maybeSingle();
-
-      if (mission && referrerRecord?.user_id) {
-        const { data: achievement, error: achievementError } =
-          await serviceSupabase
-            .from("achievements")
-            .insert({
-              user_id: referrerRecord.user_id,
-              mission_id: mission.id,
-              season_id: await getCurrentSeasonId(),
-            })
-            .select("id")
-            .single();
-
-        if (achievement && !achievementError) {
-          await serviceSupabase.from("mission_artifacts").insert({
-            user_id: referrerRecord.user_id,
-            achievement_id: achievement.id,
-            artifact_type: "REFERRAL",
-            text_content: email.toLowerCase(),
-          });
-
-          // XP付与
-          await grantMissionCompletionXp(
-            referrerRecord.user_id,
-            mission.id,
-            achievement.id,
-          );
-        }
-      }
-    }
-  } catch (error) {
-    console.warn("紹介コード処理エラー:", error);
-  }
-}

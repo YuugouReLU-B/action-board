@@ -119,24 +119,6 @@ const ARTIFACT_PAYLOAD_BUILDERS: Record<
     };
   },
   [ARTIFACT_TYPES.QUIZ.key]: () => nullFields(),
-  [ARTIFACT_TYPES.YOUTUBE.key]: (data) => {
-    if (data.requiredArtifactType !== ARTIFACT_TYPES.YOUTUBE.key)
-      return nullFields();
-    return {
-      link_url: data.artifactLink,
-      text_content: null,
-      image_storage_path: null,
-    };
-  },
-  [ARTIFACT_TYPES.YOUTUBE_COMMENT.key]: (data) => {
-    if (data.requiredArtifactType !== ARTIFACT_TYPES.YOUTUBE_COMMENT.key)
-      return nullFields();
-    return {
-      link_url: data.artifactLink,
-      text_content: null,
-      image_storage_path: null,
-    };
-  },
 };
 
 /**

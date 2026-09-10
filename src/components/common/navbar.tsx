@@ -22,12 +22,12 @@ export default async function Navbar() {
         <div className="flex gap-5 items-center font-semibold min-w-[60px]">
           <Link href="/" className="flex items-center gap-4">
             <Image
-              src="/img/logo_shiro.png"
-              alt="logo"
+              src="/img/logo.png"
+              alt="浜通りクエスト"
               width={48}
               height={48}
             />
-            <div className="text-lg">アクションボード</div>
+            <div className="text-lg">浜通りクエスト</div>
           </Link>
         </div>
         {user ? (
@@ -62,22 +62,11 @@ export default async function Navbar() {
                       <Link href="/">ホーム</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/map/posting">ポスティングマップ</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/map/poster">ポスター掲示板マップ</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/map/poster-residential">
-                        私有地ポスターマップ
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
                       <OnboardingButton
                         variant="link"
                         className="w-full justify-start p-0 h-auto text-sm"
                       >
-                        アクションボードとは？
+                        浜通りクエストとは？
                       </OnboardingButton>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>

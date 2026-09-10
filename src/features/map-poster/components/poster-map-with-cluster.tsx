@@ -10,6 +10,7 @@ import "../styles/poster-map.css";
 import "../styles/poster-map-filter.css";
 import { Expand, Minimize } from "lucide-react";
 import { MAX_ZOOM } from "@/lib/constants/mission-config";
+import { readTokenColor } from "@/lib/design/color-tokens";
 import type { Database } from "@/lib/types/supabase";
 import {
   getPrefectureDefaultZoom,
@@ -271,7 +272,11 @@ export default function PosterMapWithCluster({
         animate: true, // アニメーションを有効化
         animateAddingMarkers: true, // マーカー追加時のアニメーション
         spiderfyDistanceMultiplier: 2, // スパイダリー表示時の距離を2倍に
-        spiderLegPolylineOptions: { weight: 2, color: "#222", opacity: 0.5 },
+        spiderLegPolylineOptions: {
+          weight: 2,
+          color: readTokenColor("--app-map-spider-leg"),
+          opacity: 0.5,
+        },
       });
 
       // Add cluster events for tooltips
@@ -444,8 +449,8 @@ export default function PosterMapWithCluster({
     if (currentPos) {
       const marker = L.circleMarker(currentPos, {
         radius: 12,
-        color: "#2563eb",
-        fillColor: "#60a5fa",
+        color: readTokenColor("--app-map-location-stroke"),
+        fillColor: readTokenColor("--app-map-location-fill"),
         fillOpacity: 0.7,
         weight: 3,
       })

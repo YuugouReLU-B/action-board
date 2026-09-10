@@ -68,7 +68,7 @@ describe("RankingTabs", () => {
       );
 
       expect(screen.getByText("全体")).toBeInTheDocument();
-      expect(screen.getByText("都道府県別")).toBeInTheDocument();
+      expect(screen.queryByText("都道府県別")).not.toBeInTheDocument();
       expect(screen.getByText("ミッション別")).toBeInTheDocument();
     });
 
@@ -83,8 +83,7 @@ describe("RankingTabs", () => {
 
       const links = screen.getAllByTestId("link");
       expect(links[0]).toHaveAttribute("href", "/ranking");
-      expect(links[1]).toHaveAttribute("href", "/ranking/ranking-prefecture");
-      expect(links[2]).toHaveAttribute("href", "/ranking/ranking-mission");
+      expect(links[1]).toHaveAttribute("href", "/ranking/ranking-mission");
     });
 
     it("子要素が表示される", () => {
@@ -133,22 +132,6 @@ describe("RankingTabs", () => {
       expect(tabsContent).toHaveAttribute("data-value", "mission");
     });
 
-    it("都道府県別ランキングページの場合はprefectureが選択される", () => {
-      mockPathname.mockReturnValue("/ranking/ranking-prefecture");
-
-      render(
-        <RankingTabs>
-          <div>テストコンテンツ</div>
-        </RankingTabs>,
-      );
-
-      const tabs = screen.getByTestId("tabs");
-      expect(tabs).toHaveAttribute("data-value", "prefecture");
-
-      const tabsContent = screen.getByTestId("tabs-content");
-      expect(tabsContent).toHaveAttribute("data-value", "prefecture");
-    });
-
     it("ミッション別ランキングページのサブパスでもmissionが選択される", () => {
       mockPathname.mockReturnValue("/ranking/ranking-mission/some-mission");
 
@@ -162,8 +145,8 @@ describe("RankingTabs", () => {
       expect(tabs).toHaveAttribute("data-value", "mission");
     });
 
-    it("都道府県別ランキングページのサブパスでもprefectureが選択される", () => {
-      mockPathname.mockReturnValue("/ranking/ranking-prefecture/tokyo");
+    it("削除した都道府県別ランキングのパスはoverallに落ちる", () => {
+      mockPathname.mockReturnValue("/ranking/ranking-prefecture");
 
       render(
         <RankingTabs>
@@ -171,8 +154,10 @@ describe("RankingTabs", () => {
         </RankingTabs>,
       );
 
-      const tabs = screen.getByTestId("tabs");
-      expect(tabs).toHaveAttribute("data-value", "prefecture");
+      expect(screen.getByTestId("tabs")).toHaveAttribute(
+        "data-value",
+        "overall",
+      );
     });
 
     it("その他のパスの場合はoverallが選択される", () => {

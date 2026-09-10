@@ -4,11 +4,15 @@ categories:
     sort_no: 50
     category_kbn: DEFAULT
   - slug: follow-teammirai
-    title: チームみらいをフォローしよう
+    title: SNSをフォローしよう
     sort_no: 100
     category_kbn: DEFAULT
+  - slug: attend-events
+    title: イベントに参加しよう
+    sort_no: 150
+    category_kbn: DEFAULT
   - slug: learn-about-teammirai
-    title: チームみらいのことを知ろう
+    title: 浜通りクエストのことを知ろう
     sort_no: 200
     category_kbn: DEFAULT
   - slug: join-community
@@ -19,9 +23,13 @@ categories:
     title: いいねで応援しよう
     sort_no: 400
     category_kbn: DEFAULT
+  - slug: visit-checkpoints
+    title: チェックポイントを回ろう
+    sort_no: 160
+    category_kbn: DEFAULT
   - slug: share-and-spread
     title: 発信・拡散しよう
-    sort_no: 500
+    sort_no: 180
     category_kbn: DEFAULT
   - slug: local-activities
     title: 地域で活動しよう

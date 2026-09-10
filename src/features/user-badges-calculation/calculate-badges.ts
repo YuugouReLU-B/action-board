@@ -1,4 +1,3 @@
-import { PREFECTURES } from "@/lib/constants/prefectures";
 import { getJSTMidnightToday } from "@/lib/utils/date-utils";
 import { getCurrentSeasonId } from "../../lib/services/seasons";
 import { createAdminClient } from "../../lib/supabase/adminClient";
@@ -12,31 +11,26 @@ export async function calculateAllBadges(seasonId?: string): Promise<{
   results: {
     all: { success: boolean; updatedCount: number };
     daily: { success: boolean; updatedCount: number };
-    prefecture: { success: boolean; updatedCount: number };
     mission: { success: boolean; updatedCount: number };
   };
 }> {
   console.log("Starting badge calculation...");
 
-  const [allResult, dailyResult, prefectureResult, missionResult] =
-    await Promise.all([
-      calculateAllRankingBadges(seasonId),
-      calculateDailyRankingBadges(seasonId),
-      calculatePrefectureRankingBadges(seasonId),
-      calculateMissionRankingBadges(seasonId),
-    ]);
+  const [allResult, dailyResult, missionResult] = await Promise.all([
+    calculateAllRankingBadges(seasonId),
+    calculateDailyRankingBadges(seasonId),
+    calculateMissionRankingBadges(seasonId),
+  ]);
 
   const results = {
     all: allResult,
     daily: dailyResult,
-    prefecture: prefectureResult,
     mission: missionResult,
   };
 
   const totalUpdated =
     allResult.updatedCount +
     dailyResult.updatedCount +
-    prefectureResult.updatedCount +
     missionResult.updatedCount;
 
   console.log(
@@ -44,11 +38,7 @@ export async function calculateAllBadges(seasonId?: string): Promise<{
   );
 
   return {
-    success:
-      allResult.success &&
-      dailyResult.success &&
-      prefectureResult.success &&
-      missionResult.success,
+    success: allResult.success && dailyResult.success && missionResult.success,
     results,
   };
 }
@@ -176,64 +166,6 @@ async function calculateDailyRankingBadges(seasonId?: string): Promise<{
     return { success: true, updatedCount };
   } catch (error) {
     console.error("Error in calculateDailyRankingBadges:", error);
-    return { success: false, updatedCount };
-  }
-}
-
-/**
- * 都道府県別ランキングのバッジを計算・更新
- */
-async function calculatePrefectureRankingBadges(seasonId?: string): Promise<{
-  success: boolean;
-  updatedCount: number;
-}> {
-  const supabase = await createAdminClient();
-  let updatedCount = 0;
-
-  try {
-    // seasonIdが指定されている場合はそれを使用、そうでなければ現在のシーズン
-    const targetSeasonId = seasonId || (await getCurrentSeasonId());
-
-    if (!targetSeasonId) {
-      console.error("Target season not found");
-      return { success: false, updatedCount: 0 };
-    }
-
-    // 各都道府県ごとに処理
-    for (const prefecture of PREFECTURES) {
-      const { data: prefectureRanking, error } = await supabase.rpc(
-        "get_period_prefecture_ranking",
-        {
-          p_prefecture: prefecture,
-          p_limit: 100,
-          p_season_id: targetSeasonId,
-        },
-      );
-
-      if (error) {
-        console.error(`Error fetching ranking for ${prefecture}:`, error);
-        continue;
-      }
-
-      // 各ユーザーのバッジを更新
-      for (const user of prefectureRanking || []) {
-        const result = await updateBadge({
-          user_id: user.user_id,
-          badge_type: "PREFECTURE",
-          sub_type: prefecture,
-          rank: user.rank,
-          season_id: targetSeasonId,
-        });
-
-        if (result.updated) {
-          updatedCount++;
-        }
-      }
-    }
-
-    return { success: true, updatedCount };
-  } catch (error) {
-    console.error("Error in calculatePrefectureRankingBadges:", error);
     return { success: false, updatedCount };
   }
 }

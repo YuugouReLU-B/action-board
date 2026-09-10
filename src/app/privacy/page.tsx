@@ -1,3 +1,5 @@
+import { OPERATOR } from "@/lib/constants/operator";
+
 export default function PrivacyPolicy() {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white">
@@ -6,7 +8,8 @@ export default function PrivacyPolicy() {
           プライバシーポリシー
         </h1>
         <p className="text-sm-custom font-normal text-black text-justify">
-          政治団体「チームみらい」（以下「当団体」といいます）は、当団体が提供するウェブサービス「アクションボード」（以下「本サービス」といいます）において取得する個人情報を、以下の方針に基づき適切に取り扱います。
+          {OPERATOR.name}
+          （以下「当団体」といいます）は、当団体が提供するウェブサービス「浜通りクエスト」（以下「本サービス」といいます）において取得する個人情報を、以下の方針に基づき適切に取り扱います。
         </p>
       </div>
 
@@ -34,9 +37,6 @@ export default function PrivacyPolicy() {
             <li>メールアドレス</li>
             <li>SNSアカウント</li>
             <li>ソーシャルログイン情報</li>
-            <li>
-              外部サービス連携情報（TikTok、Google/YouTubeのアカウント情報、アクセストークン等）
-            </li>
             <li>
               ミッション成果物（写真・動画のURL、SNS投稿リンク、位置情報等）
             </li>
@@ -104,77 +104,7 @@ export default function PrivacyPolicy() {
 
         <section>
           <h2 className="text-lg-custom font-bold text-black mb-4 border-b-2 border-tm-teal pb-2">
-            7. 外部サービス連携
-          </h2>
-          <p className="text-sm-custom font-normal text-black text-justify mb-3">
-            本サービスでは、ユーザーの任意により、以下の外部サービスとのアカウント連携機能を提供しています。
-          </p>
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-sm-custom font-bold text-black mb-2">
-                TikTok連携
-              </h3>
-              <ul className="list-disc pl-6 space-y-1 text-sm-custom text-black">
-                <li>
-                  取得情報：TikTokアカウントID、表示名、プロフィール画像URL、アクセストークン
-                </li>
-                <li>
-                  利用目的：ユーザーが投稿した#チームみらい動画の特定および再生回数等の統計情報の表示
-                </li>
-                <li>
-                  連携解除：設定画面からいつでも連携を解除できます。解除時にはアクセストークン等の認証情報は削除されます。
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-sm-custom font-bold text-black mb-2">
-                Google（YouTube）連携
-              </h3>
-              <ul className="list-disc pl-6 space-y-1 text-sm-custom text-black">
-                <li>
-                  取得情報：GoogleユーザーID、YouTubeチャンネルID、チャンネル名、プロフィール画像URL、アクセストークン
-                </li>
-                <li>
-                  利用目的：ユーザーがアップロードした#チームみらい動画の特定および再生回数等の統計情報の表示
-                </li>
-                <li>
-                  連携解除：設定画面からいつでも連携を解除できます。解除時にはアクセストークン等の認証情報は削除されます。
-                </li>
-              </ul>
-            </div>
-          </div>
-          <p className="text-sm-custom font-normal text-black text-justify mt-4">
-            各外部サービスにおける情報の取り扱いについては、それぞれのプライバシーポリシーをご確認ください。
-          </p>
-          <ul className="list-disc pl-6 space-y-1 text-sm-custom text-black mt-2">
-            <li>
-              TikTok:{" "}
-              <a
-                href="https://www.tiktok.com/legal/privacy-policy"
-                className="text-black hover:text-black underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                https://www.tiktok.com/legal/privacy-policy
-              </a>
-            </li>
-            <li>
-              Google:{" "}
-              <a
-                href="https://policies.google.com/privacy"
-                className="text-black hover:text-black underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                https://policies.google.com/privacy
-              </a>
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-lg-custom font-bold text-black mb-4 border-b-2 border-tm-teal pb-2">
-            8. 個人情報の保管期間
+            7. 個人情報の保管期間
           </h2>
           <p className="text-sm-custom font-normal text-black text-justify">
             取得した個人情報は、政治資金規正法その他の関連法令に基づき、原則として取得日から7年間保管します。保管期間終了後は、当団体の責任において適切な方法により速やかに廃棄・削除いたします。
@@ -183,7 +113,7 @@ export default function PrivacyPolicy() {
 
         <section>
           <h2 className="text-lg-custom font-bold text-black mb-4 border-b-2 border-tm-teal pb-2">
-            9. 安全管理措置
+            8. 安全管理措置
           </h2>
           <p className="text-sm-custom font-normal text-black text-justify">
             当団体は、個人情報の漏えい、滅失、毀損、不正アクセス等を防止するため、アクセス権限管理、データ暗号化、従業員教育等、技術的・組織的な安全管理措置を講じます。
@@ -192,7 +122,7 @@ export default function PrivacyPolicy() {
 
         <section>
           <h2 className="text-lg-custom font-bold text-black mb-4 border-b-2 border-tm-teal pb-2">
-            10. 開示・訂正・削除等の請求
+            9. 開示・訂正・削除等の請求
           </h2>
           <p className="text-sm-custom font-normal text-black text-justify">
             ユーザーは、自己の個人情報について、開示・訂正・追加・削除・利用停止等を請求することができます。請求に際しては、本人確認を行った上で、合理的な期間内に対応いたします。
@@ -201,18 +131,18 @@ export default function PrivacyPolicy() {
 
         <section>
           <h2 className="text-lg-custom font-bold text-black mb-4">
-            11. 非公式サービスへの注意
+            10. 非公式サービスへの注意
           </h2>
           <div className="bg-[--TM-secondary] border border-[--TM-accent-light] rounded-xl p-4">
             <p className="text-sm-custom font-normal text-black text-justify">
               当団体は、本サービスの一部のソースコードをOSSとして公開する場合があります。そのため、当団体以外の者による非公式サービスが存在する可能性があります。公式のサービスは、公式ドメイン（
               <a
-                href="https://action.team-mir.ai/"
+                href={OPERATOR.officialUrl}
                 className="text-black hover:text-black underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                https://action.team-mir.ai/
+                {OPERATOR.officialUrl}
               </a>
               ）でのみ提供されます。
               <span className="text-red-600 font-medium">
@@ -224,7 +154,7 @@ export default function PrivacyPolicy() {
 
         <section>
           <h2 className="text-lg-custom font-bold text-black mb-4">
-            12. プライバシーポリシーの変更
+            11. プライバシーポリシーの変更
           </h2>
           <p className="text-sm-custom font-normal text-black text-justify">
             当団体は、本ポリシーを必要に応じて改定します。改定後の内容は本サービス上に掲示することで効力を生じるものとします。
@@ -233,29 +163,35 @@ export default function PrivacyPolicy() {
 
         <section>
           <h2 className="text-lg-custom font-bold text-black mb-4">
-            13. お問い合わせ
+            12. お問い合わせ
           </h2>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <p className="text-sm-custom font-normal text-black text-justify mb-2">
               本ポリシーに関するお問い合わせは、以下の連絡先までお願いいたします。
             </p>
             <div className="space-y-1">
-              <p className="font-medium text-gray-900">チームみらい</p>
-              <p className="text-gray-700">
-                <a
-                  href="mailto:info@team-mir.ai"
-                  className="text-black hover:text-black underline"
-                >
-                  info@team-mir.ai
-                </a>
-              </p>
+              <p className="font-medium text-gray-900">{OPERATOR.name}</p>
+              {OPERATOR.contactEmail ? (
+                <p className="text-gray-700">
+                  <a
+                    href={`mailto:${OPERATOR.contactEmail}`}
+                    className="text-black hover:text-black underline"
+                  >
+                    {OPERATOR.contactEmail}
+                  </a>
+                </p>
+              ) : (
+                <p className="text-gray-700">
+                  お問い合わせ先は決定次第記載します。
+                </p>
+              )}
             </div>
           </div>
         </section>
 
         <section>
           <h2 className="text-lg-custom font-bold text-black mb-4">
-            14. 準拠法および管轄
+            13. 準拠法および管轄
           </h2>
           <p className="text-sm-custom font-normal text-black text-justify">
             本ポリシーは日本法に準拠し、本サービスに関する一切の紛争については、東京地方裁判所を第一審の専属的合意管轄裁判所とします。

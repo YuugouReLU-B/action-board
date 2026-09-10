@@ -1,13 +1,13 @@
 import { redirect } from "next/navigation";
 import NoticeBoardAlert from "@/components/common/notice-board-alert";
 import Hero from "@/components/top/hero";
-import { PrefectureTeamCard } from "@/components/top/prefecture-team-card";
 import { MetricsWithSuspense } from "@/features/metrics/components/metrics-with-suspense";
 import FeaturedMissions from "@/features/missions/components/featured-missions";
 import FirstMissions from "@/features/missions/components/first-missions";
 import MissionsByCategory from "@/features/missions/components/missions-by-category";
 import { hasFeaturedMissions } from "@/features/missions/services/missions";
 import RankingSection from "@/features/ranking/components/ranking-section";
+import { SpotMapEntry } from "@/features/spot-map/components/spot-map-entry";
 import Activities from "@/features/user-activity/components/activities";
 import { getUnnotifiedBadges } from "@/features/user-badges/services/get-unnotified-badges";
 import { BadgeNotificationCheck } from "@/features/user-badges-notification/components/badge-notification-check";
@@ -85,15 +85,6 @@ export default async function Home({
       {/* 注意書き */}
       <NoticeBoardAlert />
 
-      {/* 都道府県対抗ランキング導線 */}
-      {user != null && (
-        <section className="py-4 md:py-8">
-          <div className="w-full max-w-lg mx-auto px-4">
-            <PrefectureTeamCard />
-          </div>
-        </section>
-      )}
-
       {/* メトリクスセクション */}
       <MetricsWithSuspense />
 
@@ -119,6 +110,12 @@ export default async function Home({
 
         {/* ミッションセクション */}
       </div>
+
+      {/* スポットマップへの入口（地図に出せるスポットが無いときは出ない） */}
+      <div className="py-6">
+        <SpotMapEntry userId={user?.id} />
+      </div>
+
       <section className="py-12 md:py-16 bg-background">
         <MissionsByCategory
           userId={user?.id}

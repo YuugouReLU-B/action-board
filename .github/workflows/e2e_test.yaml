@@ -29,6 +29,14 @@ jobs:
           echo "DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres" >> $GITHUB_ENV
           echo "ENABLE_CONFIRMATIONS=true" >> $GITHUB_ENV
           echo "SITE_URL=http://localhost:3000" >> $GITHUB_ENV
+          # E2Eは本番ビルド(next start)で動かすため、/dev/login（LINEログイン以外の
+          # 唯一のログイン手段）が404にならないよう明示的に許可する。
+          # このフラグはVercelの本番環境変数には絶対に設定しないこと。
+          echo "ALLOW_DEV_ROUTES_FOR_E2E=true" >> $GITHUB_ENV
+          # LINEサインアップのauthorize URL遷移テストはLINEへの実通信を
+          # page.route でスタブしているため、値はダミーで構わない
+          echo "NEXT_PUBLIC_LINE_CLIENT_ID=e2e-dummy-client-id" >> $GITHUB_ENV
+          echo "LINE_CLIENT_SECRET=e2e-dummy-client-secret" >> $GITHUB_ENV
 
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
@@ -96,6 +104,11 @@ jobs:
 
       - name: Load poster CSV data
         run: pnpm run poster:load-csv
+
+      # 新規DBには種データが入っていない。add-supporter-line-friend 等を前提にした
+      # テストがあるため、初期投入用の mission:sync を1回だけ流す
+      - name: Sync mission data
+        run: pnpm run mission:sync
 
       - name: Run E2E tests
         run: pnpm run test:ci:e2e

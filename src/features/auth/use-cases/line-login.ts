@@ -1,12 +1,12 @@
 import { randomBytes } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { LINE_FRIEND_METADATA_KEY } from "@/features/auth/utils/line-friend";
 import { parseIdTokenPayload } from "@/lib/utils/jwt-utils";
 import type { LineApiClient } from "../types/line-api-client";
 
 export type LineLoginInput = {
   code: string;
   redirectUri: string;
-  dateOfBirth?: string;
   onUserCreated?: (userId: string) => Promise<void>;
 };
 
@@ -17,8 +17,22 @@ export type LineLoginResult =
       email: string;
       isNewUser: boolean;
       tempPassword: string;
+      /** リンクされたLINE公式アカウントと友だちか。判定できない場合は null */
+      isOfficialAccountFriend: boolean | null;
     }
   | { success: false; error: string };
+
+/**
+ * 友だち状態が判定できたときだけメタデータに書く。
+ * 取得失敗（null）で既存の値を上書きして false にしないための分岐。
+ */
+function buildFriendshipMetadata(isFriend: boolean | null) {
+  if (isFriend === null) return {};
+  return {
+    [LINE_FRIEND_METADATA_KEY]: isFriend,
+    line_friendship_checked_at: new Date().toISOString(),
+  };
+}
 
 export async function lineLogin(
   adminSupabase: SupabaseClient,
@@ -40,6 +54,12 @@ export async function lineLogin(
   if (!lineUserId) {
     return { success: false, error: "LINEユーザーIDが取得できませんでした" };
   }
+
+  // 公式アカウントの友だち状態。bot_prompt で友だち追加した場合はここで true になる。
+  // 未リンクや取得失敗時は null（ログインは止めない）
+  const isOfficialAccountFriend = await lineApiClient.getFriendshipStatus(
+    tokens.access_token,
+  );
 
   const email = (userInfo.email as string) || `line-${lineUserId}@line.local`;
   const name = (userInfo.name as string) || "LINEユーザー";
@@ -79,6 +99,7 @@ export async function lineLogin(
           line_user_id: lineUserId,
           line_linked_at: new Date().toISOString(),
           picture: image || metadata?.picture,
+          ...buildFriendshipMetadata(isOfficialAccountFriend),
         },
       });
     } else {
@@ -89,15 +110,7 @@ export async function lineLogin(
       };
     }
   } else {
-    // 新規ユーザー
-    if (!input.dateOfBirth) {
-      return {
-        success: false,
-        error:
-          "新規ユーザー登録には各種同意と生年月日が必要です。サインアップページから登録してください。",
-      };
-    }
-
+    // 新規ユーザー。生年月日は取得しなくなったため、ここでの必須チェックは行わない
     const { data: newUser, error: createError } =
       await adminSupabase.auth.admin.createUser({
         email,
@@ -108,11 +121,11 @@ export async function lineLogin(
           email,
           provider: "line",
           line_user_id: lineUserId,
-          date_of_birth: input.dateOfBirth,
           email_verified: true,
           line_linked_at: new Date().toISOString(),
           phone_verified: false,
           picture: image,
+          ...buildFriendshipMetadata(isOfficialAccountFriend),
         },
       });
 
@@ -151,5 +164,12 @@ export async function lineLogin(
     console.error("Failed to set temporary password:", passwordError);
   }
 
-  return { success: true, userId, email: loginEmail, isNewUser, tempPassword };
+  return {
+    success: true,
+    userId,
+    email: loginEmail,
+    isNewUser,
+    tempPassword,
+    isOfficialAccountFriend,
+  };
 }

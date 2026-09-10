@@ -1,8 +1,7 @@
 import { User } from "lucide-react";
 import type React from "react";
+import { UserName } from "@/components/common/user-name";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserNameWithBadge } from "@/features/party-membership/components/user-name-with-badge";
-import type { PartyMembership } from "@/features/party-membership/types";
 import {
   formatUserDisplayName,
   formatUserPrefecture,
@@ -14,7 +13,6 @@ interface BaseCurrentUserCardProps {
     name: string | null;
     address_prefecture: string | null;
     rank: number | null;
-    party_membership?: PartyMembership | null;
   } | null;
   title?: string;
   level?: number;
@@ -54,16 +52,12 @@ export const BaseCurrentUserCard: React.FC<BaseCurrentUserCardProps> = ({
                 {displayUser.rank}
               </div>
               <div>
-                <UserNameWithBadge
+                <UserName
                   name={displayUser.name}
-                  membership={currentUser.party_membership ?? null}
                   nameClassName="font-semibold text-gray-900"
-                  badgeSize={18}
                 />
+                {/* 都道府県は表示しない（ranking-item と同じ理由） */}
                 <div className="flex items-center gap-1 mt-0.5">
-                  <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
-                    {displayUser.address_prefecture}
-                  </span>
                   {level != null && (
                     <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
                       Lv.{level}

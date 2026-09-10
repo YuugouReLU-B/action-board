@@ -2,7 +2,7 @@
  * 花火エフェクトコンポーネント
  *
  * このコンポーネントは投開票日当日のサービス停止時に使用されました。
- * アクションボードのサービスの一時停止措置として実装されています。
+ * 浜通りクエストのサービスの一時停止措置として実装されています。
  *
  */
 
@@ -62,7 +62,7 @@ const EndCredits = ({
         inset: 0,
         overflow: "hidden",
         pointerEvents: "none",
-        color: "#fff",
+        color: "var(--app-fireworks-text)",
         fontFamily: "serif",
         zIndex: 15,
       }}
@@ -106,7 +106,7 @@ const EndCredits = ({
               fontFamily: "'Noto Sans JP', sans-serif",
             }}
           >
-            アクションボードチーム
+            浜通りクエストチーム
           </div>
         </div>
         <div style={{ fontSize: "16px", lineHeight: "1.6" }}>

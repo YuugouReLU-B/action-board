@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 import { getMissionPageData } from "@/features/mission-detail/services/mission-detail";
+import { readTokenColor } from "@/lib/design/color-tokens";
 import { formatTitleWithLineBreaks, isVotingMission } from "./og-helpers";
 
 // キャッシュ用Mapを定義（メモリキャッシュ）- completeタイプのみキャッシュ
@@ -237,7 +238,7 @@ export async function GET(
               style={{
                 fontFamily: "Noto Sans JP",
                 fontSize: "58px",
-                color: "#0d9488",
+                color: readTokenColor("--app-brand-deep"),
                 textAlign: "center",
                 lineHeight: "1",
               }}
@@ -249,7 +250,7 @@ export async function GET(
                 marginLeft: "8px",
                 fontFamily: "Noto Sans JP",
                 fontSize: "24px",
-                color: "#0d9488",
+                color: readTokenColor("--app-brand-deep"),
                 textAlign: "center",
               }}
             >

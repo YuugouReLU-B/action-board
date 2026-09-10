@@ -31,35 +31,43 @@ export function calculateLevel(xp: number): number {
 }
 
 /**
- * ミッションの難易度に基づいてXPを計算する
- * @param difficulty - 難易度（1-5）
- * @param isFeatured - 注目ミッションかどうか（2倍ボーナス）
+ * ミッション達成で付与するXPを計算する。
+ *
+ * 以前は difficulty(1-5) から段階的に導出していたため、ミッションごとに
+ * 任意の値を設定できなかった。現在は `missions.points` をそのまま使う。
+ * difficulty は★表示のためだけに残っている。
+ *
+ * 引数をミッション行そのものにしているのは、数値2つだと difficulty を
+ * 渡しても型が通ってしまい、静かに誤ったXPが入るため。
  */
-export function calculateMissionXp(
-  difficulty: number,
-  isFeatured = false,
-): number {
-  let baseXp: number;
+export function calculateMissionXp(mission: {
+  points: number;
+  is_featured?: boolean | null;
+}): number {
+  return mission.is_featured ? mission.points * 2 : mission.points;
+}
+
+/**
+ * difficulty から既定のポイントを求める。
+ *
+ * 管理画面で新しいミッションを作るときの初期値に使う。
+ * 既存ミッションの points もこの値で埋めてある（マイグレーション 20260809160000）。
+ */
+export function defaultPointsForDifficulty(difficulty: number): number {
   switch (difficulty) {
     case 1:
-      baseXp = 50; // ★1
-      break;
+      return 50;
     case 2:
-      baseXp = 100; // ★2
-      break;
+      return 100;
     case 3:
-      baseXp = 200; // ★3
-      break;
+      return 200;
     case 4:
-      baseXp = 400; // ★4
-      break;
+      return 400;
     case 5:
-      baseXp = 800; // ★5
-      break;
+      return 800;
     default:
-      baseXp = 50; // デフォルト（Easy相当）
+      return 50;
   }
-  return isFeatured ? baseXp * 2 : baseXp;
 }
 
 /**

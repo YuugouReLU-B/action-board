@@ -11,14 +11,39 @@ beforeEach(() => {
 describe("createCityStatsMarkerIcon", () => {
   describe("サイズとカラーの閾値", () => {
     it.each([
-      { count: 1, size: 36, color: "#60A5FA", fontSize: "11px" },
-      { count: 4, size: 36, color: "#60A5FA", fontSize: "11px" },
-      { count: 5, size: 44, color: "#34D399", fontSize: "12px" },
-      { count: 19, size: 44, color: "#34D399", fontSize: "12px" },
-      { count: 20, size: 52, color: "#FBBF24", fontSize: "13px" },
-      { count: 99, size: 52, color: "#FBBF24", fontSize: "13px" },
-      { count: 100, size: 60, color: "#F87171", fontSize: "14px" },
-      { count: 500, size: 60, color: "#F87171", fontSize: "14px" },
+      { count: 1, size: 36, color: "var(--app-density-low)", fontSize: "11px" },
+      { count: 4, size: 36, color: "var(--app-density-low)", fontSize: "11px" },
+      { count: 5, size: 44, color: "var(--app-density-mid)", fontSize: "12px" },
+      {
+        count: 19,
+        size: 44,
+        color: "var(--app-density-mid)",
+        fontSize: "12px",
+      },
+      {
+        count: 20,
+        size: 52,
+        color: "var(--app-density-high)",
+        fontSize: "13px",
+      },
+      {
+        count: 99,
+        size: 52,
+        color: "var(--app-density-high)",
+        fontSize: "13px",
+      },
+      {
+        count: 100,
+        size: 60,
+        color: "var(--app-density-very-high)",
+        fontSize: "14px",
+      },
+      {
+        count: 500,
+        size: 60,
+        color: "var(--app-density-very-high)",
+        fontSize: "14px",
+      },
     ])("count=$count → size=$size, color=$color, fontSize=$fontSize", ({
       count,
       size,

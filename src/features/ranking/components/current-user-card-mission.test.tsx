@@ -2,24 +2,13 @@ import { render, screen } from "@testing-library/react";
 import type React from "react";
 import { CurrentUserCardMission } from "./current-user-card-mission";
 
-const mockUserNameWithBadge = jest.fn(
-  ({ name, membership }: { name: string; membership?: unknown }) => (
-    <span
-      data-testid="user-name-with-badge"
-      data-membership={JSON.stringify(membership)}
-    >
-      {name}
-    </span>
-  ),
-);
+const mockUserName = jest.fn(({ name }: { name: string }) => (
+  <span data-testid="user-name">{name}</span>
+));
 
-jest.mock(
-  "@/features/party-membership/components/user-name-with-badge",
-  () => ({
-    UserNameWithBadge: (props: unknown) =>
-      mockUserNameWithBadge(props as { name: string; membership?: unknown }),
-  }),
-);
+jest.mock("@/components/common/user-name", () => ({
+  UserName: (props: unknown) => mockUserName(props as { name: string }),
+}));
 
 jest.mock("@/components/ui/card", () => ({
   Card: ({
@@ -107,7 +96,7 @@ const mockMission = {
 
 describe("CurrentUserCardMission", () => {
   beforeEach(() => {
-    mockUserNameWithBadge.mockClear();
+    mockUserName.mockClear();
   });
 
   describe("基本的な表示", () => {
@@ -121,13 +110,13 @@ describe("CurrentUserCardMission", () => {
       );
 
       expect(screen.getByText("テストユーザー")).toBeInTheDocument();
-      expect(screen.getByText("東京都")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("東京都")).not.toBeInTheDocument();
       expect(screen.getByText("1,500pt")).toBeInTheDocument();
       expect(screen.getByText("3")).toBeInTheDocument();
-      expect(mockUserNameWithBadge).toHaveBeenCalledWith(
+      expect(mockUserName).toHaveBeenCalledWith(
         expect.objectContaining({
           name: "テストユーザー",
-          membership: mockUser.party_membership,
         }),
       );
     });
@@ -267,7 +256,8 @@ describe("CurrentUserCardMission", () => {
         />,
       );
 
-      expect(screen.getByText("未設定")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("未設定")).not.toBeInTheDocument();
     });
 
     it("空のバッジテキストが処理される", () => {

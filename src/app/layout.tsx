@@ -8,9 +8,11 @@ import NextTopLoader from "nextjs-toploader";
 import { Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { CampaignCodeHandlerWrapper } from "@/features/campaign-attribution/components/campaign-code-handler-wrapper";
+import { DevColorOverridesScript } from "@/features/dev-tools/components/dev-color-overrides-script";
 import { ReferralCodeHandlerWrapper } from "@/features/referral/components/referral-code-handler-wrapper";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 
 //metadata.tsxでmetadataを管理
 export const generateMetadata = generateRootMetadata;
@@ -31,7 +33,33 @@ export default function RootLayout({
   return (
     <html lang="ja" className={notoSansJP.variable} suppressHydrationWarning>
       <body className="bg-background text-foreground">
-        <NextTopLoader showSpinner={false} color="#2aa693" />
+        <DevColorOverridesScript />
+        {GTM_ID && (
+          <>
+            <noscript>
+              <iframe
+                src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+                height="0"
+                width="0"
+                style={{ display: "none", visibility: "hidden" }}
+                title="Google Tag Manager"
+              />
+            </noscript>
+            <Script id="gtm-init" strategy="afterInteractive">
+              {`
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${GTM_ID}');
+            `}
+            </Script>
+          </>
+        )}
+        <NextTopLoader
+          showSpinner={false}
+          color="var(--app-brand-primary-strong)"
+        />
         {GA_ID && (
           <>
             <Script
@@ -54,8 +82,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          <main className="flex flex-col items-center mt-8">
+          {/* ナビとフッターは印刷に出さない。掲示用のQRシートなど、
+              紙にするのは本文だけでよい */}
+          <div className="print:hidden">
+            <Navbar />
+          </div>
+          <main className="flex flex-col items-center mt-8 print:mt-0">
             <Suspense>
               <ReferralCodeHandlerWrapper />
             </Suspense>
@@ -64,7 +96,9 @@ export default function RootLayout({
             </Suspense>
             {children}
           </main>
-          <Footer />
+          <div className="print:hidden">
+            <Footer />
+          </div>
           <Toaster />
         </ThemeProvider>
       </body>

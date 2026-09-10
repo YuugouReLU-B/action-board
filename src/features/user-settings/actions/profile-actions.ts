@@ -7,11 +7,10 @@ import {
   shouldDeleteOldAvatar,
   validateAvatarFile,
 } from "@/features/user-settings/utils/avatar-helpers";
-import { createOrUpdateHubSpotContact } from "@/lib/services/hubspot";
+import { PREFECTURE_NOT_SELECTED } from "@/lib/constants/prefectures";
 import { sendWelcomeMail } from "@/lib/services/mail";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 import { createClient } from "@/lib/supabase/client";
-import type { HubSpotClient } from "../types/hubspot-client";
 import type { MailClient } from "../types/mail-client";
 import { updateProfile as updateProfileUseCase } from "../use-cases/update-profile";
 
@@ -24,12 +23,6 @@ export type UploadAvatarResult = {
   success: boolean;
   avatarPath?: string;
   error?: string;
-};
-
-/** 本番用 HubSpot クライアント */
-const prodHubSpotClient: HubSpotClient = {
-  createOrUpdateContact: (contactData, existingContactId) =>
-    createOrUpdateHubSpotContact(contactData, existingContactId),
 };
 
 /** 本番用メールクライアント */
@@ -55,10 +48,10 @@ export async function updateProfile(
 
   // フォームデータの取得
   const name = formData.get("name")?.toString() ?? "";
+  const rawPrefecture = formData.get("address_prefecture")?.toString() ?? "";
   const address_prefecture =
-    formData.get("address_prefecture")?.toString() ?? "";
+    rawPrefecture === PREFECTURE_NOT_SELECTED ? "" : rawPrefecture;
   const date_of_birth = formData.get("date_of_birth")?.toString() ?? "";
-  const postcode = formData.get("postcode")?.toString() ?? "";
   const x_username = formData.get("x_username")?.toString() || "";
   const github_username = formData.get("github_username")?.toString() || "";
 
@@ -134,7 +127,6 @@ export async function updateProfile(
   const result = await updateProfileUseCase(
     {
       adminSupabase: supabaseServiceClient,
-      hubspot: prodHubSpotClient,
       mail: prodMailClient,
     },
     {
@@ -143,7 +135,6 @@ export async function updateProfile(
       name,
       addressPrefecture: address_prefecture,
       dateOfBirth: date_of_birth,
-      postcode,
       xUsername: x_username,
       githubUsername: github_username,
       avatarPath: avatar_path,

@@ -27,6 +27,7 @@ describe("get_mission_ranking 関数のテスト", () => {
       title: "テストミッション",
       content: "テスト用ミッション",
       difficulty: 1,
+      points: 50,
       slug: `test-mission-${crypto.randomUUID()}`,
     });
     if (error) throw new Error(`ミッション作成エラー: ${error.message}`);
@@ -183,6 +184,7 @@ describe("get_user_mission_ranking 関数のテスト", () => {
       title: "テストミッション",
       content: "テスト",
       difficulty: 1,
+      points: 50,
       slug: `test-mission-${crypto.randomUUID()}`,
     });
   });

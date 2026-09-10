@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${season.name} ランキング - アクションボード`,
+    title: `${season.name} ランキング - 浜通りクエスト`,
   };
 }
 

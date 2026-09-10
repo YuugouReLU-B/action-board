@@ -90,17 +90,20 @@ export async function getRanking(
     );
 
     if (rpcError) {
-      console.log(rpcError);
-      throw new Error(
+      console.error(
         `シーズンランキングの取得に失敗しました: ${rpcError.message}`,
+        rpcError,
       );
+      return [];
     }
 
     const rankings = periodRankingData || [];
 
     return rankings;
   } catch (error) {
+    // ランキング取得の失敗でページ全体をクラッシュさせない
+    // （RankingTopはエラーバウンダリなしでawaitされるため、ここで例外を吸収する）
     console.error("Ranking service error:", error);
-    throw error;
+    return [];
   }
 }

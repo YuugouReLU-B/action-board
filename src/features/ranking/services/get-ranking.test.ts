@@ -86,16 +86,16 @@ describe("ranking service", () => {
         });
       });
 
-      it("エラー時は例外をスローする", async () => {
+      it("エラー時は例外を投げず空配列を返す（ページ全体のクラッシュを防ぐ）", async () => {
         const mockError = { message: "Test Database error" };
         mockSupabase.rpc.mockResolvedValue({
           data: null,
           error: mockError,
         });
 
-        await expect(getRanking()).rejects.toThrow(
-          "シーズンランキングの取得に失敗しました: Test Database error",
-        );
+        const result = await getRanking();
+
+        expect(result).toEqual([]);
       });
     });
 
@@ -189,15 +189,15 @@ describe("ranking service", () => {
         expect(result).toEqual([]);
       });
 
-      it("RPC取得エラー時は例外をスローする", async () => {
+      it("RPC取得エラー時は例外を投げず空配列を返す（ページ全体のクラッシュを防ぐ）", async () => {
         mockSupabase.rpc.mockResolvedValue({
           data: null,
           error: { message: "Test RPC fetch error" },
         });
 
-        await expect(getRanking(10, "daily")).rejects.toThrow(
-          "シーズンランキングの取得に失敗しました: Test RPC fetch error",
-        );
+        const result = await getRanking(10, "daily");
+
+        expect(result).toEqual([]);
       });
     });
   });

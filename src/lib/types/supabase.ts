@@ -1429,6 +1429,7 @@ export type Database = {
         Row: {
           last_notified_level: number | null;
           level: number;
+          line_1000pt_audience_added_at: string | null;
           season_id: string;
           updated_at: string;
           user_id: string;
@@ -1437,6 +1438,7 @@ export type Database = {
         Insert: {
           last_notified_level?: number | null;
           level?: number;
+          line_1000pt_audience_added_at?: string | null;
           season_id: string;
           updated_at?: string;
           user_id: string;
@@ -1445,6 +1447,7 @@ export type Database = {
         Update: {
           last_notified_level?: number | null;
           level?: number;
+          line_1000pt_audience_added_at?: string | null;
           season_id?: string;
           updated_at?: string;
           user_id?: string;

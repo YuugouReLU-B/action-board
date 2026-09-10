@@ -60,6 +60,7 @@ describe("buildLevelUpdates", () => {
       xp,
       level,
       last_notified_level: null,
+      line_1000pt_audience_added_at: null,
       created_at: "2025-01-01T00:00:00Z",
       updated_at: "2025-01-01T00:00:00Z",
     } as UserLevel;

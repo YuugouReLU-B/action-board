@@ -108,7 +108,9 @@ describe("importMissionCsvRows", () => {
 
     expect(result.succeeded).toEqual([]);
     expect(result.failed).toHaveLength(1);
-    expect(result.failed[0].errors.join(" ")).toContain("カテゴリが見つかりません");
+    expect(result.failed[0].errors.join(" ")).toContain(
+      "カテゴリが見つかりません",
+    );
   });
 
   test("同じslugを再登録するとエラーになる", async () => {

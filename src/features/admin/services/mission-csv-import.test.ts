@@ -44,9 +44,9 @@ describe("parseMissionCsv", () => {
     const rows = parseMissionCsv(csv);
 
     expect(rows[0].data).toBeNull();
-    expect(
-      rows[0].errors.some((e) => e.includes("QRまたはGEO_CHECKIN")),
-    ).toBe(true);
+    expect(rows[0].errors.some((e) => e.includes("QRまたはGEO_CHECKIN"))).toBe(
+      true,
+    );
   });
 
   it("category_slugが空だとエラーになる", () => {

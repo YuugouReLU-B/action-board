@@ -59,6 +59,34 @@ export async function listCategoriesForAdmin(): Promise<AdminCategory[]> {
   }));
 }
 
+export type AdminCategorySlug = {
+  slug: string;
+  title: string;
+};
+
+/** CSV一括登録画面で、指定可能な category_slug の一覧を見せるために使う */
+export async function listCategorySlugsForAdmin(): Promise<
+  AdminCategorySlug[]
+> {
+  const supabase = await createAdminClient();
+
+  const { data, error } = await supabase
+    .from("mission_category")
+    .select("slug, category_title")
+    .eq("del_flg", false)
+    .order("sort_no", { ascending: true });
+
+  if (error) {
+    console.error("カテゴリスラッグ一覧の取得に失敗:", error);
+    return [];
+  }
+
+  return (data ?? []).map((row) => ({
+    slug: row.slug,
+    title: row.category_title ?? "(名称未設定)",
+  }));
+}
+
 /** 1ミッションが属するカテゴリID。編集フォームの初期値に使う */
 export async function getCategoryIdsForMission(
   adminSupabase: SupabaseClient<Database>,

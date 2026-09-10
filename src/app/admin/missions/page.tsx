@@ -33,6 +33,9 @@ export default async function AdminMissionsPage() {
               <Link href="/admin/qr-sheets">QRシートを印刷</Link>
             </Button>
           )}
+          <Button asChild size="sm" variant="outline">
+            <Link href="/admin/missions/import">CSVで一括登録</Link>
+          </Button>
           <Button asChild size="sm">
             <Link href="/admin/missions/new">新しく作る</Link>
           </Button>

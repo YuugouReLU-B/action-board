@@ -36,6 +36,10 @@ export default async function AdminLayout({
           <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
             管理者のみ
           </span>
+          <nav className="flex gap-3 text-sm underline underline-offset-2">
+            <Link href="/admin/missions">ミッション</Link>
+            <Link href="/admin/points">ポイント調整</Link>
+          </nav>
         </header>
 
         <main>{children}</main>

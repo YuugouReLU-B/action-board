@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import NoticeBoardAlert from "@/components/common/notice-board-alert";
 import Hero from "@/components/top/hero";
 import { LotteryAnnouncementBanner } from "@/features/lottery/components/lottery-announcement-banner";
 import { MetricsWithSuspense } from "@/features/metrics/components/metrics-with-suspense";
@@ -8,7 +7,6 @@ import FirstMissions from "@/features/missions/components/first-missions";
 import MissionsByCategory from "@/features/missions/components/missions-by-category";
 import { hasFeaturedMissions } from "@/features/missions/services/missions";
 import RankingSection from "@/features/ranking/components/ranking-section";
-import { SpotMapEntry } from "@/features/spot-map/components/spot-map-entry";
 import Activities from "@/features/user-activity/components/activities";
 import { getUnnotifiedBadges } from "@/features/user-badges/services/get-unnotified-badges";
 import { BadgeNotificationCheck } from "@/features/user-badges-notification/components/badge-notification-check";
@@ -68,7 +66,7 @@ export default async function Home({
   const showFeatured = await hasFeaturedMissions();
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
+    <div className="flex flex-col min-h-screen w-full pt-2">
       {/* 抽選応募対象になったことのお知らせ */}
       <LotteryAnnouncementBanner />
 
@@ -86,8 +84,6 @@ export default async function Home({
       <section className="relative">
         <Hero />
       </section>
-      {/* 注意書き */}
-      <NoticeBoardAlert />
 
       {/* メトリクスセクション */}
       <MetricsWithSuspense />
@@ -113,11 +109,6 @@ export default async function Home({
         )}
 
         {/* ミッションセクション */}
-      </div>
-
-      {/* スポットマップへの入口（地図に出せるスポットが無いときは出ない） */}
-      <div className="py-6">
-        <SpotMapEntry userId={user?.id} />
       </div>
 
       <section className="py-12 md:py-16 bg-background">

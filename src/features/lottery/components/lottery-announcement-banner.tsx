@@ -20,7 +20,7 @@ export async function LotteryAnnouncementBanner() {
   return (
     <div className="flex w-full justify-center bg-amber-100 text-amber-900">
       <Link
-        href="/settings/profile"
+        href={`/users/${user.id}`}
         className="flex w-full max-w-4xl items-center justify-center gap-2 px-4 py-3 text-sm font-bold hover:underline"
       >
         🎉 累計{LOTTERY_THRESHOLD_POINTS.toLocaleString()}

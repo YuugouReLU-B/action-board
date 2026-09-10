@@ -18,24 +18,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { updateProfile } from "@/features/user-settings/actions/profile-actions";
-import { PrefectureSelect } from "@/features/user-settings/components/prefecture-select";
 import { AVATAR_MAX_FILE_SIZE, getAvatarUrl } from "@/lib/services/avatar";
-
-// AvatarUploadコンポーネントを削除し、メインのフォームに統合
 
 interface ProfileFormProps {
   message?: Message;
   isNew: boolean;
   initialProfile: {
     name?: string;
-    address_prefecture?: string;
-    date_of_birth?: string;
-    x_username?: string | null;
-    github_username?: string | null;
     avatar_url?: string | null;
   } | null;
   /** 新規登録時、プロフィール保存後に遷移する先 */
-  nextUrlAfterSignup: string;
+  nextUrlAfterSignup?: string;
 }
 
 export default function ProfileForm({
@@ -61,7 +54,7 @@ export default function ProfileForm({
   useEffect(() => {
     // 新規登録時は、プロフィール保存後にそのまま最初のミッションへ送る。
     // 以前はトップに戻していたが、次に何をすればよいか分からない導線だった
-    if (state?.success && isNew) {
+    if (state?.success && isNew && nextUrlAfterSignup) {
       router.push(nextUrlAfterSignup);
     }
     if (state?.success) {
@@ -95,8 +88,8 @@ export default function ProfileForm({
         <CardTitle>プロフィール設定</CardTitle>
         <CardDescription>
           {isNew
-            ? "公開されるプロフィール情報を登録します。"
-            : "公開されるプロフィール情報を編集します。"}
+            ? "アイコンとニックネームを登録します。"
+            : "アイコンとニックネームを編集します。"}
         </CardDescription>
       </CardHeader>
       {queryMessage && (
@@ -177,82 +170,11 @@ export default function ProfileForm({
               required
               disabled={isPending}
             />
+            <p className="text-sm text-gray-500">
+              このニックネームは他のユーザーに公開されます。
+            </p>
           </div>
 
-          {/* 以下はアンケート項目。すべて任意。
-              収集を続けるか項目ごと削るかは次回MTGで決める */}
-          <div className="space-y-2">
-            <Label htmlFor="date_of_birth">
-              生年月日 <span className="text-gray-500">（任意）</span>
-            </Label>
-            <p className="text-sm text-gray-500">
-              この項目は公開されません。答えたくない場合は空のままで構いません。
-            </p>
-            <Input
-              id="date_of_birth"
-              name="date_of_birth"
-              type="date"
-              defaultValue={initialProfile?.date_of_birth || ""}
-              disabled={isPending}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="address_prefecture">
-              都道府県 <span className="text-gray-500">（任意）</span>
-            </Label>
-            <p className="text-sm text-gray-500">
-              どの地域から来てくださったかの参考にさせていただきます。
-            </p>
-            <PrefectureSelect
-              name="address_prefecture"
-              id="address_prefecture"
-              defaultValue={initialProfile?.address_prefecture || ""}
-              disabled={isPending}
-            />
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Label htmlFor="x_username">X(旧Twitter)のユーザー名</Label>
-              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                オプション
-              </span>
-            </div>
-            <p className="text-sm text-gray-500">
-              Xのユーザー名を設定すると、あなたのプロフィールに表示することができます。
-            </p>
-            <Input
-              id="x_username"
-              name="x_username"
-              type="text"
-              defaultValue={initialProfile?.x_username || ""}
-              placeholder="@を除いたユーザー名"
-              disabled={isPending}
-              maxLength={50}
-            />
-          </div>
-          {!isNew && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Label htmlFor="github_username">GitHubのユーザー名</Label>
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                  オプション
-                </span>
-              </div>
-              <p className="text-sm text-gray-500">
-                GitHubのユーザー名を設定すると、あなたのプロフィールに表示することができます。
-              </p>
-              <Input
-                id="github_username"
-                name="github_username"
-                type="text"
-                defaultValue={initialProfile?.github_username || ""}
-                placeholder="GitHubのユーザー名"
-                disabled={isPending}
-                maxLength={39}
-              />
-            </div>
-          )}
           {state?.success && (
             <p className="text-center text-sm text-green-600">
               {isNew

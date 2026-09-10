@@ -2,8 +2,7 @@
  * ユーザー詳細ページ
  *
  * このページは以下の機能を提供します：
- * - ユーザーの基本情報表示（レベル、ソーシャルリンク）
- * - 獲得バッジの表示
+ * - ユーザーの基本情報表示（ソーシャルリンク）
  * - ミッション達成状況の表示
  * - 活動タイムラインの表示（ページネーション付き）
  *
@@ -12,6 +11,7 @@
  * - 初期データをクライアントコンポーネントに渡してSSR最適化
  */
 import { Card } from "@/components/ui/card";
+import { LotteryEntryPanel } from "@/features/lottery/components/lottery-entry-panel";
 import { AchievedMissionList } from "@/features/user-achievements/components/achieved-mission-list";
 import { UserMissionAchievements } from "@/features/user-achievements/components/user-mission-achievements";
 import {
@@ -23,11 +23,12 @@ import {
   getUserActivityTimeline,
   getUserActivityTimelineCount,
 } from "@/features/user-activity/loaders/timeline-loaders";
-import { UserBadges } from "@/features/user-badges/components/user-badges";
 import Levels from "@/features/user-level/components/levels";
 import SocialBadgeSection from "@/features/user-profile/components/social-badge-section";
-import { getProfile } from "@/features/user-profile/services/profile";
+import { getProfile, getUser } from "@/features/user-profile/services/profile";
 import { UserSeasonHistory } from "@/features/user-season/components/user-season-history";
+import { AccountDeletionSection } from "@/features/user-settings/components/account-deletion-section";
+import ProfileForm from "@/features/user-settings/components/profile-form";
 import {
   getCurrentSeasonId,
   getUserSeasonHistory,
@@ -51,6 +52,10 @@ export default async function UserDetailPage({ params }: Props) {
 
   if (!user) return <div>ユーザーが見つかりません</div>;
 
+  // 自分自身のページかどうか（アカウント設定セクションの表示判定に使う）
+  const viewer = await getUser();
+  const isOwnPage = viewer?.id === id;
+
   // 現在のシーズンIDを取得
   const currentSeasonId = await getCurrentSeasonId();
 
@@ -70,12 +75,8 @@ export default async function UserDetailPage({ params }: Props) {
 
   return (
     <div className="flex flex-col items-stretch w-full max-w-xl gap-4">
-      {/* ユーザーレベル表示（プログレスバーは非表示） */}
-      <Levels
-        userId={user.id}
-        hideProgress
-        seasonId={currentSeasonId ?? undefined}
-      />
+      {/* ユーザー情報表示 */}
+      <Levels userId={user.id} seasonId={currentSeasonId ?? undefined} />
 
       <div className="px-4">
         {/* ソーシャルメディアリンク表示 */}
@@ -83,15 +84,6 @@ export default async function UserDetailPage({ params }: Props) {
           x_username={user.x_username}
           github_username={user.github_username}
         />
-
-        {/* 獲得バッジセクション */}
-        <Card className="w-full p-4 mt-4">
-          <h3 className="text-lg font-bold mb-4">獲得バッジ</h3>
-          <UserBadges
-            userId={user.id}
-            seasonId={currentSeasonId ?? undefined}
-          />
-        </Card>
 
         {/* ミッション達成状況セクション（活動がある場合のみ表示） */}
         {(count || 0) > 0 && (
@@ -137,6 +129,23 @@ export default async function UserDetailPage({ params }: Props) {
             <h3 className="text-lg font-bold mb-4">シーズン履歴</h3>
             <UserSeasonHistory userId={user.id} seasonHistory={seasonHistory} />
           </Card>
+        )}
+
+        {/* アカウント設定セクション（自分のページを見ているときだけ表示） */}
+        {isOwnPage && (
+          <div className="mt-8 flex flex-col items-center gap-4">
+            <ProfileForm
+              isNew={false}
+              initialProfile={{
+                name: user.name || undefined,
+                avatar_url: user.avatar_url || null,
+              }}
+            />
+            <div className="w-full max-w-md">
+              <LotteryEntryPanel />
+            </div>
+            <AccountDeletionSection />
+          </div>
         )}
       </div>
     </div>

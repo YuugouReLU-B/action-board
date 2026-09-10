@@ -34,13 +34,8 @@ export default async function AuthButton() {
             <Link href="/">ホーム</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
+            {/* アイコン変更・ニックネーム編集・退会もマイページ下部に統合済み */}
             <Link href={`/users/${user.id}`}>マイページ</Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href="/settings/profile">アカウント</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

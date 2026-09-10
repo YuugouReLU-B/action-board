@@ -10,8 +10,6 @@ import RankingSection from "@/features/ranking/components/ranking-section";
 import Activities from "@/features/user-activity/components/activities";
 import { getUnnotifiedBadges } from "@/features/user-badges/services/get-unnotified-badges";
 import { BadgeNotificationCheck } from "@/features/user-badges-notification/components/badge-notification-check";
-import { LevelUpCheck } from "@/features/user-level/components/level-up-check";
-import { checkLevelUpNotification } from "@/features/user-level/loaders/level-up-loaders";
 import {
   getUser,
   hasPrivateProfile,
@@ -32,8 +30,7 @@ export default async function Home({
 
   const user = await getUser();
 
-  // レベルアップ通知とバッジ通知をチェック
-  let levelUpNotification = null;
+  // バッジ通知をチェック
   let badgeNotifications = null;
 
   if (user) {
@@ -44,13 +41,6 @@ export default async function Home({
 
     // 現在のシーズンIDを取得
     const currentSeasonId = await getCurrentSeasonId();
-
-    // レベルアップ通知をチェック
-    // 自動ミッション（紹介など）でレベルアップした場合の通知を表示するため有効化
-    const levelUpCheck = await checkLevelUpNotification();
-    if (levelUpCheck.shouldNotify && levelUpCheck.levelUp) {
-      levelUpNotification = levelUpCheck.levelUp;
-    }
 
     // バッジ通知をチェック（現在のシーズンのみ）
     const unnotifiedBadges = await getUnnotifiedBadges(
@@ -69,11 +59,6 @@ export default async function Home({
     <div className="flex flex-col min-h-screen w-full pt-2">
       {/* 抽選応募対象になったことのお知らせ */}
       <LotteryAnnouncementBanner />
-
-      {/* レベルアップ通知 */}
-      {levelUpNotification && (
-        <LevelUpCheck levelUpData={levelUpNotification} />
-      )}
 
       {/* バッジ通知 */}
       {badgeNotifications && (

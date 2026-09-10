@@ -4,13 +4,11 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
   test("ログイン済み状態からトップページ確認", async ({ signedInPage }) => {
     await assertAuthState(signedInPage, true);
 
-    // 自身のステータス表示を確認
+    // 自身のステータス表示を確認（レベル表示は廃止し、ポイント数のみ表示）
     await expect(
       signedInPage
         .locator("section")
-        .getByText(
-          "テストユーザーLV.1東京都0 ポイント次のレベルまで40ポイント",
-        ),
+        .getByText("テストユーザー東京都0 ポイント"),
     ).toBeVisible({ timeout: 10000 });
     await expect(
       signedInPage.getByRole("link", {
@@ -58,38 +56,30 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     ).toBeVisible();
   });
 
-  test("アカウントページ遷移が正常に動作する", async ({ signedInPage }) => {
+  test("アカウント設定（マイページ下部）が正常に動作する", async ({
+    signedInPage,
+  }) => {
     await assertAuthState(signedInPage, true);
 
-    // アカウントページに遷移
+    // マイページに遷移（アイコン変更・ニックネーム編集・退会もここに統合されている）
     await signedInPage.getByTestId("usermenubutton").click();
-    await signedInPage.getByRole("menuitem", { name: "アカウント" }).click();
-    await expect(signedInPage).toHaveURL(/\/settings\/profile/, {
+    await signedInPage.getByRole("menuitem", { name: "マイページ" }).click();
+    await expect(signedInPage).toHaveURL(/\/users\/[^/]+$/, {
       timeout: 10000,
     });
 
-    // アカウントページの表示内容を確認
+    // アカウント設定セクションの表示内容を確認（アイコン+ニックネームのみ）
     await expect(signedInPage.getByText("プロフィール設定")).toBeVisible();
-    await expect(signedInPage.getByText("ニックネーム")).toBeVisible();
-    // 生年月日（任意項目。年月日セレクトではなく単一のdate inputになった）
-    await expect(signedInPage.getByText(/生年月日/)).toBeVisible();
-    await expect(signedInPage.locator("#date_of_birth")).toBeVisible();
-    // 都道府県
-    await expect(signedInPage.getByText("都道府県")).toBeVisible();
-    await expect(
-      signedInPage.getByRole("combobox", { name: "都道府県" }),
-    ).toBeVisible();
-    // 郵便番号は個人情報最小化のため収集をやめ、項目自体が削除された
-    // アカウント
-    await expect(
-      signedInPage.getByText("X(旧Twitter)のユーザー名"),
-    ).toBeVisible();
-    await expect(
-      signedInPage.getByText("GitHubのユーザー名", { exact: true }),
-    ).toBeVisible();
+    await expect(signedInPage.getByLabel("ニックネーム")).toBeVisible();
     await expect(
       signedInPage.getByRole("button", { name: "更新する" }),
     ).toBeVisible();
+
+    // /settings/profile に直接アクセスしてもマイページへリダイレクトされる
+    await signedInPage.goto("/settings/profile");
+    await expect(signedInPage).toHaveURL(/\/users\/[^/]+$/, {
+      timeout: 10000,
+    });
   });
 
   test("ユーザーページ遷移が正常に動作する", async ({ signedInPage }) => {
@@ -168,20 +158,12 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
       { timeout: 10000 },
     );
 
-    // ミッション完了後のポイントの変動を確認
+    // ミッション完了後のポイントの変動を確認（レベル表示は廃止し、ポイント数のみ表示）
     await signedInPage.goto("/");
-    await expect(
-      signedInPage.getByRole("dialog", {
-        name: "サポーターレベルが アップしました！",
-      }),
-    ).toBeVisible();
-    await signedInPage.getByRole("button", { name: "Close" }).click();
     await expect(
       signedInPage
         .locator("section")
-        .getByText(
-          "テストユーザーLV.9東京都800 ポイント次のレベルまで100ポイント",
-        ),
+        .getByText("テストユーザー東京都800 ポイント"),
     ).toBeVisible({ timeout: 10000 });
 
     await signedInPage.goto("/ranking");
@@ -222,9 +204,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage
         .locator("section")
-        .getByText(
-          "テストユーザーLV.1東京都0 ポイント次のレベルまで40ポイント",
-        ),
+        .getByText("テストユーザー東京都0 ポイント"),
     ).toBeVisible({ timeout: 10000 });
   });
 

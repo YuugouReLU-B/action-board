@@ -2,14 +2,12 @@ import { MapPin } from "lucide-react";
 import Link from "next/link";
 import { UserName } from "@/components/common/user-name";
 import { UserTopBadge } from "@/features/user-badges/components/user-top-badge";
-import { LevelProgress } from "@/features/user-level/components/level-progress";
 import { getUserLevel } from "@/features/user-level/services/level";
 import UserAvatar from "@/features/user-profile/components/user-avatar";
 import { getProfile } from "@/features/user-profile/services/profile";
 
 interface LevelsProps {
   userId: string;
-  hideProgress?: boolean;
   clickable?: boolean;
   showBadge?: boolean;
   seasonId?: string;
@@ -18,7 +16,6 @@ interface LevelsProps {
 // TODO: UserProfileCardにリネーム
 export default async function Levels({
   userId,
-  hideProgress = false,
   clickable = false,
   showBadge = false,
   seasonId,
@@ -40,13 +37,7 @@ export default async function Levels({
         <div className="flex flex-col ml-6 min-w-0">
           <UserName name={profile.name} nameClassName="text-lg font-bold" />
           <div className="flex items-center mt-2">
-            <div className="flex items-baseline">
-              <div className="text-sm font-bold">LV.</div>
-              <div className="text-xxl font-bold ml-1 leading-none">
-                {userLevel ? userLevel.level : "1"}
-              </div>
-            </div>
-            <div className="flex ml-4 text-sm items-center">
+            <div className="flex text-sm items-center">
               <MapPin className="w-4 h-4 mr-0.5" />
               {profile.address_prefecture}
             </div>
@@ -61,11 +52,6 @@ export default async function Levels({
       {showBadge && (
         <div className="mt-3">
           <UserTopBadge userId={userId} seasonId={seasonId} />
-        </div>
-      )}
-      {!hideProgress && (
-        <div className="mt-4 flex flex-col items-start">
-          <LevelProgress userLevel={userLevel} />
         </div>
       )}
     </div>

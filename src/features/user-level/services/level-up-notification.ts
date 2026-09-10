@@ -2,52 +2,6 @@ import "server-only";
 
 import { getCurrentSeasonId } from "@/lib/services/seasons";
 import { createAdminClient } from "@/lib/supabase/adminClient";
-import type { LevelUpNotification } from "../types/level-types";
-import {
-  buildLevelUpNotificationData,
-  shouldShowLevelUpNotification,
-} from "../utils/level-up-helpers";
-
-/**
- * レベルアップ通知をチェックし、必要に応じて通知データを返す
- */
-export async function checkLevelUpNotification(
-  userId: string,
-): Promise<LevelUpNotification> {
-  const supabase = await createAdminClient();
-  const currentSeasonId = await getCurrentSeasonId();
-
-  if (!currentSeasonId) {
-    console.error("Current season not found");
-    return { shouldNotify: false };
-  }
-
-  const { data: userLevel, error } = await supabase
-    .from("user_levels")
-    .select("*")
-    .eq("user_id", userId)
-    .eq("season_id", currentSeasonId)
-    .single();
-
-  if (error || !userLevel) {
-    return { shouldNotify: false };
-  }
-
-  if (
-    shouldShowLevelUpNotification(
-      userLevel.level,
-      userLevel.last_notified_level,
-    )
-  ) {
-    return buildLevelUpNotificationData(
-      userLevel.level,
-      userLevel.last_notified_level,
-      userLevel.xp,
-    );
-  }
-
-  return { shouldNotify: false };
-}
 
 /**
  * レベルアップ通知を確認済みとしてマークする

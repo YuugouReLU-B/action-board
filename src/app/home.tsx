@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import NoticeBoardAlert from "@/components/common/notice-board-alert";
 import Hero from "@/components/top/hero";
 import { LotteryAnnouncementBanner } from "@/features/lottery/components/lottery-announcement-banner";
 import { MetricsWithSuspense } from "@/features/metrics/components/metrics-with-suspense";
@@ -8,12 +7,9 @@ import FirstMissions from "@/features/missions/components/first-missions";
 import MissionsByCategory from "@/features/missions/components/missions-by-category";
 import { hasFeaturedMissions } from "@/features/missions/services/missions";
 import RankingSection from "@/features/ranking/components/ranking-section";
-import { SpotMapEntry } from "@/features/spot-map/components/spot-map-entry";
 import Activities from "@/features/user-activity/components/activities";
 import { getUnnotifiedBadges } from "@/features/user-badges/services/get-unnotified-badges";
 import { BadgeNotificationCheck } from "@/features/user-badges-notification/components/badge-notification-check";
-import { LevelUpCheck } from "@/features/user-level/components/level-up-check";
-import { checkLevelUpNotification } from "@/features/user-level/loaders/level-up-loaders";
 import {
   getUser,
   hasPrivateProfile,
@@ -34,8 +30,7 @@ export default async function Home({
 
   const user = await getUser();
 
-  // レベルアップ通知とバッジ通知をチェック
-  let levelUpNotification = null;
+  // バッジ通知をチェック
   let badgeNotifications = null;
 
   if (user) {
@@ -46,13 +41,6 @@ export default async function Home({
 
     // 現在のシーズンIDを取得
     const currentSeasonId = await getCurrentSeasonId();
-
-    // レベルアップ通知をチェック
-    // 自動ミッション（紹介など）でレベルアップした場合の通知を表示するため有効化
-    const levelUpCheck = await checkLevelUpNotification();
-    if (levelUpCheck.shouldNotify && levelUpCheck.levelUp) {
-      levelUpNotification = levelUpCheck.levelUp;
-    }
 
     // バッジ通知をチェック（現在のシーズンのみ）
     const unnotifiedBadges = await getUnnotifiedBadges(
@@ -68,14 +56,9 @@ export default async function Home({
   const showFeatured = await hasFeaturedMissions();
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
+    <div className="flex flex-col min-h-screen w-full pt-2">
       {/* 抽選応募対象になったことのお知らせ */}
       <LotteryAnnouncementBanner />
-
-      {/* レベルアップ通知 */}
-      {levelUpNotification && (
-        <LevelUpCheck levelUpData={levelUpNotification} />
-      )}
 
       {/* バッジ通知 */}
       {badgeNotifications && (
@@ -86,8 +69,6 @@ export default async function Home({
       <section className="relative">
         <Hero />
       </section>
-      {/* 注意書き */}
-      <NoticeBoardAlert />
 
       {/* メトリクスセクション */}
       <MetricsWithSuspense />
@@ -113,11 +94,6 @@ export default async function Home({
         )}
 
         {/* ミッションセクション */}
-      </div>
-
-      {/* スポットマップへの入口（地図に出せるスポットが無いときは出ない） */}
-      <div className="py-6">
-        <SpotMapEntry userId={user?.id} />
       </div>
 
       <section className="py-12 md:py-16 bg-background">

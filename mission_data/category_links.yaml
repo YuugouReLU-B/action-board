@@ -1,10 +1,12 @@
 category_links:
+  - category_slug: official-line-registration
+    missions:
+      - mission_slug: add-supporter-line-friend
+        sort_no: 100
   - category_slug: learn-teammirai-supporter
     missions: []
   - category_slug: follow-teammirai
     missions:
-      - mission_slug: add-supporter-line-friend
-        sort_no: 50
       - mission_slug: follow-hamadori-x
         sort_no: 100
       - mission_slug: follow-hamadori-instagram

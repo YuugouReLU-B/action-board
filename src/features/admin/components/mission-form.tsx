@@ -1,7 +1,8 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import type { AdminActionResult } from "@/features/admin/actions/mission-actions";
 import type { AdminCategory } from "@/features/admin/services/admin-categories";
@@ -69,6 +70,28 @@ export function MissionForm({
   const [points, setPoints] = useState(
     mission?.points ?? defaultPointsForDifficulty(1),
   );
+
+  const [iconUrl, setIconUrl] = useState<string | null>(
+    mission?.icon_url ?? null,
+  );
+  const [photoUrl, setPhotoUrl] = useState<string | null>(
+    mission?.ogp_image_url ?? null,
+  );
+  const iconFileInputRef = useRef<HTMLInputElement>(null);
+  const photoFileInputRef = useRef<HTMLInputElement>(null);
+
+  const handlePreview = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setPreview: (url: string | null) => void,
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setPreview(event.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const isQrSpot = artifactType === ARTIFACT_TYPES.QR.key;
   const isGeoCheckin = artifactType === ARTIFACT_TYPES.GEO_CHECKIN.key;
@@ -193,15 +216,52 @@ export function MissionForm({
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Field
-          htmlFor="icon_url"
-          label="アイコンのパス"
-          hint="例: /img/mission-icons/xxx.svg"
+          htmlFor="icon_file"
+          label="アイコン"
+          hint="SVG/PNG/WebP・5MBまで。選び直さなければ既存のまま"
         >
+          <div className="flex items-center gap-3">
+            {iconUrl && (
+              <div className="relative">
+                <img
+                  src={iconUrl}
+                  alt="アイコンのプレビュー"
+                  className="h-12 w-12 rounded border border-gray-200 object-contain bg-white"
+                />
+                <button
+                  type="button"
+                  className="absolute -right-2 -top-2 rounded-full bg-red-400 p-0.5 text-white hover:bg-red-600"
+                  onClick={() => {
+                    setIconUrl(null);
+                    if (iconFileInputRef.current) {
+                      iconFileInputRef.current.value = "";
+                    }
+                  }}
+                  aria-label="アイコンを削除"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            )}
+            <input
+              type="file"
+              name="icon_file"
+              id="icon_file"
+              ref={iconFileInputRef}
+              accept="image/png,image/jpeg,image/webp,image/svg+xml"
+              onChange={(e) => handlePreview(e, setIconUrl)}
+              className="text-sm"
+            />
+          </div>
+          {/* 新しいファイルが選ばれなければこの既存値がそのまま使われる */}
           <input
+            type="hidden"
             name="icon_url"
-            id="icon_url"
-            defaultValue={mission?.icon_url ?? ""}
-            className={inputClass}
+            value={
+              iconUrl?.startsWith("data:")
+                ? (mission?.icon_url ?? "")
+                : (iconUrl ?? "")
+            }
           />
         </Field>
 
@@ -305,6 +365,56 @@ export function MissionForm({
           />
         </Field>
       </div>
+
+      <Field
+        htmlFor="photo_file"
+        label="イベント写真"
+        hint="SVG/PNG/WebP・5MBまで。ミッション詳細ページに表示する写真。選び直さなければ既存のまま"
+      >
+        <div className="flex items-center gap-3">
+          {photoUrl && (
+            <div className="relative">
+              <img
+                src={photoUrl}
+                alt="イベント写真のプレビュー"
+                className="h-20 w-32 rounded border border-gray-200 object-cover bg-white"
+              />
+              <button
+                type="button"
+                className="absolute -right-2 -top-2 rounded-full bg-red-400 p-0.5 text-white hover:bg-red-600"
+                onClick={() => {
+                  setPhotoUrl(null);
+                  if (photoFileInputRef.current) {
+                    photoFileInputRef.current.value = "";
+                  }
+                }}
+                aria-label="イベント写真を削除"
+              >
+                <X size={12} />
+              </button>
+            </div>
+          )}
+          <input
+            type="file"
+            name="photo_file"
+            id="photo_file"
+            ref={photoFileInputRef}
+            accept="image/png,image/jpeg,image/webp,image/svg+xml"
+            onChange={(e) => handlePreview(e, setPhotoUrl)}
+            className="text-sm"
+          />
+        </div>
+        {/* 新しいファイルが選ばれなければこの既存値がそのまま使われる */}
+        <input
+          type="hidden"
+          name="ogp_image_url"
+          value={
+            photoUrl?.startsWith("data:")
+              ? (mission?.ogp_image_url ?? "")
+              : (photoUrl ?? "")
+          }
+        />
+      </Field>
 
       {hasLocationFields && (
         <fieldset className="rounded-lg border border-gray-200 p-4">

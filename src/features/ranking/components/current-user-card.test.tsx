@@ -64,12 +64,6 @@ jest.mock("@/features/ranking/components/ranking-level-badge", () => ({
   ),
 }));
 
-jest.mock("@/features/user-profile/components/user-avatar", () => {
-  return ({ userId }: { userId: string }) => (
-    <div data-testid="user-avatar">{userId}</div>
-  );
-});
-
 jest.mock("@/features/ranking/utils/ranking-utils", () => ({
   formatUserDisplayName: (name: string) => name || "名前未設定",
   formatUserPrefecture: (prefecture: string) => prefecture || "未設定",

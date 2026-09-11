@@ -1,19 +1,10 @@
 "use client";
 
-import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import {
-  useActionState,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useActionState, useCallback, useEffect, useState } from "react";
 import { CollapsibleInfo } from "@/components/common/collapsible-info";
 import { FormMessage, type Message } from "@/components/common/form-message";
 import { SubmitButton } from "@/components/common/submit-button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -33,14 +24,11 @@ import {
 } from "@/components/ui/select";
 import { updateProfile } from "@/features/user-settings/actions/profile-actions";
 import { PrefectureSelect } from "@/features/user-settings/components/prefecture-select";
-import { AVATAR_MAX_FILE_SIZE, getAvatarUrl } from "@/lib/services/avatar";
 import {
   formatBirthDate,
   generateDaysArray,
 } from "@/lib/utils/date-form-utils";
 import { verifyMinimumAge } from "@/lib/utils/form-date-utils";
-
-// AvatarUploadコンポーネントを削除し、メインのフォームに統合
 
 interface ProfileFormProps {
   message?: Message;
@@ -51,7 +39,6 @@ interface ProfileFormProps {
     date_of_birth?: string;
     x_username?: string | null;
     github_username?: string | null;
-    avatar_url?: string | null;
   } | null;
   initialPrivateUser: {
     id?: string;
@@ -69,13 +56,6 @@ export default function ProfileForm({
     message,
   );
   const [state, formAction, isPending] = useActionState(updateProfile, null);
-  const [avatarPath, setAvatarPath] = useState<string | null>(
-    initialProfile?.avatar_url || null,
-  );
-  // 画像プレビュー用のステート
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    initialProfile?.avatar_url ? getAvatarUrl(initialProfile.avatar_url) : null,
-  );
   const [selectedPrefecture, setSelectedPrefecture] = useState<string>(
     initialProfile?.address_prefecture || "",
   );
@@ -94,7 +74,6 @@ export default function ProfileForm({
   const [ageError, setAgeError] = useState<string | null>(null);
   const [isAgeValid, setIsAgeValid] = useState(true);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   // 年月日の選択肢を生成
@@ -139,26 +118,6 @@ export default function ProfileForm({
     }
   }, [selectedYear, selectedMonth, selectedDay]);
 
-  // ファイル選択時のプレビュー処理
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // ファイルサイズチェック (5MB)
-    if (file.size > AVATAR_MAX_FILE_SIZE) {
-      alert("画像サイズは5MB以下にしてください");
-      e.target.value = "";
-      return;
-    }
-
-    // 画像プレビュー生成
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setAvatarPreview(event.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
-
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -176,65 +135,6 @@ export default function ProfileForm({
       )}
       <form action={formAction}>
         <CardContent className="space-y-4">
-          {/* アバターアップロード - ニックネームの上に配置 */}
-          <div className="flex flex-col items-center space-y-4 mb-4">
-            <div className="relative">
-              <Avatar
-                className="h-32 w-32 cursor-pointer"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <AvatarImage
-                  src={avatarPreview || undefined}
-                  alt="プロフィール画像"
-                  style={{ objectFit: "cover" }}
-                />
-                <AvatarFallback className="text-6xl bg-emerald-100 text-emerald-700 font-medium">
-                  {initialProfile?.name?.charAt(0) || "?"}
-                </AvatarFallback>
-              </Avatar>
-
-              {/* 削除アイコン - 現在の画像がある場合のみ表示 */}
-              {avatarPreview && (
-                <button
-                  type="button"
-                  className="absolute top-0 right-0 bg-red-400 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
-                  onClick={() => {
-                    // 画像URLをクリアし、プレビューも削除
-                    setAvatarPath(null);
-                    setAvatarPreview(null);
-                  }}
-                  disabled={isPending}
-                  aria-label="画像を削除"
-                >
-                  <X size={16} />
-                </button>
-              )}
-            </div>
-
-            {/* 現在のアバターURLをサーバーに送信するための隠しフィールド */}
-            <input type="hidden" name="avatar_path" value={avatarPath || ""} />
-
-            {/* 画像選択入力フィールド - これでServer Actionにファイルを送る */}
-            <div className="flex flex-col items-center gap-2">
-              <input
-                type="file"
-                name="avatar"
-                ref={fileInputRef}
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isPending}
-              >
-                画像を変更する
-              </Button>
-            </div>
-          </div>
-
           <div className="space-y-2">
             <Label htmlFor="name">ニックネーム</Label>
             <Input

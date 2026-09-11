@@ -1,14 +1,12 @@
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import NoticeBoardAlert from "@/components/common/notice-board-alert";
 import Hero from "@/components/top/hero";
 import { PrefectureTeamCard } from "@/components/top/prefecture-team-card";
-import { MetricsWithSuspense } from "@/features/metrics/components/metrics-with-suspense";
 import FeaturedMissions from "@/features/missions/components/featured-missions";
 import FirstMissions from "@/features/missions/components/first-missions";
 import MissionsByCategory from "@/features/missions/components/missions-by-category";
 import { hasFeaturedMissions } from "@/features/missions/services/missions";
-import RankingSection from "@/features/ranking/components/ranking-section";
-import Activities from "@/features/user-activity/components/activities";
 import { getUnnotifiedBadges } from "@/features/user-badges/services/get-unnotified-badges";
 import { BadgeNotificationCheck } from "@/features/user-badges-notification/components/badge-notification-check";
 import { LevelUpCheck } from "@/features/user-level/components/level-up-check";
@@ -94,18 +92,19 @@ export default async function Home({
         </section>
       )}
 
-      {/* メトリクスセクション */}
-      <MetricsWithSuspense />
-
-      {/* アクティビティセクション */}
+      {/* 参加方法の案内図（活動状況・タイムライン・ランキングの代わりに表示） */}
       <section className="py-12 md:py-16 bg-background">
-        <Activities />
+        <div className="w-full max-w-4xl mx-auto px-4">
+          <Image
+            src="/img/how-to-participate.png"
+            alt="参加方法：1. 浜通りクエストを開く 2. イベント参加・スポット訪問 3. その場でポイント獲得 4. 1000ポイントで景品応募"
+            width={1672}
+            height={941}
+            className="w-full h-auto rounded-lg"
+          />
+        </div>
       </section>
 
-      {/* ランキングセクション */}
-      <section className="md:py-16 bg-background">
-        <RankingSection />
-      </section>
       <div className="w-full md:container md:mx-auto">
         {/* はじめのミッションセクション（すべて達成済みならセクションごと非表示） */}
         <FirstMissions userId={user?.id} />

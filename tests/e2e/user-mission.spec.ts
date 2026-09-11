@@ -18,20 +18,12 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
       }),
     ).toBeVisible();
 
-    // 活動状況の表示を確認
-    await expect(
-      signedInPage.getByRole("heading", { name: /チームみらいの活動状況/ }),
-    ).toBeVisible();
-    await expect(signedInPage.getByText("サポーター数")).toBeVisible();
+    // 参加方法の案内図の表示を確認
+    await expect(signedInPage.getByAltText(/参加方法/)).toBeVisible();
 
     // 注目ミッションの表示を確認
     await expect(
       signedInPage.getByRole("heading", { name: /注目ミッション/ }),
-    ).toBeVisible();
-
-    // 活動タイムラインの表示を確認
-    await expect(
-      signedInPage.getByRole("heading", { name: /活動タイムライン/ }),
     ).toBeVisible();
 
     // 問い合わせフォームの表示を確認
@@ -45,7 +37,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     ).toBeVisible();
     await expect(
       signedInPage.getByRole("link", {
-        name: "アクションボードへのご意見フォーム",
+        name: "浜通りクエストへのご意見フォーム",
       }),
     ).toBeVisible();
 
@@ -132,6 +124,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await assertAuthState(signedInPage, true);
 
     // 任意のユーザーページに遷移（ランキングから佐藤太郎のページへ）
+    await signedInPage.goto("/ranking");
     await signedInPage
       .getByRole("link")
       .filter({ hasText: "佐藤太郎" })
@@ -251,8 +244,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await assertAuthState(signedInPage, true);
 
     // ランキングページに遷移
-    await signedInPage.getByRole("link", { name: "トップ100を見る" }).click();
-    await expect(signedInPage).toHaveURL("/ranking", { timeout: 10000 });
+    await signedInPage.goto("/ranking");
 
     await expect(
       signedInPage.getByRole("heading", { name: "アクションリーダー" }),

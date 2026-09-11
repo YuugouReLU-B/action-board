@@ -125,6 +125,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
 
     // 任意のユーザーページに遷移（ランキングから佐藤太郎のページへ）
     await signedInPage.goto("/ranking");
+    await signedInPage.getByRole("button", { name: "全期間" }).click();
     await signedInPage
       .getByRole("link")
       .filter({ hasText: "佐藤太郎" })

@@ -1,10 +1,8 @@
-import { MapPin } from "lucide-react";
 import Link from "next/link";
 import { UserName } from "@/components/common/user-name";
 import { UserTopBadge } from "@/features/user-badges/components/user-top-badge";
 import { LevelProgress } from "@/features/user-level/components/level-progress";
 import { getUserLevel } from "@/features/user-level/services/level";
-import UserAvatar from "@/features/user-profile/components/user-avatar";
 import { getProfile } from "@/features/user-profile/services/profile";
 
 interface LevelsProps {
@@ -35,27 +33,10 @@ export default async function Levels({
     <div
       className={`w-full flex flex-col items-stretch bg-white rounded-md p-6 ${clickable ? "hover:bg-gray-50 transition-colors max-w-lg" : "max-w-md"}`}
     >
-      <div className="flex items-center">
-        <UserAvatar userProfile={profile} size="lg" />
-        <div className="flex flex-col ml-6 min-w-0">
-          <UserName name={profile.name} nameClassName="text-lg font-bold" />
-          <div className="flex items-center mt-2">
-            <div className="flex items-baseline">
-              <div className="text-sm font-bold">LV.</div>
-              <div className="text-xxl font-bold ml-1 leading-none">
-                {userLevel ? userLevel.level : "1"}
-              </div>
-            </div>
-            <div className="flex ml-4 text-sm items-center">
-              <MapPin className="w-4 h-4 mr-0.5" />
-              {profile.address_prefecture}
-            </div>
-          </div>
-          <div className="flex items-center mt-2 text-sm text-gray-600">
-            <div>
-              {userLevel ? userLevel.xp.toLocaleString() : "0"} ポイント
-            </div>
-          </div>
+      <div className="flex flex-col min-w-0">
+        <UserName name={profile.name} nameClassName="text-2xl font-bold" />
+        <div className="mt-2 text-2xl font-bold">
+          {userLevel ? userLevel.xp.toLocaleString() : "0"} ポイント
         </div>
       </div>
       {showBadge && (

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { UserName } from "@/components/common/user-name";
 import { Button } from "@/components/ui/button";
 import type { ActivityTimelineItem } from "@/features/user-activity/types/activity-types";
-import UserAvatar from "@/features/user-profile/components/user-avatar";
 import type { Tables } from "@/lib/types/supabase";
 /**
  * 活動タイムライン表示コンポーネント
@@ -11,7 +10,7 @@ import type { Tables } from "@/lib/types/supabase";
  * - ユーザーの活動履歴を時系列で表示
  * - ページネーション機能（「もっと見る」ボタン）
  * - 活動タイプに応じた適切なメッセージ表示
- * - ユーザーアバターとプロフィールリンク
+ * - ユーザー名とプロフィールリンク
  * - 空状態の適切な処理
  *
  * 使用場所：
@@ -45,24 +44,19 @@ export function ActivityTimeline({
           key={activity.id || idx}
           className="flex flex-row gap-2 items-center"
         >
-          {/* ユーザーアバターとプロフィールリンク */}
-          <Link href={`/users/${activity.user_id}`}>
-            <UserAvatar
-              className="w-10 h-10"
-              userProfile={{
-                name: activity.name,
-                avatar_url: activity.avatar_url,
-              }}
-            />
-          </Link>
-
           {/* 活動内容の表示 */}
           <div className="flex flex-col gap-1">
             <div className="flex flex-wrap items-center text-sm">
-              <UserName
-                name={`${activity.name ?? ""}さん`}
-                className="gap-0.5 mr-1"
-              />
+              {activity.address_prefecture ? (
+                <span>{activity.address_prefecture}の</span>
+              ) : null}
+              {/* ユーザー名とプロフィールリンク */}
+              <Link href={`/users/${activity.user_id}`}>
+                <UserName
+                  name={`${activity.name ?? ""}さん`}
+                  className="gap-0.5 mr-1"
+                />
+              </Link>
               <span>
                 {/* 活動タイプに応じたメッセージ表示 */}
                 {activity.activity_type === "signup" ? (

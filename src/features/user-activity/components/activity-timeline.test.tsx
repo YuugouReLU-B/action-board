@@ -79,7 +79,7 @@ describe("ActivityTimeline", () => {
       expect(missionLink).toHaveAttribute("href", "/missions/test-mission-abc");
     });
 
-    it("ユーザーアバターとリンクが正しく表示される", () => {
+    it("ユーザー名にプロフィールリンクが正しく表示される", () => {
       const mockTimeline = [
         {
           id: "1",

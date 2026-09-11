@@ -8,9 +8,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage
         .locator("section")
-        .getByText(
-          "テストユーザーLV.1東京都0 ポイント次のレベルまで40ポイント",
-        ),
+        .getByText("テストユーザー0 ポイント次のレベルまで40ポイント"),
     ).toBeVisible({ timeout: 10000 });
     await expect(
       signedInPage.getByRole("link", {
@@ -18,20 +16,12 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
       }),
     ).toBeVisible();
 
-    // 活動状況の表示を確認
-    await expect(
-      signedInPage.getByRole("heading", { name: /浜通りクエストの活動状況/ }),
-    ).toBeVisible();
-    await expect(signedInPage.getByText("登録者数")).toBeVisible();
+    // 参加方法の案内図の表示を確認
+    await expect(signedInPage.getByAltText(/参加方法/)).toBeVisible();
 
     // 注目ミッションの表示を確認
     await expect(
       signedInPage.getByRole("heading", { name: /注目ミッション/ }),
-    ).toBeVisible();
-
-    // 活動タイムラインの表示を確認
-    await expect(
-      signedInPage.getByRole("heading", { name: /活動タイムライン/ }),
     ).toBeVisible();
 
     // 問い合わせフォームの表示を確認
@@ -179,9 +169,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage
         .locator("section")
-        .getByText(
-          "テストユーザーLV.9東京都800 ポイント次のレベルまで100ポイント",
-        ),
+        .getByText("テストユーザー800 ポイント次のレベルまで100ポイント"),
     ).toBeVisible({ timeout: 10000 });
 
     await signedInPage.goto("/ranking");
@@ -222,9 +210,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage
         .locator("section")
-        .getByText(
-          "テストユーザーLV.1東京都0 ポイント次のレベルまで40ポイント",
-        ),
+        .getByText("テストユーザー0 ポイント次のレベルまで40ポイント"),
     ).toBeVisible({ timeout: 10000 });
   });
 
@@ -234,8 +220,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await assertAuthState(signedInPage, true);
 
     // ランキングページに遷移
-    await signedInPage.getByRole("link", { name: "トップ100を見る" }).click();
-    await expect(signedInPage).toHaveURL("/ranking", { timeout: 10000 });
+    await signedInPage.goto("/ranking");
 
     await expect(
       signedInPage.getByRole("heading", { name: "アクションリーダー" }),

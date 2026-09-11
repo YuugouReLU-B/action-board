@@ -8,9 +8,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage
         .locator("section")
-        .getByText(
-          "テストユーザーLV.1東京都0 ポイント次のレベルまで40ポイント",
-        ),
+        .getByText("テストユーザー0 ポイント次のレベルまで40ポイント"),
     ).toBeVisible({ timeout: 10000 });
     await expect(
       signedInPage.getByRole("link", {
@@ -45,7 +43,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     ).toBeVisible();
     await expect(
       signedInPage.getByRole("link", {
-        name: "アクションボードへのご意見フォーム",
+        name: "浜通りクエストへのご意見フォーム",
       }),
     ).toBeVisible();
 
@@ -197,9 +195,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage
         .locator("section")
-        .getByText(
-          "テストユーザーLV.9東京都800 ポイント次のレベルまで100ポイント",
-        ),
+        .getByText("テストユーザー800 ポイント次のレベルまで100ポイント"),
     ).toBeVisible({ timeout: 10000 });
 
     await signedInPage.goto("/ranking");
@@ -239,9 +235,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage
         .locator("section")
-        .getByText(
-          "テストユーザーLV.1東京都0 ポイント次のレベルまで40ポイント",
-        ),
+        .getByText("テストユーザー0 ポイント次のレベルまで40ポイント"),
     ).toBeVisible({ timeout: 10000 });
   });
 

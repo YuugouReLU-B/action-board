@@ -56,7 +56,6 @@ export default async function ProfileSettingsPage({
             privateUser?.date_of_birth ?? user.user_metadata.date_of_birth,
           x_username: publicUser?.x_username || null,
           github_username: publicUser?.github_username || null,
-          avatar_url: publicUser?.avatar_url || null,
         }}
         initialPrivateUser={privateUser}
       />

@@ -1,5 +1,6 @@
 "use server";
 
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { missionSchema } from "@/features/admin/schemas/mission-schema";
 import {
@@ -8,7 +9,13 @@ import {
 } from "@/features/admin/services/admin-categories";
 import { requireAdmin } from "@/features/admin/services/authorize-admin";
 import { issueQrCode } from "@/features/qr-spot/services/qr-code";
+import {
+  MISSION_ASSET_ALLOWED_MIME_TYPES,
+  MISSION_ASSET_BUCKET,
+  MISSION_ASSET_MAX_FILE_SIZE,
+} from "@/lib/services/mission-assets";
 import { createAdminClient } from "@/lib/supabase/adminClient";
+import type { Database } from "@/lib/types/supabase";
 
 export type AdminActionResult =
   | { success: true; missionId: string }
@@ -41,6 +48,7 @@ function parseMissionForm(formData: FormData) {
     title: String(formData.get("title") ?? "").trim(),
     content: emptyToNull(formData.get("content")),
     icon_url: emptyToNull(formData.get("icon_url")),
+    ogp_image_url: emptyToNull(formData.get("ogp_image_url")),
     required_artifact_type: String(
       formData.get("required_artifact_type") ?? "",
     ),
@@ -57,6 +65,55 @@ function parseMissionForm(formData: FormData) {
   });
 }
 
+/**
+ * フォームで選択されたファイルを mission-assets バケットにアップロードし、公開URLを返す。
+ * ファイルが選択されていなければ null を返す（＝既存の値を変えない）。
+ */
+async function uploadMissionAssetIfProvided(
+  supabase: SupabaseClient<Database>,
+  formData: FormData,
+  fieldName: string,
+  missionId: string,
+  folder: "icons" | "photos",
+): Promise<{ url: string | null; error?: string }> {
+  const file = formData.get(fieldName);
+  if (!(file instanceof File) || file.size === 0) {
+    return { url: null };
+  }
+
+  if (file.size > MISSION_ASSET_MAX_FILE_SIZE) {
+    return { url: null, error: "画像ファイルのサイズは5MB以下にしてください" };
+  }
+  if (!MISSION_ASSET_ALLOWED_MIME_TYPES.includes(file.type)) {
+    return {
+      url: null,
+      error: "対応している画像形式はJPEG、PNG、WebP、SVGです",
+    };
+  }
+
+  const fileExt = file.name.split(".").pop();
+  const fileName = `${folder}/${missionId}-${Date.now()}.${fileExt}`;
+  const fileBuffer = await file.arrayBuffer();
+
+  const { error } = await supabase.storage
+    .from(MISSION_ASSET_BUCKET)
+    .upload(fileName, fileBuffer, {
+      contentType: file.type,
+      upsert: true,
+    });
+
+  if (error) {
+    console.error(`ミッション画像（${folder}）のアップロードに失敗:`, error);
+    return { url: null, error: "画像のアップロードに失敗しました" };
+  }
+
+  const { data } = supabase.storage
+    .from(MISSION_ASSET_BUCKET)
+    .getPublicUrl(fileName);
+
+  return { url: data.publicUrl };
+}
+
 export async function createMission(
   formData: FormData,
 ): Promise<AdminActionResult> {
@@ -70,9 +127,33 @@ export async function createMission(
   const supabase = await createAdminClient();
   const id = crypto.randomUUID();
 
-  const { error } = await supabase
-    .from("missions")
-    .insert({ id, ...parsed.data });
+  const icon = await uploadMissionAssetIfProvided(
+    supabase,
+    formData,
+    "icon_file",
+    id,
+    "icons",
+  );
+  if (icon.error) {
+    return { success: false, error: icon.error };
+  }
+  const photo = await uploadMissionAssetIfProvided(
+    supabase,
+    formData,
+    "photo_file",
+    id,
+    "photos",
+  );
+  if (photo.error) {
+    return { success: false, error: photo.error };
+  }
+
+  const { error } = await supabase.from("missions").insert({
+    id,
+    ...parsed.data,
+    icon_url: icon.url ?? parsed.data.icon_url,
+    ogp_image_url: photo.url ?? parsed.data.ogp_image_url,
+  });
 
   if (error) {
     console.error("ミッションの作成に失敗:", error);
@@ -112,9 +193,35 @@ export async function updateMission(
   }
 
   const supabase = await createAdminClient();
+
+  const icon = await uploadMissionAssetIfProvided(
+    supabase,
+    formData,
+    "icon_file",
+    missionId,
+    "icons",
+  );
+  if (icon.error) {
+    return { success: false, error: icon.error };
+  }
+  const photo = await uploadMissionAssetIfProvided(
+    supabase,
+    formData,
+    "photo_file",
+    missionId,
+    "photos",
+  );
+  if (photo.error) {
+    return { success: false, error: photo.error };
+  }
+
   const { error } = await supabase
     .from("missions")
-    .update(parsed.data)
+    .update({
+      ...parsed.data,
+      icon_url: icon.url ?? parsed.data.icon_url,
+      ogp_image_url: photo.url ?? parsed.data.ogp_image_url,
+    })
     .eq("id", missionId);
 
   if (error) {

@@ -1429,6 +1429,7 @@ export type Database = {
         Row: {
           last_notified_level: number | null;
           level: number;
+          line_1000pt_audience_added_at: string | null;
           season_id: string;
           updated_at: string;
           user_id: string;
@@ -1437,6 +1438,7 @@ export type Database = {
         Insert: {
           last_notified_level?: number | null;
           level?: number;
+          line_1000pt_audience_added_at?: string | null;
           season_id: string;
           updated_at?: string;
           user_id: string;
@@ -1445,6 +1447,7 @@ export type Database = {
         Update: {
           last_notified_level?: number | null;
           level?: number;
+          line_1000pt_audience_added_at?: string | null;
           season_id?: string;
           updated_at?: string;
           user_id?: string;
@@ -1481,6 +1484,30 @@ export type Database = {
           referral_code?: string;
           updated_at?: string | null;
           user_id?: string;
+        };
+        Relationships: [];
+      };
+      user_registration_channels: {
+        Row: {
+          created_at: string;
+          id: string;
+          line_official_account_friend: boolean | null;
+          provider: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          id: string;
+          line_official_account_friend?: boolean | null;
+          provider?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          line_official_account_friend?: boolean | null;
+          provider?: string | null;
+          updated_at?: string;
         };
         Relationships: [];
       };

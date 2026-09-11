@@ -1,22 +1,20 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import NoticeBoardAlert from "@/components/common/notice-board-alert";
 import Hero from "@/components/top/hero";
+import { syncPointMilestoneAudience } from "@/features/line-notification/use-cases/sync-point-milestone-audience";
 import { LotteryAnnouncementBanner } from "@/features/lottery/components/lottery-announcement-banner";
 import FeaturedMissions from "@/features/missions/components/featured-missions";
 import FirstMissions from "@/features/missions/components/first-missions";
 import MissionsByCategory from "@/features/missions/components/missions-by-category";
 import { hasFeaturedMissions } from "@/features/missions/services/missions";
-import { SpotMapEntry } from "@/features/spot-map/components/spot-map-entry";
 import { getUnnotifiedBadges } from "@/features/user-badges/services/get-unnotified-badges";
 import { BadgeNotificationCheck } from "@/features/user-badges-notification/components/badge-notification-check";
-import { LevelUpCheck } from "@/features/user-level/components/level-up-check";
-import { checkLevelUpNotification } from "@/features/user-level/loaders/level-up-loaders";
 import {
   getUser,
   hasPrivateProfile,
 } from "@/features/user-profile/services/profile";
 import { getCurrentSeasonId } from "@/lib/loaders/seasons-loaders";
+import { createAdminClient } from "@/lib/supabase/adminClient";
 import { generateRootMetadata } from "@/lib/utils/metadata";
 
 // メタデータ生成を外部関数に委譲
@@ -32,8 +30,7 @@ export default async function Home({
 
   const user = await getUser();
 
-  // レベルアップ通知とバッジ通知をチェック
-  let levelUpNotification = null;
+  // バッジ通知をチェック
   let badgeNotifications = null;
 
   if (user) {
@@ -45,13 +42,6 @@ export default async function Home({
     // 現在のシーズンIDを取得
     const currentSeasonId = await getCurrentSeasonId();
 
-    // レベルアップ通知をチェック
-    // 自動ミッション（紹介など）でレベルアップした場合の通知を表示するため有効化
-    const levelUpCheck = await checkLevelUpNotification();
-    if (levelUpCheck.shouldNotify && levelUpCheck.levelUp) {
-      levelUpNotification = levelUpCheck.levelUp;
-    }
-
     // バッジ通知をチェック（現在のシーズンのみ）
     const unnotifiedBadges = await getUnnotifiedBadges(
       user.id,
@@ -60,20 +50,18 @@ export default async function Home({
     if (unnotifiedBadges.length > 0) {
       badgeNotifications = unnotifiedBadges;
     }
+
+    // 累計ポイントが閾値に到達していればLINEオーディエンスへ追加（画面表示への影響なし）
+    await syncPointMilestoneAudience(await createAdminClient(), user.id);
   }
 
   //フューチャードミッションの存在確認
   const showFeatured = await hasFeaturedMissions();
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
+    <div className="flex flex-col min-h-screen w-full pt-2">
       {/* 抽選応募対象になったことのお知らせ */}
       <LotteryAnnouncementBanner />
-
-      {/* レベルアップ通知 */}
-      {levelUpNotification && (
-        <LevelUpCheck levelUpData={levelUpNotification} />
-      )}
 
       {/* バッジ通知 */}
       {badgeNotifications && (
@@ -84,8 +72,6 @@ export default async function Home({
       <section className="relative">
         <Hero />
       </section>
-      {/* 注意書き */}
-      <NoticeBoardAlert />
 
       {/* 参加方法の案内図（活動状況・タイムライン・ランキングの代わりに表示） */}
       <section className="py-12 md:py-16 bg-background">
@@ -112,11 +98,6 @@ export default async function Home({
         )}
 
         {/* ミッションセクション */}
-      </div>
-
-      {/* スポットマップへの入口（地図に出せるスポットが無いときは出ない） */}
-      <div className="py-6">
-        <SpotMapEntry userId={user?.id} />
       </div>
 
       <section className="py-12 md:py-16 bg-background">

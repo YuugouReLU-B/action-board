@@ -9,10 +9,8 @@ import { getUserRepeatableMissionAchievements } from "@/features/user-achievemen
  * 最上部にシーズン情報ヘッダーを追加したページです。
  *
  * 主な機能:
- * - シーズン情報ヘッダー（レベル、XP含む）
- * - そのシーズンでのユーザーレベル表示
+ * - シーズン情報ヘッダー（XP含む）
  * - ソーシャルメディアリンク
- * - そのシーズンで獲得したバッジ
  * - ミッション達成状況
  * - 活動タイムライン
  * - 全シーズン履歴
@@ -22,7 +20,6 @@ import {
   getUserActivityTimeline,
   getUserActivityTimelineCount,
 } from "@/features/user-activity/loaders/timeline-loaders";
-import { UserBadges } from "@/features/user-badges/components/user-badges";
 import Levels from "@/features/user-level/components/levels";
 import SocialBadgeSection from "@/features/user-profile/components/social-badge-section";
 import { getProfile } from "@/features/user-profile/services/profile";
@@ -85,8 +82,8 @@ export default async function SeasonUserDetailPage({ params }: Props) {
         <UserSeasonHeader season={season} />
       </div>
 
-      {/* ユーザーレベル表示（プログレスバーは非表示） - シーズン用 */}
-      <Levels userId={user.id} seasonId={season.id} hideProgress />
+      {/* ユーザー情報表示 - シーズン用 */}
+      <Levels userId={user.id} seasonId={season.id} />
 
       <div className="px-4">
         {/* ソーシャルメディアリンク表示 */}
@@ -94,12 +91,6 @@ export default async function SeasonUserDetailPage({ params }: Props) {
           x_username={user.x_username}
           github_username={user.github_username}
         />
-
-        {/* 獲得バッジセクション（そのシーズンのもののみ） */}
-        <Card className="w-full p-4 mt-4">
-          <h3 className="text-lg font-bold mb-4">獲得バッジ</h3>
-          <UserBadges userId={user.id} seasonId={season.id} />
-        </Card>
 
         {/* ミッション達成状況セクション（活動がある場合のみ表示） */}
         {(count || 0) > 0 && (

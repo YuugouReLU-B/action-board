@@ -6,9 +6,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
 
     // 自身のステータス表示を確認（レベル表示は廃止し、ポイント数のみ表示）
     await expect(
-      signedInPage
-        .locator("section")
-        .getByText("テストユーザー0 ポイント次のレベルまで40ポイント"),
+      signedInPage.locator("section").getByText("テストユーザー0 ポイント"),
     ).toBeVisible({ timeout: 10000 });
     await expect(
       signedInPage.getByRole("link", {
@@ -153,9 +151,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     // ミッション完了後のポイントの変動を確認（レベル表示は廃止し、ポイント数のみ表示）
     await signedInPage.goto("/");
     await expect(
-      signedInPage
-        .locator("section")
-        .getByText("テストユーザー800 ポイント次のレベルまで100ポイント"),
+      signedInPage.locator("section").getByText("テストユーザー800 ポイント"),
     ).toBeVisible({ timeout: 10000 });
 
     await signedInPage.goto("/ranking");
@@ -194,9 +190,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
 
     await signedInPage.goto("/");
     await expect(
-      signedInPage
-        .locator("section")
-        .getByText("テストユーザー0 ポイント次のレベルまで40ポイント"),
+      signedInPage.locator("section").getByText("テストユーザー0 ポイント"),
     ).toBeVisible({ timeout: 10000 });
   });
 

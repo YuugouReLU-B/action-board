@@ -6,9 +6,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
 
     // 自身のステータス表示を確認（レベル表示は廃止し、ポイント数のみ表示）
     await expect(
-      signedInPage
-        .locator("section")
-        .getByText("テストユーザー東京都0 ポイント"),
+      signedInPage.locator("section").getByText("テストユーザー0 ポイント"),
     ).toBeVisible({ timeout: 10000 });
     await expect(
       signedInPage.getByRole("link", {
@@ -16,20 +14,12 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
       }),
     ).toBeVisible();
 
-    // 活動状況の表示を確認
-    await expect(
-      signedInPage.getByRole("heading", { name: /浜通りクエストの活動状況/ }),
-    ).toBeVisible();
-    await expect(signedInPage.getByText("登録者数")).toBeVisible();
+    // 参加方法の案内図の表示を確認
+    await expect(signedInPage.getByAltText(/参加方法/)).toBeVisible();
 
     // 注目ミッションの表示を確認
     await expect(
       signedInPage.getByRole("heading", { name: /注目ミッション/ }),
-    ).toBeVisible();
-
-    // 活動タイムラインの表示を確認
-    await expect(
-      signedInPage.getByRole("heading", { name: /活動タイムライン/ }),
     ).toBeVisible();
 
     // 問い合わせフォームの表示を確認
@@ -161,9 +151,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     // ミッション完了後のポイントの変動を確認（レベル表示は廃止し、ポイント数のみ表示）
     await signedInPage.goto("/");
     await expect(
-      signedInPage
-        .locator("section")
-        .getByText("テストユーザー東京都800 ポイント"),
+      signedInPage.locator("section").getByText("テストユーザー800 ポイント"),
     ).toBeVisible({ timeout: 10000 });
 
     await signedInPage.goto("/ranking");
@@ -202,9 +190,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
 
     await signedInPage.goto("/");
     await expect(
-      signedInPage
-        .locator("section")
-        .getByText("テストユーザー東京都0 ポイント"),
+      signedInPage.locator("section").getByText("テストユーザー0 ポイント"),
     ).toBeVisible({ timeout: 10000 });
   });
 
@@ -214,8 +200,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await assertAuthState(signedInPage, true);
 
     // ランキングページに遷移
-    await signedInPage.getByRole("link", { name: "トップ100を見る" }).click();
-    await expect(signedInPage).toHaveURL("/ranking", { timeout: 10000 });
+    await signedInPage.goto("/ranking");
 
     await expect(
       signedInPage.getByRole("heading", { name: "アクションリーダー" }),

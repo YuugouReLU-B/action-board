@@ -138,7 +138,6 @@ export default async function UserDetailPage({ params }: Props) {
               isNew={false}
               initialProfile={{
                 name: user.name || undefined,
-                avatar_url: user.avatar_url || null,
               }}
             />
             <div className="w-full max-w-md">

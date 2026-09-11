@@ -1,3 +1,4 @@
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { signOutAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import MyAvatar from "@/features/user-profile/components/my-avatar";
 import { getUser } from "@/features/user-profile/services/profile";
 
 export default async function AuthButton() {
@@ -17,11 +17,15 @@ export default async function AuthButton() {
 
   return user /* && profile */ ? (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        aria-label="ユーザーメニューを開く"
-        data-testid="usermenubutton"
-      >
-        <MyAvatar className="w-8 h-8" />
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="ユーザーメニューを開く"
+          data-testid="usermenubutton"
+        >
+          <Menu className="w-6 h-6" />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"

@@ -47,7 +47,6 @@ export default async function ProfileSettingsPage({
         isNew={true}
         initialProfile={{
           name: publicUser?.name || user.user_metadata.name || "",
-          avatar_url: publicUser?.avatar_url || null,
         }}
         nextUrlAfterSignup={nextUrlAfterSignup}
       />

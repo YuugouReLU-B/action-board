@@ -17,6 +17,7 @@ export const missionSchema = z
     title: z.string().min(1, "タイトルは必須です").max(200),
     content: z.string().max(20000).optional().nullable(),
     icon_url: z.string().max(500).optional().nullable(),
+    ogp_image_url: z.string().max(500).optional().nullable(),
     required_artifact_type: z.enum(
       Object.keys(ARTIFACT_TYPES) as [string, ...string[]],
     ),

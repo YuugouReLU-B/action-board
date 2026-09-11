@@ -43,7 +43,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     ).toBeVisible();
     await expect(
       signedInPage.getByRole("link", {
-        name: "アクションボードへのご意見フォーム",
+        name: "浜通りクエストへのご意見フォーム",
       }),
     ).toBeVisible();
 

@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { CopyrightSection } from "@/components/footer/copyright-section";
 import { FeedbackSection } from "@/components/footer/feedback-section";
 import { LogoSection } from "@/components/footer/logo-section";
 import { SeasonsList } from "@/components/footer/seasons-list";
+import { HeroBackdrop } from "@/components/top/hero-backdrop";
 
 export default function Footer() {
   return (
@@ -12,32 +12,11 @@ export default function Footer() {
       </div>
 
       <div className="relative w-full bg-linear-to-b from-[var(--app-brand-light)] to-[var(--app-brand-pale)] overflow-hidden">
-        <LogoSection />
-        <div className="relative h-[280px]">
-          <div className="absolute bottom-0 left-0 right-0 w-full flex justify-center">
-            <div className="relative w-full max-w-[756px] h-[392px]">
-              <Image
-                src="/img/hero-background.svg"
-                alt="街並みと雲のイラスト"
-                fill
-                className="object-contain object-bottom"
-              />
-            </div>
-          </div>
+        {/* トップと同じ風景を footer の地に敷く */}
+        <HeroBackdrop overlayClassName="bg-white/55" />
 
-          <div className="absolute bottom-0 left-0 right-0 w-full flex justify-center z-10">
-            <div className="relative w-full max-w-[756px] h-[157px]">
-              <Image
-                src="/img/hero-people.svg"
-                alt="活動する人たちのイラスト"
-                fill
-                className="object-contain object-bottom"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="relative z-20">
+        <div className="relative z-10 pb-4">
+          <LogoSection />
           <SeasonsList />
           <CopyrightSection />
         </div>

@@ -1,8 +1,16 @@
 import type { NextRequest } from "next/server";
+import { resolveBasicAuthResponse } from "@/lib/middleware/basic-auth";
 import { resolveMaintenanceResponse } from "@/lib/middleware/maintenance";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function proxy(request: NextRequest) {
+  // ベータ公開前のゲート。何よりも先に判定して、メンテナンス画面すら見せない
+  const basicAuthResponse = resolveBasicAuthResponse(request);
+
+  if (basicAuthResponse) {
+    return basicAuthResponse;
+  }
+
   const maintenanceResponse = resolveMaintenanceResponse(request);
 
   if (maintenanceResponse) {

@@ -13,7 +13,7 @@ interface AchievementMetricProps {
 /**
  * アクション達成数表示コンポーネント
  *
- * チームみらいのアクション達成数とその増加数を表示します。
+ * 浜通りクエストのアクション達成数とその増加数を表示します。
  * Supabaseからのデータが取得できない場合は、環境変数のフォールバック値を使用します。
  */
 export function AchievementMetric({

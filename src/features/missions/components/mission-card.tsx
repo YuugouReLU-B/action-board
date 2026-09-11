@@ -94,7 +94,7 @@ export default function Mission({
                     ? `1枚あたり${POSTER_POINTS_PER_UNIT}`
                     : mission.required_artifact_type === "POSTING"
                       ? `1枚あたり${POSTING_POINTS_PER_UNIT}`
-                      : calculateMissionXp(mission.difficulty)}
+                      : calculateMissionXp({ points: mission.points })}
                   <span className="">P</span>
                   {mission.is_featured && <span className="ml-1">x 2</span>}
                 </span>

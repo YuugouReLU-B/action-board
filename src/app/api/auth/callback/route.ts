@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { APP_ORIGIN } from "@/lib/constants/app-origin";
 import { createClient } from "@/lib/supabase/client";
 
 export async function GET(request: Request) {
@@ -7,7 +8,7 @@ export async function GET(request: Request) {
   // https://supabase.com/docs/guides/auth/server-side/nextjs
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? requestUrl.origin;
+  const origin = APP_ORIGIN;
   const redirectTo = requestUrl.searchParams.get("redirect_to")?.toString();
 
   if (code) {

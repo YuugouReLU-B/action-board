@@ -8,12 +8,11 @@ import {
   buildCampaignStatsResponse,
   DEFAULT_CAMPAIGN_STATS_LIMIT,
 } from "@/features/campaign-attribution/utils/campaign-stats-response";
-import { getPartyMembershipByEmail } from "@/features/party-membership/services/memberships";
-import { buildMembershipLookupResponse } from "@/features/party-membership/utils/membership-lookup";
+import { APP_ORIGIN } from "@/lib/constants/app-origin";
 import { verifyBearerToken } from "@/lib/utils/bearer-token";
 import { isValidCampaignCodeFormat } from "@/lib/validation/campaign-attribution";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = APP_ORIGIN;
 
 /**
  * 問い合わせ対応ボット（みらいいぬ）などの外部クライアント向けMCPサーバー
@@ -23,27 +22,6 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
  */
 const handler = createMcpHandler(
   (server) => {
-    server.tool(
-      "get_party_membership_by_email",
-      "メールアドレスをキーに、浜通りクエストのユーザー存在有無・党員バッジ情報・プロフィールページURLを検索する。党員バッジが表示されない等の問い合わせ対応に使う。",
-      {
-        email: z
-          .string()
-          .email()
-          .describe(
-            "検索対象のメールアドレス（浜通りクエストのログイン用メールアドレス）",
-          ),
-      },
-      async ({ email }) => {
-        const lookup = await getPartyMembershipByEmail(email);
-        const response = buildMembershipLookupResponse(lookup, SITE_URL);
-
-        return {
-          content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
-        };
-      },
-    );
-
     server.tool(
       "get_campaign_attribution_stats",
       "キャンペーンコード（?cv=）別の浜通りクエスト新規登録数を集計する。全国キャラバンの会場別登録数など、イベント/キャンペーン起因の成果測定（アトリビューション計測）に使う。返すのは集計値のみで個人は特定できない。",

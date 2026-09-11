@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Select,
   SelectContent,
@@ -9,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DatePicker } from "@/features/youtube-stats/components/date-picker";
 import { formatLocalDate } from "@/lib/utils/date-formatters";
 import { PERIOD_OPTIONS, type PeriodType } from "../types";
 

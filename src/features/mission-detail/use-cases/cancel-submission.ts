@@ -187,7 +187,7 @@ export async function cancelSubmission(
   // Fetch mission info for XP calculation
   const { data: missionData, error: missionFetchError } = await adminSupabase
     .from("missions")
-    .select("difficulty, title, slug, is_featured")
+    .select("difficulty, points, title, slug, is_featured")
     .eq("id", achievement.mission_id)
     .single();
 
@@ -212,10 +212,7 @@ export async function cancelSubmission(
   }
 
   // Revoke XP
-  const xpToRevoke = calculateMissionXp(
-    missionData.difficulty,
-    missionData.is_featured,
-  );
+  const xpToRevoke = calculateMissionXp(missionData);
   const bonusXp = isBonusMission(missionData.slug)
     ? await fetchUserXpBonus(adminSupabase, userId, achievementId)
     : 0;

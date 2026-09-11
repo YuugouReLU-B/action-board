@@ -145,6 +145,10 @@
     --app-map-location-fill: #60a5fa;
     --app-map-spider-leg: #222222;
 
+    /* --- 地図: スポットマップのピン -------------------------- */
+    --app-map-spot-todo: #ef4444;
+    --app-map-spot-done: #10b981;
+
     /* --- 地図: ポスター掲示板ステータス ---------------------- */
     --app-poster-not-yet: #6b7280;
     --app-poster-reserved: #f59e0b;
@@ -206,19 +210,8 @@
     --app-scrollbar-thumb: #888888;
     --app-scrollbar-thumb-hover: #555555;
 
-    /* --- 冬季エフェクト -------------------------------------- */
-    --app-winter-petal-1: #f5a0b8;
-    --app-winter-petal-2: #e87da0;
-    --app-winter-petal-3: #fcdce8;
-    --app-winter-star: #fff3b0;
-    --app-winter-text: #ffffff;
-    --app-winter-surface: #ffffff;
-
     /* --- 花火エフェクト -------------------------------------- */
     --app-fireworks-text: #ffffff;
-
-    /* --- サービス停止オーバーレイ ---------------------------- */
-    --app-service-stop-bg: #0a0a1a;
 
     /* --- 外部サービスのブランド色（変更不可） -----------------
        Google / LINE のブランドガイドライン上、色の改変は認めら

@@ -4,9 +4,9 @@
 
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
+import { APP_ORIGIN } from "@/lib/constants/app-origin";
 
-export const defaultUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+export const defaultUrl = APP_ORIGIN;
 
 // ==========================================
 // 基本設定

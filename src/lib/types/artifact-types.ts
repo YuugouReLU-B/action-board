@@ -55,18 +55,22 @@ export const ARTIFACT_TYPES = {
     displayName: "リンクアクセス",
     prompt: "リンクをクリックするとミッションが達成されます。",
   },
-  YOUTUBE: {
-    key: "YOUTUBE",
-    displayName: "YouTube",
+  LINE_FRIEND: {
+    key: "LINE_FRIEND",
+    displayName: "公式LINE友だち追加",
     prompt:
-      "YouTubeでチームみらい動画に高評価をつけて、自動または手動で記録しましょう。",
-    validationRegex:
-      /^https?:\/\/(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?v=|shorts\/|live\/)|youtu\.be\/)[\w-]+(?:[?&#].*)?$/,
+      "公式LINEを友だち追加すると達成になります。追加後に「追加を確認する」を押してください。",
   },
-  YOUTUBE_COMMENT: {
-    key: "YOUTUBE_COMMENT",
-    displayName: "YouTubeコメント",
-    prompt: "YouTubeでチームみらい動画にコメントして、自動で記録しましょう。",
+  QR: {
+    key: "QR",
+    displayName: "QRスポット",
+    prompt: "現地のQRコードを読み取ると達成になります。",
+  },
+  GEO_CHECKIN: {
+    key: "GEO_CHECKIN",
+    displayName: "位置情報チェックイン",
+    prompt:
+      "現地に着いたら「イベントに来た」ボタンを押すと、位置情報を判定して達成になります。",
   },
   RESIDENTIAL_POSTER: {
     key: "RESIDENTIAL_POSTER",
@@ -79,6 +83,22 @@ export const ARTIFACT_TYPES = {
     prompt: "このミッションでは添付データの投稿は不要です。",
   },
 } as const;
+
+/**
+ * 提出物を保存しない達成の種類。
+ *
+ * 達成の記録とXP付与だけを行い、mission_artifacts には何も入れない。
+ * mission_artifacts には「link_url / text_content / image_storage_path の
+ * いずれかが必須」というCHECK制約があるため、ここに入れ忘れると
+ * 達成しようとした瞬間に制約違反で失敗する。
+ */
+export const ARTIFACT_TYPES_WITHOUT_SUBMISSION: ReadonlySet<string> = new Set([
+  ARTIFACT_TYPES.NONE.key,
+  ARTIFACT_TYPES.LINK_ACCESS.key,
+  ARTIFACT_TYPES.LINE_FRIEND.key,
+  ARTIFACT_TYPES.QR.key,
+  ARTIFACT_TYPES.GEO_CHECKIN.key,
+]);
 
 export type ArtifactTypeKey = keyof typeof ARTIFACT_TYPES;
 
@@ -106,7 +126,8 @@ export type MissionRequiredArtifactType =
   | "REFERRAL"
   | "POSTING"
   | "POSTER"
-  | "YOUTUBE"
-  | "YOUTUBE_COMMENT"
+  | "LINE_FRIEND"
+  | "QR"
+  | "GEO_CHECKIN"
   | "RESIDENTIAL_POSTER"
   | "NONE";

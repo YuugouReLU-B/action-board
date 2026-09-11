@@ -21,7 +21,6 @@ async function main() {
       const totalUpdated =
         result.results.all.updatedCount +
         result.results.daily.updatedCount +
-        result.results.prefecture.updatedCount +
         result.results.mission.updatedCount;
 
       console.log(`Total badges updated: ${totalUpdated}`);

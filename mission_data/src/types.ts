@@ -11,6 +11,8 @@ export interface Mission {
   icon_url: string | null;
   content: string | null;
   difficulty: number;
+  /** 達成時に付与する基礎XP。省略すると difficulty から既定値を求める */
+  points?: number;
   required_artifact_type: string;
   max_achievement_count: number | null;
   is_featured: boolean;

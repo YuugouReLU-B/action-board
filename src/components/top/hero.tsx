@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { HeroBackdrop } from "@/components/top/hero-backdrop";
 import { Button } from "@/components/ui/button";
 import { OnboardingButton } from "@/features/onboarding/components/onboarding-button";
 import Levels from "@/features/user-level/components/levels";
@@ -11,8 +12,12 @@ export default async function Hero() {
   if (user) {
     try {
       return (
-        <section className="mt-[-96px] pt-24 bg-gradient-hero ">
-          <Levels userId={user.id} clickable={true} showBadge={true} />
+        <section className="relative mt-[-96px] pt-24 pb-8 bg-gradient-hero">
+          {/* ヘッダーの下まで風景を敷き、白を重ねてカードを浮かせる */}
+          <HeroBackdrop priority overlayClassName="bg-white/55" />
+          <div className="relative z-10">
+            <Levels userId={user.id} clickable={true} showBadge={true} />
+          </div>
         </section>
       );
     } catch (error) {
@@ -21,18 +26,12 @@ export default async function Hero() {
   }
 
   return (
-    <section className="relative w-full h-[740px] bg-linear-to-b from-[var(--app-brand-light)] to-[var(--app-brand-pale)] overflow-hidden mt-[-96px] pt-24">
-      <div className="absolute inset-0 w-full h-full flex justify-center items-end">
-        <div className="relative w-[1080px] min-w-[1080px] h-[560px]">
-          <Image
-            src="/img/hero-background.svg"
-            alt="街並みと雲のイラスト"
-            fill
-            className="object-contain object-bottom"
-            priority
-          />
-        </div>
-      </div>
+    <section className="relative w-full h-[600px] md:h-[720px] bg-linear-to-b from-[var(--app-brand-light)] to-[var(--app-brand-pale)] overflow-hidden mt-[-96px] pt-24">
+      {/* ロゴとボタンが乗る上半分を明るく保つ。下端は絵の色を残す */}
+      <HeroBackdrop
+        priority
+        overlayClassName="bg-linear-to-b from-white/75 from-0% via-white/25 via-40% to-white/10 to-100%"
+      />
 
       {/* メインコンテンツ */}
       <div className="relative z-10 px-4 pt-8">
@@ -42,19 +41,16 @@ export default async function Hero() {
             <Image
               src="/img/logo.png"
               alt="浜通りクエスト"
-              width={143}
-              height={120}
-              sizes="100vw"
-              className="h-[120px] w-auto"
+              width={512}
+              height={512}
+              sizes="(min-width: 768px) 280px, 220px"
+              className="h-[220px] w-auto md:h-[280px]"
+              priority
             />
           </div>
 
-          <h1 className="text-4xl md:text-4xl font-bold text-gray-800 mb-4">
-            浜通りクエスト
-          </h1>
-          <p className="text-sm font-bold mb-8 px-3">
-            テクノロジーで政治をかえる。あなたと一緒に未来をつくる。
-          </p>
+          {/* ロゴ画像に同じ文字が入っているため視覚的には出さない */}
+          <h1 className="sr-only">浜通りクエスト</h1>
 
           {!user && (
             <div className="flex flex-col items-center gap-4">
@@ -70,24 +66,12 @@ export default async function Hero() {
 
               <OnboardingButton
                 variant="link"
-                className="text-sm hover:text-[var(--app-brand-link-hover)] underline font-medium transition-colors duration-200"
+                className="text-sm hover:text-[var(--app-brand-link-hover)] underline font-medium transition-colors duration-200 [text-shadow:0_0_6px_rgb(255_255_255),0_0_12px_rgb(255_255_255)]"
               >
                 浜通りクエストとは？
               </OnboardingButton>
             </div>
           )}
-        </div>
-      </div>
-
-      <div className="absolute bottom-0 left-0 right-0 w-full flex justify-center z-10">
-        <div className="relative w-full max-w-[1080px] h-[224px]">
-          <Image
-            src="/img/hero-people.svg"
-            alt="活動する人たちのイラスト"
-            fill
-            className="object-contain object-bottom"
-            priority
-          />
         </div>
       </div>
     </section>

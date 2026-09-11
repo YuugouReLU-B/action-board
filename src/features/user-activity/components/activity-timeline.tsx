@@ -1,6 +1,6 @@
 import Link from "next/link";
+import { UserName } from "@/components/common/user-name";
 import { Button } from "@/components/ui/button";
-import { UserNameWithBadge } from "@/features/party-membership/components/user-name-with-badge";
 import type { ActivityTimelineItem } from "@/features/user-activity/types/activity-types";
 import type { Tables } from "@/lib/types/supabase";
 /**
@@ -52,14 +52,8 @@ export function ActivityTimeline({
               ) : null}
               {/* ユーザー名とプロフィールリンク */}
               <Link href={`/users/${activity.user_id}`}>
-                <UserNameWithBadge
+                <UserName
                   name={`${activity.name ?? ""}さん`}
-                  membership={
-                    "party_membership" in activity
-                      ? (activity.party_membership ?? null)
-                      : null
-                  }
-                  badgeSize={16}
                   className="gap-0.5 mr-1"
                 />
               </Link>

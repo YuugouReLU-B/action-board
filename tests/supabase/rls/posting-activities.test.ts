@@ -24,6 +24,7 @@ describe("posting_activities テーブルのRLSテスト", () => {
       title: "ポスティングミッション for RLS",
       content: "これはRLSテスト用のポスティングミッションです",
       difficulty: 1,
+      points: 50,
       required_artifact_type: "POSTING" as const,
       slug: `test-posting-mission-${crypto.randomUUID()}`,
     };

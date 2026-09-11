@@ -27,12 +27,24 @@ cp .env ../action-board-<branch-name>/
 コード例・配置場所の詳細は [アーキテクチャガイドライン](docs/nextjs_architecture_guidelines.md) を参照。
 
 ### ミッション・ポスティングイベント・シーズンのデータ管理
-ミッション、`posting_events`、シーズンは **YAMLファイルで宣言的に管理** されている。SQLマイグレーションで直接変更しないこと。
-- `mission_data/missions.yaml` - ミッション定義（`is_featured`, `is_hidden` 等の変更もここ）
+**ミッションだけDBが正**、それ以外はYAMLが正、という二本立てになっている。
+
+**ミッション（`missions`）** は管理画面 `/admin` から編集する。
+- `mission_data/missions.yaml` は**新環境を立ち上げるときの種データ**。既存ミッションの編集手段ではない
+- `mission:sync` は**既存ミッションを上書きしない**（新規のみ挿入）。CI/CDからは外してある
+- yamlの内容を意図的に反映させたいときだけ `pnpm run mission:sync --overwrite`
+- ポイントは `missions.points`。`difficulty` は★表示専用でXPには影響しない
+
+**それ以外は従来どおりYAMLで宣言的に管理**。SQLマイグレーションで直接変更しないこと。
 - `mission_data/categories.yaml` - カテゴリ定義
 - `mission_data/category_links.yaml` - カテゴリとミッションの紐付け
+- `mission_data/quiz_*.yaml` - クイズのカテゴリと設問
+- `posting_data/posting_events.yaml` - ポスティングイベント
 - `season_data/seasons.yaml` - シーズン定義（`name`, `is_active`, `start_date`, `end_date` の変更もここ）
-- CI/CDデプロイ時に `npm run mission:sync` / `npm run season:sync` で自動同期される
+- CI/CDデプロイ時に `posting:sync` / `season:sync` で自動同期される
+
+> ⚠️ yamlに載っていないミッションは `mission:sync` が一切触れない。過去に初期マイグレーションで
+> 直接INSERTされたミッションが取りこぼされていた。DBのslug一覧とyamlを突き合わせて確認すること。
 
 ### Supabaseクライアントの使い分け
 - **`createClient()` / `getAuth()` / `getStorage()`**: 認証操作（`supabase.auth.*`）やStorage操作に使用

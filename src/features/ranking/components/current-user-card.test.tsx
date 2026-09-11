@@ -2,24 +2,13 @@ import { render, screen } from "@testing-library/react";
 import type React from "react";
 import { CurrentUserCard } from "./current-user-card";
 
-const mockUserNameWithBadge = jest.fn(
-  ({ name, membership }: { name: string; membership?: unknown }) => (
-    <span
-      data-testid="user-name-with-badge"
-      data-membership={JSON.stringify(membership)}
-    >
-      {name}
-    </span>
-  ),
-);
+const mockUserName = jest.fn(({ name }: { name: string }) => (
+  <span data-testid="user-name">{name}</span>
+));
 
-jest.mock(
-  "@/features/party-membership/components/user-name-with-badge",
-  () => ({
-    UserNameWithBadge: (props: unknown) =>
-      mockUserNameWithBadge(props as { name: string; membership?: unknown }),
-  }),
-);
+jest.mock("@/components/common/user-name", () => ({
+  UserName: (props: unknown) => mockUserName(props as { name: string }),
+}));
 
 jest.mock("next/link", () => {
   return ({ children, href }: { children: React.ReactNode; href: string }) => (
@@ -96,7 +85,7 @@ const mockUser = {
 
 describe("CurrentUserCard", () => {
   beforeEach(() => {
-    mockUserNameWithBadge.mockClear();
+    mockUserName.mockClear();
   });
 
   describe("基本的な表示", () => {
@@ -104,14 +93,14 @@ describe("CurrentUserCard", () => {
       render(<CurrentUserCard currentUser={mockUser} />);
 
       expect(screen.getByText("テストユーザー")).toBeInTheDocument();
-      expect(screen.getByText("東京都")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("東京都")).not.toBeInTheDocument();
       expect(screen.getByText("Lv.25")).toBeInTheDocument();
       expect(screen.getByText("2,500pt")).toBeInTheDocument();
       expect(screen.getByText("5")).toBeInTheDocument();
-      expect(mockUserNameWithBadge).toHaveBeenCalledWith(
+      expect(mockUserName).toHaveBeenCalledWith(
         expect.objectContaining({
           name: "テストユーザー",
-          membership: mockUser.party_membership,
         }),
       );
     });
@@ -198,7 +187,8 @@ describe("CurrentUserCard", () => {
       const user = { ...mockUser, address_prefecture: "" };
       render(<CurrentUserCard currentUser={user} />);
 
-      expect(screen.getByText("未設定")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("未設定")).not.toBeInTheDocument();
     });
 
     it("負の値のランクが処理される", () => {

@@ -1,4 +1,4 @@
-export type BadgeType = "DAILY" | "ALL" | "PREFECTURE" | "MISSION";
+export type BadgeType = "DAILY" | "ALL" | "MISSION";
 
 export interface UserBadge {
   id: string;
@@ -36,8 +36,6 @@ export const getBadgeTitle = (badge: UserBadge): string => {
       return `デイリーランキング ${badge.rank}位`;
     case "ALL":
       return `総合ランキング ${badge.rank}位`;
-    case "PREFECTURE":
-      return `${badge.sub_type}ランキング ${badge.rank}位`;
     case "MISSION": {
       const title = badge.mission_title ?? badge.sub_type ?? "";
       return title
@@ -58,7 +56,6 @@ export const getBadgeEmoji = (rank: number): string => {
 export const BadgeType = {
   DAILY: "DAILY",
   ALL: "ALL",
-  PREFECTURE: "PREFECTURE",
   MISSION: "MISSION",
 } as const;
 
@@ -71,12 +68,6 @@ export function getBadgeRankingUrl(badge: UserBadge): string | null {
       return "/ranking?period=daily";
     case BadgeType.ALL:
       return "/ranking?period=all";
-    case BadgeType.PREFECTURE:
-      // 都道府県名をURLエンコード
-      if (badge.sub_type) {
-        return `/ranking/ranking-prefecture?prefecture=${encodeURIComponent(badge.sub_type)}`;
-      }
-      return "/ranking/ranking-prefecture";
     case BadgeType.MISSION:
       // ミッションIDがあればそれを使用
       if (badge.mission_id) {

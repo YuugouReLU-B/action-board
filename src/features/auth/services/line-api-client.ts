@@ -34,4 +34,32 @@ export class LineApiClientImpl implements LineApiClient {
 
     return response.json();
   }
+
+  /**
+   * 「現在」友だちかどうかを返す。認証時に変化したかではないので、
+   * 以前から友だちだったユーザーも true になる。
+   * ブロック中のユーザーは false になる。
+   */
+  async getFriendshipStatus(accessToken: string): Promise<boolean | null> {
+    try {
+      const response = await fetch("https://api.line.me/friendship/v1/status", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (!response.ok) {
+        // 公式アカウント未リンク時などは 4xx が返る。
+        // 友だち状態は付帯情報なのでログインは続行させる
+        console.warn(
+          `友だち状態の取得に失敗: ${response.status} ${await response.text()}`,
+        );
+        return null;
+      }
+
+      const data = (await response.json()) as { friendFlag?: boolean };
+      return data.friendFlag ?? null;
+    } catch (error) {
+      console.warn("友だち状態の取得でエラー:", error);
+      return null;
+    }
+  }
 }

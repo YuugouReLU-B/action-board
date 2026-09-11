@@ -22,8 +22,8 @@ export default async function Navbar() {
         <div className="flex gap-5 items-center font-semibold min-w-[60px]">
           <Link href="/" className="flex items-center gap-4">
             <Image
-              src="/img/logo_shiro.png"
-              alt="logo"
+              src="/img/logo.png"
+              alt="浜通りクエスト"
               width={48}
               height={48}
             />
@@ -60,17 +60,6 @@ export default async function Navbar() {
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
                       <Link href="/">ホーム</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/map/posting">ポスティングマップ</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/map/poster">ポスター掲示板マップ</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/map/poster-residential">
-                        私有地ポスターマップ
-                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <OnboardingButton

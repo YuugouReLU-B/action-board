@@ -81,7 +81,7 @@ export default function OnboardingMissionCard({
               {mission.required_artifact_type === "POSTER" ||
               mission.required_artifact_type === "POSTING"
                 ? "-"
-                : calculateMissionXp(mission.difficulty)}
+                : calculateMissionXp({ points: mission.points })}
             </span>
           </div>
         </div>

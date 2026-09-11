@@ -43,7 +43,7 @@ describe("mail service", () => {
       });
 
       expect(mockCreate).toHaveBeenCalledWith("example.com", {
-        from: '"チームみらい" <noreply@example.com>',
+        from: '"浜通りクエスト" <noreply@example.com>',
         to: "user@example.com",
         subject: "Hello",
         html: "<p>Hi</p>",

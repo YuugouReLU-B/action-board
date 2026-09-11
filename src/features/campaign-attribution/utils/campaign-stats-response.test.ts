@@ -78,6 +78,5 @@ describe("buildCampaignStatsResponse", () => {
     const notes = response.notes.join("\n");
     expect(notes).toContain("新規登録したユーザー数");
     expect(notes).toContain("1ユーザーにつき1コード");
-    expect(notes).toContain("党員登録・寄付");
   });
 });

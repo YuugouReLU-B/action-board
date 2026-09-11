@@ -2,11 +2,12 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import NoticeBoardAlert from "@/components/common/notice-board-alert";
 import Hero from "@/components/top/hero";
-import { PrefectureTeamCard } from "@/components/top/prefecture-team-card";
+import { LotteryAnnouncementBanner } from "@/features/lottery/components/lottery-announcement-banner";
 import FeaturedMissions from "@/features/missions/components/featured-missions";
 import FirstMissions from "@/features/missions/components/first-missions";
 import MissionsByCategory from "@/features/missions/components/missions-by-category";
 import { hasFeaturedMissions } from "@/features/missions/services/missions";
+import { SpotMapEntry } from "@/features/spot-map/components/spot-map-entry";
 import { getUnnotifiedBadges } from "@/features/user-badges/services/get-unnotified-badges";
 import { BadgeNotificationCheck } from "@/features/user-badges-notification/components/badge-notification-check";
 import { LevelUpCheck } from "@/features/user-level/components/level-up-check";
@@ -66,6 +67,9 @@ export default async function Home({
 
   return (
     <div className="flex flex-col min-h-screen w-full">
+      {/* 抽選応募対象になったことのお知らせ */}
+      <LotteryAnnouncementBanner />
+
       {/* レベルアップ通知 */}
       {levelUpNotification && (
         <LevelUpCheck levelUpData={levelUpNotification} />
@@ -82,15 +86,6 @@ export default async function Home({
       </section>
       {/* 注意書き */}
       <NoticeBoardAlert />
-
-      {/* 都道府県対抗ランキング導線 */}
-      {user != null && (
-        <section className="py-4 md:py-8">
-          <div className="w-full max-w-lg mx-auto px-4">
-            <PrefectureTeamCard />
-          </div>
-        </section>
-      )}
 
       {/* 参加方法の案内図（活動状況・タイムライン・ランキングの代わりに表示） */}
       <section className="py-12 md:py-16 bg-background">
@@ -118,6 +113,12 @@ export default async function Home({
 
         {/* ミッションセクション */}
       </div>
+
+      {/* スポットマップへの入口（地図に出せるスポットが無いときは出ない） */}
+      <div className="py-6">
+        <SpotMapEntry userId={user?.id} />
+      </div>
+
       <section className="py-12 md:py-16 bg-background">
         <MissionsByCategory
           userId={user?.id}

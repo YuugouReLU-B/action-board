@@ -2,24 +2,13 @@ import { render, screen } from "@testing-library/react";
 import type React from "react";
 import { BaseCurrentUserCard } from "./base-current-user-card";
 
-const mockUserNameWithBadge = jest.fn(
-  ({ name, membership }: { name: string; membership?: unknown }) => (
-    <span
-      data-testid="user-name-with-badge"
-      data-membership={JSON.stringify(membership)}
-    >
-      {name}
-    </span>
-  ),
-);
+const mockUserName = jest.fn(({ name }: { name: string }) => (
+  <span data-testid="user-name">{name}</span>
+));
 
-jest.mock(
-  "@/features/party-membership/components/user-name-with-badge",
-  () => ({
-    UserNameWithBadge: (props: unknown) =>
-      mockUserNameWithBadge(props as { name: string; membership?: unknown }),
-  }),
-);
+jest.mock("@/components/common/user-name", () => ({
+  UserName: (props: unknown) => mockUserName(props as { name: string }),
+}));
 
 jest.mock("@/components/ui/card", () => ({
   Card: ({
@@ -65,7 +54,7 @@ jest.mock("@/features/ranking/utils/ranking-utils", () => ({
 
 describe("BaseCurrentUserCard", () => {
   beforeEach(() => {
-    mockUserNameWithBadge.mockClear();
+    mockUserName.mockClear();
   });
 
   const mockCurrentUser = {
@@ -94,13 +83,12 @@ describe("BaseCurrentUserCard", () => {
 
       expect(screen.getByText("あなたのランク")).toBeInTheDocument();
       expect(screen.getByText("テストユーザー")).toBeInTheDocument();
-      expect(screen.getByText("東京都")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("東京都")).not.toBeInTheDocument();
       expect(screen.getByText("5")).toBeInTheDocument();
-      expect(mockUserNameWithBadge).toHaveBeenCalledWith(
+      expect(mockUserName).toHaveBeenCalledWith(
         expect.objectContaining({
           name: "テストユーザー",
-          membership: mockCurrentUser.party_membership,
-          badgeSize: 18,
         }),
       );
     });
@@ -211,7 +199,8 @@ describe("BaseCurrentUserCard", () => {
         </BaseCurrentUserCard>,
       );
 
-      expect(screen.getByText("未設定")).toBeInTheDocument();
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("未設定")).not.toBeInTheDocument();
     });
   });
 
@@ -284,7 +273,8 @@ describe("BaseCurrentUserCard", () => {
       expect(userInfoGroup).toContainElement(
         screen.getByText("テストユーザー"),
       );
-      expect(userInfoGroup).toContainElement(screen.getByText("東京都"));
+      // 都道府県は表示しなくなった
+      expect(screen.queryByText("東京都")).not.toBeInTheDocument();
     });
   });
 });

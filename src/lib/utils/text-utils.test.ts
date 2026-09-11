@@ -13,8 +13,8 @@ describe("extractHashtags", () => {
 
   describe("日本語ハッシュタグ", () => {
     it("ひらがなハッシュタグを抽出する", () => {
-      expect(extractHashtags("動画 #チームみらい です")).toEqual([
-        "#チームみらい",
+      expect(extractHashtags("動画 #浜通りクエスト です")).toEqual([
+        "#浜通りクエスト",
       ]);
     });
 
@@ -29,8 +29,10 @@ describe("extractHashtags", () => {
 
   describe("複数タグ混在", () => {
     it("英語と日本語のハッシュタグを同時に抽出する", () => {
-      const result = extractHashtags("#チームみらい の活動 #teammirai #政治");
-      expect(result).toEqual(["#チームみらい", "#teammirai", "#政治"]);
+      const result = extractHashtags(
+        "#浜通りクエスト の活動 #hamadoriquest #政治",
+      );
+      expect(result).toEqual(["#浜通りクエスト", "#hamadoriquest", "#政治"]);
     });
 
     it("テキスト中の複数のハッシュタグを全て抽出する", () => {
@@ -73,8 +75,8 @@ describe("extractHashtags", () => {
     });
 
     it("ひらがな・カタカナ・漢字混在のタグを抽出する", () => {
-      expect(extractHashtags("#チームみらい応援団")).toEqual([
-        "#チームみらい応援団",
+      expect(extractHashtags("#浜通りクエスト応援団")).toEqual([
+        "#浜通りクエスト応援団",
       ]);
     });
   });

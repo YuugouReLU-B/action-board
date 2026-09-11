@@ -80,3 +80,6 @@ users-prefecture-export.csv
 # Claude Code temp files
 .claude/tmp/
 
+# vercel link が生成する .env.local（VERCEL_OIDC_TOKEN が入る）
+# CLI は `.env*` を足すが、それだと .env.example まで対象になるので絞る
+.env*.local

@@ -9,7 +9,10 @@ import {
   POSTER_POINTS_PER_UNIT,
   POSTING_POINTS_PER_UNIT,
 } from "@/lib/constants/mission-config";
-import { ARTIFACT_TYPES } from "@/lib/types/artifact-types";
+import {
+  ARTIFACT_TYPES,
+  ARTIFACT_TYPES_WITHOUT_SUBMISSION,
+} from "@/lib/types/artifact-types";
 import type { Database, TablesInsert } from "@/lib/types/supabase";
 import type { AchieveMissionFormData } from "../actions/actions";
 import {
@@ -203,6 +206,30 @@ async function grantBonusXp(
   return totalPoints;
 }
 
+/**
+ * 成果物の保存に失敗したときに、直前に作った達成を取り消す。
+ *
+ * 達成の記録と成果物の保存が別のINSERTになっているため、後者が失敗すると
+ * 「達成済みなのにXPが入っていない」行が残る。利用者からは達成済みに見えて
+ * やり直しもできなくなるので、ここで巻き戻す。
+ */
+async function rollbackAchievement(
+  adminSupabase: SupabaseClient<Database>,
+  achievementId: string,
+): Promise<void> {
+  const { error } = await adminSupabase
+    .from("achievements")
+    .delete()
+    .eq("id", achievementId);
+
+  if (error) {
+    console.error(
+      `[Rollback Error] 達成の取り消しに失敗 id=${achievementId}:`,
+      error.message,
+    );
+  }
+}
+
 export async function achieveMission(
   adminSupabase: SupabaseClient<Database>,
   userSupabase: SupabaseClient<Database>,
@@ -218,7 +245,7 @@ export async function achieveMission(
   const { data: missionData, error: missionFetchError } = await adminSupabase
     .from("missions")
     .select(
-      "max_achievement_count, required_artifact_type, is_featured, difficulty, title",
+      "max_achievement_count, required_artifact_type, is_featured, difficulty, points, title",
     )
     .eq("id", missionId)
     .single();
@@ -320,11 +347,7 @@ export async function achieveMission(
   }
 
   // Save artifact if needed
-  if (
-    artifactType &&
-    artifactType !== ARTIFACT_TYPES.NONE.key &&
-    artifactType !== ARTIFACT_TYPES.LINK_ACCESS.key
-  ) {
+  if (artifactType && !ARTIFACT_TYPES_WITHOUT_SUBMISSION.has(artifactType)) {
     const artifactFields = buildArtifactPayload(artifactType, artifactData);
     const artifactTypeLabel = getArtifactTypeLabel(artifactType);
 
@@ -343,6 +366,7 @@ export async function achieveMission(
       !artifactPayload.image_storage_path &&
       !artifactPayload.text_content
     ) {
+      await rollbackAchievement(adminSupabase, achievement.id);
       return {
         success: false,
         error:
@@ -360,6 +384,7 @@ export async function achieveMission(
       console.error(
         `[Artifact Error] type=${artifactTypeLabel} error=${artifactError?.message}`,
       );
+      await rollbackAchievement(adminSupabase, achievement.id);
       return {
         success: false,
         error: `成果物の保存に失敗しました: ${artifactError?.message ?? "unknown"}`,
@@ -440,10 +465,7 @@ export async function achieveMission(
   };
   if (missionData?.required_artifact_type !== "POSTING") {
     // Inline grantMissionCompletionXp logic using adminSupabase
-    const xpToGrant = calculateMissionXp(
-      missionData.difficulty,
-      missionData.is_featured,
-    );
+    const xpToGrant = calculateMissionXp(missionData);
     const xpDescription = `ミッション「${missionData.title}」達成による経験値獲得`;
 
     xpResult = await processXpGrant(adminSupabase, {

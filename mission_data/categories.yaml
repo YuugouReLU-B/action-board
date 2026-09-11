@@ -1,14 +1,27 @@
 categories:
+  # ── 1000pt到達までの3ステップ（浜通りクエスト運用の主要導線） ──
+  - slug: official-line-registration
+    title: 公式LINE登録をしよう
+    sort_no: 10
+    category_kbn: DEFAULT
+  - slug: visit-checkpoints
+    title: チェックポイントを回ろう
+    sort_no: 20
+    category_kbn: DEFAULT
+  - slug: attend-events
+    title: イベントに参加しよう
+    sort_no: 30
+    category_kbn: DEFAULT
   - slug: learn-teammirai-supporter
     title: サポーター活動について知ろう
     sort_no: 50
     category_kbn: DEFAULT
   - slug: follow-teammirai
-    title: チームみらいをフォローしよう
+    title: SNSをフォローしよう
     sort_no: 100
     category_kbn: DEFAULT
   - slug: learn-about-teammirai
-    title: チームみらいのことを知ろう
+    title: 浜通りクエストのことを知ろう
     sort_no: 200
     category_kbn: DEFAULT
   - slug: join-community
@@ -21,7 +34,7 @@ categories:
     category_kbn: DEFAULT
   - slug: share-and-spread
     title: 発信・拡散しよう
-    sort_no: 500
+    sort_no: 180
     category_kbn: DEFAULT
   - slug: local-activities
     title: 地域で活動しよう

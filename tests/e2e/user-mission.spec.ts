@@ -28,11 +28,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage.getByRole("heading", { name: "ご意見箱" }),
     ).toBeVisible();
-    await expect(
-      signedInPage.getByRole("link", {
-        name: "ポスターマップへのご意見フォーム",
-      }),
-    ).toBeVisible();
+    // ご意見箱はポスターマップ分と統合され、1本のリンクになった
     await expect(
       signedInPage.getByRole("link", {
         name: "浜通りクエストへのご意見フォーム",
@@ -40,9 +36,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     ).toBeVisible();
 
     // フッターの表示を確認
-    await expect(
-      signedInPage.getByRole("link", { name: "運営組織" }),
-    ).toBeVisible();
+    // 「運営組織」リンクは運営主体が確定するまでのあいだ削除されている
     await expect(
       signedInPage.getByRole("link", { name: "利用規約" }),
     ).toBeVisible();
@@ -67,30 +61,15 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     // アカウントページの表示内容を確認
     await expect(signedInPage.getByText("プロフィール設定")).toBeVisible();
     await expect(signedInPage.getByText("ニックネーム")).toBeVisible();
-    // 生年月日
-    await expect(
-      signedInPage.getByText("生年月日", { exact: true }),
-    ).toBeVisible();
-    await expect(signedInPage.getByTestId("year_select")).toBeVisible();
-    await expect(signedInPage.getByTestId("month_select")).toBeVisible();
-    await expect(signedInPage.getByTestId("day_select")).toBeVisible();
+    // 生年月日（任意項目。年月日セレクトではなく単一のdate inputになった）
+    await expect(signedInPage.getByText(/生年月日/)).toBeVisible();
+    await expect(signedInPage.locator("#date_of_birth")).toBeVisible();
     // 都道府県
     await expect(signedInPage.getByText("都道府県")).toBeVisible();
     await expect(
       signedInPage.getByRole("combobox", { name: "都道府県" }),
     ).toBeVisible();
-    // 郵便番号
-    await expect(
-      signedInPage.getByText("郵便番号(ハイフンなし半角7桁)"),
-    ).toBeVisible();
-    await expect(
-      signedInPage.getByRole("button", { name: "なぜ郵便番号が必要ですか？" }),
-    ).toBeVisible();
-    await expect(
-      signedInPage.getByRole("textbox", {
-        name: "郵便番号(ハイフンなし半角7桁)",
-      }),
-    ).toBeVisible();
+    // 郵便番号は個人情報最小化のため収集をやめ、項目自体が削除された
     // アカウント
     await expect(
       signedInPage.getByText("X(旧Twitter)のユーザー名"),
@@ -121,7 +100,8 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
   test("任意のユーザーページ遷移が正常に動作する", async ({ signedInPage }) => {
     await assertAuthState(signedInPage, true);
 
-    // 任意のユーザーページに遷移（ランキングから佐藤太郎のページへ）
+    // ランキングページ経由で任意のユーザーページに遷移する
+    // （ホーム画面のランキングプレビューは廃止されたため、ランキングページへ移動してから探す）
     await signedInPage.goto("/ranking");
     await signedInPage.getByRole("button", { name: "全期間" }).click();
     await signedInPage
@@ -195,10 +175,11 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await signedInPage.goto("/ranking");
     await signedInPage.getByRole("button", { name: "全期間" }).click();
     await expect(signedInPage.getByText("あなたのランク")).toBeVisible();
+    // ランキング一覧では都道府県を表示しなくなった
     await expect(
       signedInPage
         .getByRole("link", {
-          name: "テストユーザー 東京都 Lv.9 800pt",
+          name: "テストユーザー Lv.9 800pt",
         })
         .first(),
     ).toBeVisible({ timeout: 10000 });
@@ -254,15 +235,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
       signedInPage.getByRole("heading", { name: "全期間トップ100" }),
     ).toBeVisible();
 
-    await signedInPage.getByText("都道府県別").click();
-    await expect(signedInPage).toHaveURL("/ranking/ranking-prefecture", {
-      timeout: 10000,
-    });
-    await expect(signedInPage.getByText("都道府県を選択")).toBeVisible();
-    await expect(
-      signedInPage.getByRole("heading", { name: "東京都トップ" }),
-    ).toBeVisible();
-
+    // 都道府県別ランキングは導線を外したため、タブは「全体」「ミッション別」のみ
     await signedInPage.getByText("ミッション別").click();
     await expect(signedInPage).toHaveURL("/ranking/ranking-mission", {
       timeout: 10000,

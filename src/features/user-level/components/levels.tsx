@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { UserNameWithBadge } from "@/features/party-membership/components/user-name-with-badge";
-import { getPartyMembership } from "@/features/party-membership/loaders/memberships-loaders";
+import { UserName } from "@/components/common/user-name";
 import { UserTopBadge } from "@/features/user-badges/components/user-top-badge";
 import { LevelProgress } from "@/features/user-level/components/level-progress";
 import { getUserLevel } from "@/features/user-level/services/level";
@@ -29,19 +28,13 @@ export default async function Levels({
   }
 
   const userLevel = await getUserLevel(userId, seasonId);
-  const partyMembership = await getPartyMembership(userId);
 
   const cardContent = (
     <div
       className={`w-full flex flex-col items-stretch bg-white rounded-md p-6 ${clickable ? "hover:bg-gray-50 transition-colors max-w-lg" : "max-w-md"}`}
     >
       <div className="flex flex-col min-w-0">
-        <UserNameWithBadge
-          name={profile.name}
-          membership={partyMembership}
-          nameClassName="text-2xl font-bold"
-          badgeSize={22}
-        />
+        <UserName name={profile.name} nameClassName="text-2xl font-bold" />
         <div className="mt-2 text-2xl font-bold">
           {userLevel ? userLevel.xp.toLocaleString() : "0"} ポイント
         </div>

@@ -1,9 +1,5 @@
 import "server-only";
 
-import {
-  getPartyMembership,
-  getPartyMembershipMap,
-} from "@/features/party-membership/services/memberships";
 import { getCurrentSeasonId } from "@/lib/services/seasons";
 import { createAdminClient } from "@/lib/supabase/adminClient";
 import type { RankingPeriod, UserRanking } from "../types/ranking-types";
@@ -11,7 +7,6 @@ import {
   dateFilterToISOString,
   getPeriodDateFilter,
 } from "../utils/period-utils";
-import { attachPartyMembership } from "../utils/ranking-helpers";
 
 export interface UserPeriodRanking {
   user_id: string;
@@ -21,7 +16,6 @@ export interface UserPeriodRanking {
   rank: number;
   updated_at: string | null;
   xp: number;
-  party_membership: Awaited<ReturnType<typeof getPartyMembership>>;
 }
 
 /**
@@ -53,7 +47,6 @@ export async function getUserPeriodRanking(
   }
 
   // パーティメンバーシップ情報を取得
-  const partyMembership = await getPartyMembership(userId);
 
   return {
     user_id: data[0].user_id,
@@ -63,7 +56,6 @@ export async function getUserPeriodRanking(
     rank: data[0].rank,
     updated_at: data[0].updated_at,
     xp: data[0].xp,
-    party_membership: partyMembership,
   };
 }
 
@@ -105,13 +97,8 @@ export async function getRanking(
     }
 
     const rankings = periodRankingData || [];
-    const membershipMap = await getPartyMembershipMap(
-      rankings
-        .map((ranking) => ranking.user_id)
-        .filter((id): id is string => typeof id === "string" && id.length > 0),
-    );
 
-    return attachPartyMembership(rankings, membershipMap);
+    return rankings;
   } catch (error) {
     console.error("Ranking service error:", error);
     throw error;

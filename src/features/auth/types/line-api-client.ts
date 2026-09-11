@@ -8,6 +8,15 @@ export type LineTokenResponse = {
   expires_in?: number;
   scope?: string;
   id_token?: string;
+  /**
+   * bot_prompt を付けて認証した場合のみ返る。
+   * **その認証で友だち状態が「変化したか」**であって、友だちかどうかではない。
+   *
+   * 友だち追加ミッションの判定にこれを使ってはいけない。
+   * すでに友だちだったユーザーは変化しないので false になり、
+   * 永久に達成できなくなる。判定には getFriendshipStatus()（friendFlag）を使うこと。
+   */
+  friendship_status_changed?: boolean;
 };
 
 /**
@@ -21,4 +30,12 @@ export interface LineApiClient {
     code: string,
     redirectUri: string,
   ): Promise<LineTokenResponse>;
+
+  /**
+   * リンクされたLINE公式アカウントと友だちかどうかを返す。
+   *
+   * 公式アカウントがリンクされていない場合など、判定できないときは null。
+   * 付帯情報なのでエラーでログインを止めないこと。
+   */
+  getFriendshipStatus(accessToken: string): Promise<boolean | null>;
 }

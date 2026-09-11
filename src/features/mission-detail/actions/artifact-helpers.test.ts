@@ -212,35 +212,6 @@ describe("buildArtifactPayload", () => {
       const result = buildArtifactPayload(ARTIFACT_TYPES.QUIZ.key, data);
       expect(result).toEqual(NULL_FIELDS);
     });
-
-    test("YOUTUBE type → link_urlにartifactLinkを設定", () => {
-      const data = baseFormData({
-        requiredArtifactType: ARTIFACT_TYPES.YOUTUBE.key,
-        artifactLink: "https://www.youtube.com/watch?v=abc123",
-      });
-      const result = buildArtifactPayload(ARTIFACT_TYPES.YOUTUBE.key, data);
-      expect(result).toEqual({
-        link_url: "https://www.youtube.com/watch?v=abc123",
-        text_content: null,
-        image_storage_path: null,
-      });
-    });
-
-    test("YOUTUBE_COMMENT type → link_urlにartifactLinkを設定", () => {
-      const data = baseFormData({
-        requiredArtifactType: ARTIFACT_TYPES.YOUTUBE_COMMENT.key,
-        artifactLink: "https://www.youtube.com/watch?v=abc123&lc=commentId123",
-      });
-      const result = buildArtifactPayload(
-        ARTIFACT_TYPES.YOUTUBE_COMMENT.key,
-        data,
-      );
-      expect(result).toEqual({
-        link_url: "https://www.youtube.com/watch?v=abc123&lc=commentId123",
-        text_content: null,
-        image_storage_path: null,
-      });
-    });
   });
 
   describe("不明なartifact type", () => {
@@ -308,27 +279,6 @@ describe("buildArtifactPayload", () => {
       expect(result).toEqual(NULL_FIELDS);
     });
 
-    test("YOUTUBE builderにTEXT dataを渡す → 全フィールドnull", () => {
-      const data = baseFormData({
-        requiredArtifactType: ARTIFACT_TYPES.TEXT.key,
-        artifactText: "テキスト",
-      });
-      const result = buildArtifactPayload(ARTIFACT_TYPES.YOUTUBE.key, data);
-      expect(result).toEqual(NULL_FIELDS);
-    });
-
-    test("YOUTUBE_COMMENT builderにIMAGE dataを渡す → 全フィールドnull", () => {
-      const data = baseFormData({
-        requiredArtifactType: ARTIFACT_TYPES.IMAGE.key,
-        artifactImagePath: "images/test.png",
-      });
-      const result = buildArtifactPayload(
-        ARTIFACT_TYPES.YOUTUBE_COMMENT.key,
-        data,
-      );
-      expect(result).toEqual(NULL_FIELDS);
-    });
-
     test("RESIDENTIAL_POSTER builderにTEXT dataを渡す → 全フィールドnull", () => {
       const data = baseFormData({
         requiredArtifactType: ARTIFACT_TYPES.TEXT.key,
@@ -373,8 +323,6 @@ describe("getArtifactTypeLabel", () => {
       ["RESIDENTIAL_POSTER"],
       ["QUIZ"],
       ["LINK_ACCESS"],
-      ["YOUTUBE"],
-      ["YOUTUBE_COMMENT"],
       ["NONE"],
     ])("%s → そのkeyを返す", (key) => {
       expect(getArtifactTypeLabel(key)).toBe(key);

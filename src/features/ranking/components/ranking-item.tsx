@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 // TOPページ用のランキングコンポーネント
-import { UserNameWithBadge } from "@/features/party-membership/components/user-name-with-badge";
+import { UserName } from "@/components/common/user-name";
+import { Badge } from "@/components/ui/badge";
 import { formatNumberJa } from "@/lib/utils/format-number-ja";
 import type { UserMissionRanking, UserRanking } from "../types/ranking-types";
 import { getRankIcon } from "./ranking-icon";
@@ -31,16 +31,10 @@ export function RankingItem({
     >
       {getRankIcon(user.rank ?? 0)}
       <div className="min-w-0 pl-1">
-        <UserNameWithBadge
-          name={user.name ?? ""}
-          membership={user.party_membership ?? null}
-          nameClassName="font-bold text-lg"
-          badgeSize={20}
-        />
+        <UserName name={user.name ?? ""} nameClassName="font-bold text-lg" />
+        {/* 都道府県は表示しない。浜通り向けでは意味が薄いうえ、
+            未選択の人が北海道として並んでしまっていた */}
         <div className="flex items-center gap-1 mt-0.5">
-          <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
-            {user.address_prefecture}
-          </span>
           <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
             Lv.{user.level}
           </span>

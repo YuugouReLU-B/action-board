@@ -1,6 +1,7 @@
 import {
   calculateLevel,
   calculateMissionXp,
+  defaultPointsForDifficulty,
   getLevelProgress,
   getXpToNextLevel,
   totalXp,
@@ -9,74 +10,57 @@ import {
 
 describe("ミッション経験値計算", () => {
   describe("calculateMissionXp", () => {
-    it("難易度1（★1 Easy）は50XP", () => {
-      expect(calculateMissionXp(1)).toBe(50);
+    it("ミッションに設定されたポイントをそのまま返す", () => {
+      expect(calculateMissionXp({ points: 50 })).toBe(50);
+      expect(calculateMissionXp({ points: 300 })).toBe(300);
     });
 
-    it("難易度2（★2 Normal）は100XP", () => {
-      expect(calculateMissionXp(2)).toBe(100);
+    it("difficulty からの導出をやめたので、5段階以外の値も扱える", () => {
+      expect(calculateMissionXp({ points: 123 })).toBe(123);
     });
 
-    it("難易度3（★3 Hard）は200XP", () => {
-      expect(calculateMissionXp(3)).toBe(200);
-    });
-
-    it("難易度4（★4 Super hard）は400XP", () => {
-      expect(calculateMissionXp(4)).toBe(400);
-    });
-
-    it("難易度5（★5）は800XP", () => {
-      expect(calculateMissionXp(5)).toBe(800);
-    });
-
-    it("無効な難易度（0）はデフォルト50XP", () => {
-      expect(calculateMissionXp(0)).toBe(50);
-    });
-
-    it("無効な難易度（6）はデフォルト50XP", () => {
-      expect(calculateMissionXp(6)).toBe(50);
-    });
-
-    it("負の難易度はデフォルト50XP", () => {
-      expect(calculateMissionXp(-1)).toBe(50);
-    });
-
-    it("未知の難易度ではデフォルトの50XPを返す", () => {
-      expect(calculateMissionXp(999)).toBe(50);
+    it("ポイント0のミッションは0XP", () => {
+      expect(calculateMissionXp({ points: 0 })).toBe(0);
     });
 
     describe("注目ミッション（2倍ボーナス）", () => {
-      it("難易度1の注目ミッションは100XP", () => {
-        expect(calculateMissionXp(1, true)).toBe(100);
+      it("is_featured が true なら2倍", () => {
+        expect(calculateMissionXp({ points: 300, is_featured: true })).toBe(
+          600,
+        );
       });
 
-      it("難易度2の注目ミッションは200XP", () => {
-        expect(calculateMissionXp(2, true)).toBe(200);
+      it("is_featured が false なら等倍", () => {
+        expect(calculateMissionXp({ points: 300, is_featured: false })).toBe(
+          300,
+        );
       });
 
-      it("難易度3の注目ミッションは400XP", () => {
-        expect(calculateMissionXp(3, true)).toBe(400);
+      it("is_featured が省略されていれば等倍", () => {
+        expect(calculateMissionXp({ points: 300 })).toBe(300);
       });
 
-      it("難易度4の注目ミッションは800XP", () => {
-        expect(calculateMissionXp(4, true)).toBe(800);
+      it("is_featured が null でも等倍（DBのnullをそのまま渡せる）", () => {
+        expect(calculateMissionXp({ points: 300, is_featured: null })).toBe(
+          300,
+        );
       });
+    });
+  });
 
-      it("難易度5の注目ミッションは1600XP", () => {
-        expect(calculateMissionXp(5, true)).toBe(1600);
-      });
+  describe("defaultPointsForDifficulty", () => {
+    it.each([
+      [1, 50],
+      [2, 100],
+      [3, 200],
+      [4, 400],
+      [5, 800],
+    ])("難易度%iの既定ポイントは%i", (difficulty, expected) => {
+      expect(defaultPointsForDifficulty(difficulty)).toBe(expected);
+    });
 
-      it("無効な難易度の注目ミッションはデフォルト50XPの2倍で100XP", () => {
-        expect(calculateMissionXp(0, true)).toBe(100);
-      });
-
-      it("isFeaturedがfalseの場合は通常のXP", () => {
-        expect(calculateMissionXp(3, false)).toBe(200);
-      });
-
-      it("isFeaturedが省略された場合は通常のXP", () => {
-        expect(calculateMissionXp(3)).toBe(200);
-      });
+    it.each([0, 6, -1, 999])("範囲外の難易度%iは既定の50", (difficulty) => {
+      expect(defaultPointsForDifficulty(difficulty)).toBe(50);
     });
   });
 });

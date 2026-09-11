@@ -1,3 +1,12 @@
+/**
+ * 都道府県を「選ばない」ことを表す値。
+ *
+ * Radix の Select は空文字を項目の値にできず、未選択のまま送信すると
+ * hidden な native select が先頭の選択肢を送ってしまう。
+ * 明示的な番人を置いて、サーバー側で null に戻す。
+ */
+export const PREFECTURE_NOT_SELECTED = "__not_selected__";
+
 export const PREFECTURES = [
   "北海道",
   "青森県",

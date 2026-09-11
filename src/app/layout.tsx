@@ -82,8 +82,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          <main className="flex flex-col items-center mt-8">
+          {/* ナビとフッターは印刷に出さない。掲示用のQRシートなど、
+              紙にするのは本文だけでよい */}
+          <div className="print:hidden">
+            <Navbar />
+          </div>
+          <main className="flex flex-col items-center mt-8 print:mt-0">
             <Suspense>
               <ReferralCodeHandlerWrapper />
             </Suspense>
@@ -92,7 +96,9 @@ export default function RootLayout({
             </Suspense>
             {children}
           </main>
-          <Footer />
+          <div className="print:hidden">
+            <Footer />
+          </div>
           <Toaster />
         </ThemeProvider>
       </body>

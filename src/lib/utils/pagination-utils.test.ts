@@ -27,7 +27,7 @@ describe("createPaginationUrl", () => {
 
   it("should return pathname without query when no params exist and page is 1", () => {
     const params = new URLSearchParams();
-    const result = createPaginationUrl("/tiktok", params, 1);
-    expect(result).toBe("/tiktok");
+    const result = createPaginationUrl("/stats", params, 1);
+    expect(result).toBe("/stats");
   });
 });

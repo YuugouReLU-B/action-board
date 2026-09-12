@@ -7,6 +7,7 @@ import FeaturedMissions from "@/features/missions/components/featured-missions";
 import FirstMissions from "@/features/missions/components/first-missions";
 import MissionsByCategory from "@/features/missions/components/missions-by-category";
 import { hasFeaturedMissions } from "@/features/missions/services/missions";
+import RankingSection from "@/features/ranking/components/ranking-section";
 import { getUnnotifiedBadges } from "@/features/user-badges/services/get-unnotified-badges";
 import { BadgeNotificationCheck } from "@/features/user-badges-notification/components/badge-notification-check";
 import {
@@ -84,6 +85,11 @@ export default async function Home({
             className="w-full h-auto rounded-lg"
           />
         </div>
+      </section>
+
+      {/* ランキングセクション */}
+      <section className="md:py-16 bg-background">
+        <RankingSection />
       </section>
 
       <div className="w-full md:container md:mx-auto">

@@ -16,7 +16,7 @@ export function AchievedMissionList({ missions }: AchievedMissionListProps) {
   if (missions.length === 0) {
     return (
       <p className="text-sm text-gray-600">
-        まだ達成したミッションはありません。
+        まだ達成したクエストはありません。
       </p>
     );
   }

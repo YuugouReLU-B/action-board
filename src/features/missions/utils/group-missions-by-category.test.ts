@@ -112,6 +112,23 @@ describe("groupMissionsByCategory", () => {
 
       expect(result[0].categoryTitle).toBe("テストカテゴリ");
     });
+
+    it("category_kbn（特設/常設の区分）を正しく設定する", () => {
+      const data: MissionCategoryView[] = [
+        createMissionCategoryView({
+          mission_id: "m1",
+          category_id: "c1",
+          category_kbn: "SPECIAL",
+        }),
+      ];
+
+      const result = groupMissionsByCategory(data, new Map(), {
+        showAchievedMissions: true,
+        achievedMissionIds: [],
+      });
+
+      expect(result[0].categoryKbn).toBe("SPECIAL");
+    });
   });
 
   describe("ソート", () => {

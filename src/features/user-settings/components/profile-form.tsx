@@ -50,7 +50,7 @@ export default function ProfileForm({
   }, [state?.success, isNew, router, nextUrlAfterSignup]);
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>プロフィール設定</CardTitle>
         <CardDescription>

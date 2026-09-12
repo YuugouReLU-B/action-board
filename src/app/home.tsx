@@ -3,9 +3,7 @@ import Hero from "@/components/top/hero";
 import { HowToParticipateSection } from "@/components/top/how-to-participate-section";
 import { syncPointMilestoneAudience } from "@/features/line-notification/use-cases/sync-point-milestone-audience";
 import { LotteryAnnouncementBanner } from "@/features/lottery/components/lottery-announcement-banner";
-import FeaturedMissions from "@/features/missions/components/featured-missions";
 import MissionsByCategory from "@/features/missions/components/missions-by-category";
-import { hasFeaturedMissions } from "@/features/missions/services/missions";
 import RankingSection from "@/features/ranking/components/ranking-section";
 import { getUnnotifiedBadges } from "@/features/user-badges/services/get-unnotified-badges";
 import { BadgeNotificationCheck } from "@/features/user-badges-notification/components/badge-notification-check";
@@ -55,9 +53,6 @@ export default async function Home({
     await syncPointMilestoneAudience(await createAdminClient(), user.id);
   }
 
-  //フューチャードミッションの存在確認
-  const showFeatured = await hasFeaturedMissions();
-
   return (
     <div className="flex flex-col min-h-screen w-full pt-2">
       {/* 抽選応募対象になったことのお知らせ */}
@@ -74,26 +69,18 @@ export default async function Home({
       </section>
 
       {/* 参加方法の案内図（活動状況・タイムライン・ランキングの代わりに表示）。
-          ログイン済みユーザーには開閉できるようにして邪魔にならないようにする */}
-      <section className="pt-4 pb-12 md:pt-6 md:pb-16 bg-background">
-        <HowToParticipateSection collapsible={!!user} />
-      </section>
+          ログイン済みユーザーにはヒーロー内の「遊び方」モーダルで見せるので、
+          ここでは未ログイン時のみ表示する */}
+      {!user && (
+        <section className="pt-4 pb-12 md:pt-6 md:pb-16 bg-background">
+          <HowToParticipateSection collapsible={false} />
+        </section>
+      )}
 
       {/* ランキングセクション */}
       <section className="md:py-16 bg-background">
         <RankingSection />
       </section>
-
-      <div className="w-full md:container md:mx-auto">
-        {/* フューチャードミッションセクション */}
-        {showFeatured && (
-          <section className="py-12 md:py-16 bg-background">
-            <FeaturedMissions userId={user?.id} showAchievedMissions={true} />
-          </section>
-        )}
-
-        {/* ミッションセクション */}
-      </div>
 
       <section className="py-12 md:py-16 bg-background">
         <MissionsByCategory userId={user?.id} />

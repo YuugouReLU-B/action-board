@@ -39,7 +39,10 @@ export default async function Levels({
       <div className="flex flex-col items-center min-w-0">
         <div className="text-3xl font-bold">
           現在{" "}
-          <span className="text-muted-foreground">
+          <span
+            className="text-6xl text-yellow-300"
+            style={{ WebkitTextStroke: "1.5px black" }}
+          >
             {userLevel ? userLevel.xp.toLocaleString() : "0"}
           </span>{" "}
           ポイント

@@ -4,12 +4,12 @@ categories:
   - slug: official-line-registration
     title: 公式LINE登録をしよう
     sort_no: 10
-    category_kbn: DEFAULT
+    category_kbn: PERMANENT
   - slug: visit-checkpoints
     title: プレイヤーを訪問しよう
     sort_no: 20
-    category_kbn: DEFAULT
+    category_kbn: PERMANENT
   - slug: attend-events
     title: イベントに参加しよう
     sort_no: 30
-    category_kbn: DEFAULT
+    category_kbn: SPECIAL

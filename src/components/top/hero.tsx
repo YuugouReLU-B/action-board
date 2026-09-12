@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HeroBackdrop } from "@/components/top/hero-backdrop";
+import { HowToPlayModal } from "@/components/top/how-to-play-modal";
 import { Button } from "@/components/ui/button";
 import Levels from "@/features/user-level/components/levels";
 import { getUser } from "@/features/user-profile/services/profile";
@@ -22,6 +23,9 @@ export default async function Hero() {
               showName={false}
               transparent={true}
             />
+          </div>
+          <div className="absolute bottom-3 right-4 z-10">
+            <HowToPlayModal />
           </div>
         </section>
       );
@@ -67,6 +71,12 @@ export default async function Hero() {
                 >
                   浜通りクエストに登録する
                 </Button>
+              </Link>
+              <Link
+                href="/sign-in"
+                className="text-sm font-bold text-gray-700 underline underline-offset-2 hover:text-gray-900"
+              >
+                ログインはこちら
               </Link>
             </div>
           )}

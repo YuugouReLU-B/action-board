@@ -12,7 +12,7 @@ type HowToParticipateSectionProps = {
 export function HowToParticipateSection({
   collapsible,
 }: HowToParticipateSectionProps) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(!collapsible);
   const showImage = !collapsible || isOpen;
 
   return (
@@ -22,7 +22,7 @@ export function HowToParticipateSection({
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
           aria-expanded={isOpen}
-          className="w-full flex items-center justify-center gap-2 text-2xl md:text-3xl text-gray-900 mb-3"
+          className="w-full flex items-center justify-center gap-2 text-2xl md:text-3xl font-extrabold text-gray-900 mb-3"
         >
           <span>参加方法</span>
           <ChevronDown

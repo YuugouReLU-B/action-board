@@ -3,6 +3,7 @@ name: Migrate DB then Deploy
 on:
   push:
     branches: [main, develop]
+  workflow_dispatch: {}
 
 jobs:
   migrate-and-deploy:

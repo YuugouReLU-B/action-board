@@ -37,7 +37,7 @@ export default async function FirstMissions({ userId }: FirstMissionsProps) {
         userId={userId}
         showAchievedMissions={false}
         filterSlugs={FIRST_MISSION_SLUGS}
-        title="🚩 はじめのミッション"
+        title="はじめのミッション"
         subTitle={FIRST_MISSIONS_SUB_TITLE}
         id="first-missions"
       />

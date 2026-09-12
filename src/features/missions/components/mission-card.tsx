@@ -113,10 +113,10 @@ export default function Mission({
                 )}
               >
                 {hasReachedMaxAchievements
-                  ? "ミッションクリア🎉"
+                  ? "ミッションクリア"
                   : userAchievementCount === 0
-                    ? "ポイントを獲得🔥"
-                    : "もう一回チャレンジ🔥"}
+                    ? "ポイントを獲得"
+                    : "もう一回チャレンジ"}
               </Button>
             </motion.div>
           </Link>

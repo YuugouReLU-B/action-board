@@ -25,7 +25,7 @@ export async function RankingTop({
 
   return (
     <BaseRanking
-      title={title ?? `🏅${periodLabel}トップ${limit}`}
+      title={title ?? `${periodLabel}トップ${limit}`}
       detailsHref="/ranking"
       showDetailedInfo={showDetailedInfo}
       columns={3}

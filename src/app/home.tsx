@@ -75,7 +75,7 @@ export default async function Home({
 
       {/* 参加方法の案内図（活動状況・タイムライン・ランキングの代わりに表示）。
           ログイン済みユーザーには開閉できるようにして邪魔にならないようにする */}
-      <section className="py-12 md:py-16 bg-background">
+      <section className="pt-4 pb-12 md:pt-6 md:pb-16 bg-background">
         <HowToParticipateSection collapsible={!!user} />
       </section>
 

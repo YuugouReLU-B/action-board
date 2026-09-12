@@ -22,7 +22,7 @@ export function MissionsViewToggle({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-center gap-3">
-        <h2 className="text-center text-2xl md:text-3xl my-5">🎯 ミッション</h2>
+        <h2 className="text-center text-2xl md:text-3xl my-5">ミッション</h2>
         {mapSpots.length > 0 && (
           <div className="inline-flex rounded-full border border-gray-300 p-1">
             <Button

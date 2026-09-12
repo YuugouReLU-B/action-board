@@ -83,7 +83,7 @@ describe("RankingTop", () => {
 
       render(await RankingTop({}));
 
-      expect(screen.getByText("🏅全期間トップ10")).toBeInTheDocument();
+      expect(screen.getByText("全期間トップ10")).toBeInTheDocument();
       expect(screen.getByTestId("card")).toBeInTheDocument();
     });
 
@@ -92,7 +92,7 @@ describe("RankingTop", () => {
 
       render(await RankingTop({ limit: 5 }));
 
-      expect(screen.getByText("🏅全期間トップ5")).toBeInTheDocument();
+      expect(screen.getByText("全期間トップ5")).toBeInTheDocument();
     });
 
     it("ランキングアイテムが正しく表示される", async () => {
@@ -144,7 +144,7 @@ describe("RankingTop", () => {
 
       render(await RankingTop({ limit: 20 }));
 
-      expect(screen.getByText("🏅全期間トップ20")).toBeInTheDocument();
+      expect(screen.getByText("全期間トップ20")).toBeInTheDocument();
     });
 
     it("limitが1の場合", async () => {
@@ -152,7 +152,7 @@ describe("RankingTop", () => {
 
       render(await RankingTop({ limit: 1 }));
 
-      expect(screen.getByText("🏅全期間トップ1")).toBeInTheDocument();
+      expect(screen.getByText("全期間トップ1")).toBeInTheDocument();
     });
   });
 
@@ -162,7 +162,7 @@ describe("RankingTop", () => {
 
       render(await RankingTop({ limit: 10, period: "daily" }));
 
-      expect(screen.getByText("🏅今日のトップ10")).toBeInTheDocument();
+      expect(screen.getByText("今日のトップ10")).toBeInTheDocument();
     });
 
     it("全期間ランキングのタイトルが正しく表示される", async () => {
@@ -170,7 +170,7 @@ describe("RankingTop", () => {
 
       render(await RankingTop({ limit: 10, period: "all" }));
 
-      expect(screen.getByText("🏅全期間トップ10")).toBeInTheDocument();
+      expect(screen.getByText("全期間トップ10")).toBeInTheDocument();
     });
   });
 
@@ -214,7 +214,7 @@ describe("RankingTop", () => {
 
       render(await RankingTop({}));
 
-      expect(screen.getByText("🏅全期間トップ10")).toBeInTheDocument();
+      expect(screen.getByText("全期間トップ10")).toBeInTheDocument();
       expect(screen.queryByTestId("ranking-item")).not.toBeInTheDocument();
     });
   });
@@ -225,7 +225,7 @@ describe("RankingTop", () => {
 
       render(await RankingTop({ limit: 25, showDetailedInfo: true }));
 
-      expect(screen.getByText("🏅全期間トップ25")).toBeInTheDocument();
+      expect(screen.getByText("全期間トップ25")).toBeInTheDocument();
       expect(screen.getByTestId("link")).toBeInTheDocument();
     });
   });

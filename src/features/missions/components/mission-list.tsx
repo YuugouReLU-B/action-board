@@ -24,7 +24,7 @@ export default async function Missions({
   showAchievedMissions,
   filterFeatured,
   filterSlugs,
-  title = "📈 ミッション",
+  title = "ミッション",
   subTitle,
   id,
 }: MissionsProps) {

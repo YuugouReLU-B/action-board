@@ -1,7 +1,7 @@
 import type { UserBadge } from "./badge-types";
 import {
-  getBadgeEmoji,
   getBadgeRankingUrl,
+  getBadgeTierColorClass,
   getBadgeTitle,
 } from "./badge-types";
 
@@ -74,24 +74,24 @@ describe("badge-types", () => {
     });
   });
 
-  describe("getBadgeEmoji", () => {
-    it("rank 1-10 は金メダル絵文字を返す", () => {
-      expect(getBadgeEmoji(1)).toBe("\u{1F947}");
-      expect(getBadgeEmoji(10)).toBe("\u{1F947}");
+  describe("getBadgeTierColorClass", () => {
+    it("rank 1-10 は金色のクラスを返す", () => {
+      expect(getBadgeTierColorClass(1)).toBe("text-yellow-500");
+      expect(getBadgeTierColorClass(10)).toBe("text-yellow-500");
     });
 
-    it("rank 11-50 は銀メダル絵文字を返す", () => {
-      expect(getBadgeEmoji(11)).toBe("\u{1F948}");
-      expect(getBadgeEmoji(50)).toBe("\u{1F948}");
+    it("rank 11-50 は銀色のクラスを返す", () => {
+      expect(getBadgeTierColorClass(11)).toBe("text-gray-400");
+      expect(getBadgeTierColorClass(50)).toBe("text-gray-400");
     });
 
-    it("rank 51以上 は銅メダル絵文字を返す", () => {
-      expect(getBadgeEmoji(51)).toBe("\u{1F949}");
-      expect(getBadgeEmoji(100)).toBe("\u{1F949}");
+    it("rank 51以上 は銅色のクラスを返す", () => {
+      expect(getBadgeTierColorClass(51)).toBe("text-orange-500");
+      expect(getBadgeTierColorClass(100)).toBe("text-orange-500");
     });
 
-    it("rank=0 は金メダル絵文字を返す(10以下)", () => {
-      expect(getBadgeEmoji(0)).toBe("\u{1F947}");
+    it("rank=0 は金色のクラスを返す(10以下)", () => {
+      expect(getBadgeTierColorClass(0)).toBe("text-yellow-500");
     });
   });
 

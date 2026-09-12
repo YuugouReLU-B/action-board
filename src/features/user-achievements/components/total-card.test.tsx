@@ -31,10 +31,10 @@ describe("MissionAchievementTotalCard", () => {
       expect(screen.getByText("総達成数")).toBeInTheDocument();
     });
 
-    it("トロフィー絵文字が表示される", () => {
+    it("トロフィーアイコンが表示される", () => {
       render(<MissionAchievementTotalCard totalCount={5} />);
 
-      expect(screen.getByText("🏆")).toBeInTheDocument();
+      expect(screen.getByTestId("trophy-icon")).toBeInTheDocument();
     });
 
     it("Cardコンポーネントが使用される", () => {

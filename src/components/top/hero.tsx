@@ -15,7 +15,13 @@ export default async function Hero() {
           {/* ヘッダーの下まで風景を敷き、白を重ねてカードを浮かせる */}
           <HeroBackdrop priority overlayClassName="bg-white/55" />
           <div className="relative z-10">
-            <Levels userId={user.id} clickable={true} showBadge={true} />
+            <Levels
+              userId={user.id}
+              clickable={true}
+              showBadge={true}
+              showName={false}
+              transparent={true}
+            />
           </div>
         </section>
       );

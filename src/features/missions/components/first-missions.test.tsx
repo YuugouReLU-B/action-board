@@ -51,7 +51,7 @@ describe("FirstMissions", () => {
 
     const { getByTestId } = render(component);
 
-    expect(getByTestId("title")).toHaveTextContent("🚩 はじめのミッション");
+    expect(getByTestId("title")).toHaveTextContent("はじめのミッション");
     expect(getByTestId("sub-title")).toHaveTextContent(
       FIRST_MISSIONS_SUB_TITLE,
     );

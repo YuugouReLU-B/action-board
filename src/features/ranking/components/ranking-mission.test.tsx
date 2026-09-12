@@ -130,7 +130,7 @@ describe("RankingMission", () => {
       );
 
       expect(
-        screen.getByText("🏅「テストミッション」トップ10"),
+        screen.getByText("「テストミッション」トップ10"),
       ).toBeInTheDocument();
       expect(screen.getByTestId("card")).toBeInTheDocument();
     });
@@ -269,7 +269,7 @@ describe("RankingMission", () => {
       );
 
       expect(
-        screen.getByText("🏅「テストミッション」トップ10"),
+        screen.getByText("「テストミッション」トップ10"),
       ).toBeInTheDocument();
       expect(screen.queryByTestId("ranking-item")).not.toBeInTheDocument();
     });

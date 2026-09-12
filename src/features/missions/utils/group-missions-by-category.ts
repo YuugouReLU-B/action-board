@@ -11,6 +11,7 @@ export interface GroupMissionsByCategoryOptions {
 export interface CategoryWithMissions {
   categoryId: string;
   categoryTitle: string;
+  categoryKbn: string;
   missions: MissionForComponent[];
 }
 
@@ -106,6 +107,7 @@ export function groupMissionsByCategory(
     return {
       categoryId,
       categoryTitle: category.category_title || "",
+      categoryKbn: category.category_kbn || "",
       missions,
     };
   });

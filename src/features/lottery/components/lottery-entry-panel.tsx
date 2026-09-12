@@ -27,7 +27,7 @@ export async function LotteryEntryPanel() {
   if (isEligible && !token) return null;
 
   return (
-    <div className="w-full max-w-md rounded-xl border-2 bg-white p-6">
+    <div className="w-full rounded-xl border-2 bg-white p-6">
       <p className="text-lg font-bold">プレゼント抽選応募</p>
       <p className="mt-1 text-sm text-gray-600">
         累計{LOTTERY_THRESHOLD_POINTS.toLocaleString()}

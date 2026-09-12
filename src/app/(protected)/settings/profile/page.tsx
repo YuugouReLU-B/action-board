@@ -42,14 +42,16 @@ export default async function ProfileSettingsPage({
 
   return (
     <div className="flex flex-col items-center justify-center py-2">
-      <ProfileForm
-        message={params}
-        isNew={true}
-        initialProfile={{
-          name: publicUser?.name || user.user_metadata.name || "",
-        }}
-        nextUrlAfterSignup={nextUrlAfterSignup}
-      />
+      <div className="w-full max-w-md">
+        <ProfileForm
+          message={params}
+          isNew={true}
+          initialProfile={{
+            name: publicUser?.name || user.user_metadata.name || "",
+          }}
+          nextUrlAfterSignup={nextUrlAfterSignup}
+        />
+      </div>
     </div>
   );
 }

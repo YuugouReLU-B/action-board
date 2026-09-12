@@ -14,13 +14,12 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
       }),
     ).toBeVisible();
 
-    // 参加方法の案内図の表示を確認
-    await expect(signedInPage.getByAltText(/参加方法/)).toBeVisible();
-
-    // 注目ミッションの表示を確認
+    // ログイン後は「遊び方」モーダル経由で参加方法の案内図を見る
+    await signedInPage.getByRole("button", { name: "遊び方" }).click();
     await expect(
-      signedInPage.getByRole("heading", { name: /注目ミッション/ }),
+      signedInPage.getByAltText(/参加方法/).locator("visible=true"),
     ).toBeVisible();
+    await signedInPage.keyboard.press("Escape");
 
     // 問い合わせフォームの表示を確認
     await expect(
@@ -116,7 +115,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await signedInPage
       .getByRole("article")
       .filter({ hasText: "(seed) ゴミ拾いをしよう (成果物不要)" })
-      .getByRole("button", { name: "ポイントを獲得" })
+      .getByRole("button", { name: "400P獲得" })
       .click();
     await expect(signedInPage).toHaveURL(/\/missions\/[^/]+$/, {
       timeout: 10000,
@@ -144,7 +143,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage.getByText("このミッションは何度でもチャレンジできます。"),
     ).toBeVisible();
-    // 注目ミッションのポイント2倍は廃止したので、pointsそのまま(400)が付与される
+    // ポイント2倍の仕組みは廃止したので、pointsそのまま(400)が付与される
     await expect(signedInPage.getByText("400ポイント獲得しました")).toBeVisible(
       { timeout: 10000 },
     );
@@ -170,7 +169,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     // ミッション取消後のポイントの変動を確認
     await signedInPage.goto("/");
     await signedInPage
-      .getByRole("button", { name: "もう一回チャレンジ" })
+      .getByRole("button", { name: "もう一回400P獲得" })
       .first()
       .click();
     await expect(signedInPage).toHaveURL(/\/missions\/[^/]+$/, {

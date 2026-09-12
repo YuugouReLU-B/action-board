@@ -16,7 +16,7 @@ export default async function Navbar() {
   const user = await getUser();
 
   return (
-    <nav className="sticky top-4 z-50 w-full flex justify-center h-16">
+    <nav className="sticky top-4 z-50 w-full flex justify-center h-16 mt-4">
       <div className="px-4 w-full flex justify-between items-center text-sm bg-white border-b border-b-foreground/10 mx-4 rounded-2xl ">
         <div className="flex gap-5 items-center font-semibold min-w-[60px]">
           <Link href="/" className="flex items-center gap-4">

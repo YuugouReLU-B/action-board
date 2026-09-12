@@ -9,6 +9,10 @@ interface LevelsProps {
   clickable?: boolean;
   showBadge?: boolean;
   seasonId?: string;
+  /** ニックネームを表示するか（デフォルトtrue） */
+  showName?: boolean;
+  /** 背景の白いカードを消し、文字だけにするか（デフォルトfalse） */
+  transparent?: boolean;
 }
 
 // TODO: UserProfileCardにリネーム
@@ -17,6 +21,8 @@ export default async function Levels({
   clickable = false,
   showBadge = false,
   seasonId,
+  showName = true,
+  transparent = false,
 }: LevelsProps) {
   const profile = await getProfile(userId);
 
@@ -28,16 +34,25 @@ export default async function Levels({
 
   const cardContent = (
     <div
-      className={`w-full flex flex-col items-stretch bg-white rounded-md p-6 ${clickable ? "hover:bg-gray-50 transition-colors max-w-lg" : "max-w-md"}`}
+      className={`w-full flex flex-col items-stretch ${transparent ? "" : "bg-white rounded-md p-6"} ${clickable ? `${transparent ? "" : "hover:bg-gray-50 transition-colors"} max-w-lg` : "max-w-md"}`}
     >
       <div className="flex flex-col items-center min-w-0">
         <div className="text-3xl font-bold">
-          現在 {userLevel ? userLevel.xp.toLocaleString() : "0"} ポイント
+          現在{" "}
+          <span
+            className="text-6xl text-yellow-300"
+            style={{ WebkitTextStroke: "1.5px black" }}
+          >
+            {userLevel ? userLevel.xp.toLocaleString() : "0"}
+          </span>{" "}
+          ポイント
         </div>
       </div>
-      <div className="mt-2 flex justify-end min-w-0">
-        <UserName name={profile.name} nameClassName="text-base font-bold" />
-      </div>
+      {showName && (
+        <div className="mt-2 flex justify-end min-w-0">
+          <UserName name={profile.name} nameClassName="text-base font-bold" />
+        </div>
+      )}
       {showBadge && (
         <div className="mt-3">
           <UserTopBadge userId={userId} seasonId={seasonId} />

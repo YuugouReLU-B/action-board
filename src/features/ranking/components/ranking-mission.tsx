@@ -53,7 +53,7 @@ export async function RankingMission({
     return `${(rankingItem?.user_achievement_count ?? 0).toLocaleString()}回`;
   };
 
-  const title = `🏅「${mission.title}」トップ${limit}`;
+  const title = `「${mission.title}」トップ${limit}`;
 
   return (
     <BaseRanking

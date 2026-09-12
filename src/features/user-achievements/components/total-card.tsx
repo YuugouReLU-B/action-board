@@ -1,3 +1,4 @@
+import { Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface MissionAchievementTotalCardProps {
@@ -12,7 +13,7 @@ export function MissionAchievementTotalCard({
       <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-emerald-200 to-teal-200 rounded-full opacity-20 -mr-16 -mt-16" />
       <div className="relative flex justify-between items-center">
         <div className="flex items-center gap-1">
-          <span className="text-gray-700">🏆</span>
+          <Trophy className="h-4 w-4 text-gray-700" data-testid="trophy-icon" />
           <span className="text-base font-bold text-gray-700">総達成数</span>
         </div>
         <div className="flex items-baseline gap-1">

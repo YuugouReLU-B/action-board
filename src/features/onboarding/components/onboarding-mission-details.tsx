@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DifficultyBadge } from "@/features/missions/components/difficulty-badge";
 import { MissionIcon } from "@/features/missions/components/mission-icon";
 import type { MockMission } from "@/features/onboarding/types/types";
 import { BUTTON_TEXT, STYLE_CLASSES } from "../constants/constants";
@@ -33,9 +32,6 @@ export const OnboardingMissionDetails: React.FC<
             )}
             <div className="flex-1 space-y-2">
               <CardTitle className="text-xl">{mission.title}</CardTitle>
-              <div className="flex flex-wrap gap-2">
-                <DifficultyBadge difficulty={mission.difficulty} />
-              </div>
             </div>
           </div>
         </CardHeader>

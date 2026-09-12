@@ -30,11 +30,13 @@ export default async function Levels({
     <div
       className={`w-full flex flex-col items-stretch bg-white rounded-md p-6 ${clickable ? "hover:bg-gray-50 transition-colors max-w-lg" : "max-w-md"}`}
     >
-      <div className="flex flex-col min-w-0">
-        <UserName name={profile.name} nameClassName="text-2xl font-bold" />
-        <div className="mt-2 text-2xl font-bold">
-          {userLevel ? userLevel.xp.toLocaleString() : "0"} ポイント
+      <div className="flex flex-col items-center min-w-0">
+        <div className="text-3xl font-bold">
+          現在 {userLevel ? userLevel.xp.toLocaleString() : "0"} ポイント
         </div>
+      </div>
+      <div className="mt-2 flex justify-end min-w-0">
+        <UserName name={profile.name} nameClassName="text-base font-bold" />
       </div>
       {showBadge && (
         <div className="mt-3">

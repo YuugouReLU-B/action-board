@@ -8,7 +8,7 @@ export type MapSpot = {
   id: string;
   slug: string;
   title: string;
-  /** 実際に付与されるポイント（注目ミッションの2倍を反映済み） */
+  /** 実際に付与されるポイント */
   points: number;
   latitude: number;
   longitude: number;

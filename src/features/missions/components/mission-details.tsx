@@ -2,7 +2,6 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DifficultyBadge } from "@/features/missions/components/difficulty-badge";
 import { MissionIcon } from "@/features/missions/components/mission-icon";
 import type { Tables } from "@/lib/types/supabase";
 import { dateFormatter } from "@/lib/utils/date-formatters";
@@ -22,7 +21,6 @@ export function MissionDetails({ mission }: MissionDetailsProps) {
           <div className="flex-1 space-y-2">
             <CardTitle className="text-xl">{mission.title}</CardTitle>
             <div className="flex flex-wrap gap-2">
-              <DifficultyBadge difficulty={mission.difficulty} />
               {mission.event_date && (
                 <Badge variant="outline">
                   {dateFormatter(new Date(mission.event_date))}

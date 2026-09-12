@@ -6,7 +6,7 @@ categories:
     sort_no: 10
     category_kbn: DEFAULT
   - slug: visit-checkpoints
-    title: チェックポイントを回ろう
+    title: プレイヤーを訪問しよう
     sort_no: 20
     category_kbn: DEFAULT
   - slug: attend-events

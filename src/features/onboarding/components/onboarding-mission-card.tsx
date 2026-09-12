@@ -74,9 +74,7 @@ export default function OnboardingMissionCard({
             </span>
           </div>
           <div className="flex items-center">
-            <span className="text-sm font-medium text-gray-700">難易度：</span>
-            <span className="mx-1">{"⭐".repeat(mission.difficulty)}</span>
-            <span className="text-sm font-medium ml-1.5 text-gray-700">
+            <span className="text-sm font-medium text-gray-700">
               獲得ポイント：
               {mission.required_artifact_type === "POSTER" ||
               mission.required_artifact_type === "POSTING"

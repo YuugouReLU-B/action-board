@@ -172,7 +172,7 @@ describe("Mission", () => {
 
     expect(screen.getByText("テストミッション")).toBeInTheDocument();
     expect(screen.getByText("みんなで10回達成")).toBeInTheDocument();
-    expect(screen.getByText("今すぐチャレンジ🔥")).toBeInTheDocument();
+    expect(screen.getByText("ポイントを獲得🔥")).toBeInTheDocument();
   });
 
   it("イベント日付が正しく表示される", () => {

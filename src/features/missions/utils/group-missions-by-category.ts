@@ -49,19 +49,15 @@ export function groupMissionsByCategory(
       // mission_idがnullの場合の処理
       if (!a.mission_id || !b.mission_id) return 0;
 
-      // 上限まで達成済みのミッションを後ろに移動
-      const aAchievementCount = userAchievementCountMap.get(a.mission_id) ?? 0;
-      const bAchievementCount = userAchievementCountMap.get(b.mission_id) ?? 0;
+      // 達成済み（1回でも達成していれば）のミッションを後ろに移動。
+      // 何度でも挑戦できるミッションも、達成済みなら一覧の下段に回す
+      const aAchieved = (userAchievementCountMap.get(a.mission_id) ?? 0) > 0;
+      const bAchieved = (userAchievementCountMap.get(b.mission_id) ?? 0) > 0;
 
-      const aIsMaxAchieved =
-        a.max_achievement_count && aAchievementCount >= a.max_achievement_count;
-      const bIsMaxAchieved =
-        b.max_achievement_count && bAchievementCount >= b.max_achievement_count;
-
-      if (aIsMaxAchieved && !bIsMaxAchieved) {
+      if (aAchieved && !bAchieved) {
         return 1; // a を後ろに
       }
-      if (!aIsMaxAchieved && bIsMaxAchieved) {
+      if (!aAchieved && bAchieved) {
         return -1; // b を後ろに
       }
 

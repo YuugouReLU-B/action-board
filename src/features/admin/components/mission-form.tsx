@@ -65,8 +65,8 @@ export function MissionForm({
   const [artifactType, setArtifactType] = useState(
     mission?.required_artifact_type ?? ARTIFACT_TYPES.GEO_CHECKIN.key,
   );
-  const [difficulty, setDifficulty] = useState(mission?.difficulty ?? 1);
-  // 新規作成時だけ難易度に追従させる。既存の値を勝手に書き換えない
+  // 難易度は画面表示から廃止したが、DBカラムは残っているため既存値をそのまま送る
+  const [difficulty] = useState(mission?.difficulty ?? 1);
   const [points, setPoints] = useState(
     mission?.points ?? defaultPointsForDifficulty(1),
   );
@@ -282,31 +282,9 @@ export function MissionForm({
         </Field>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-3">
-        <Field
-          htmlFor="difficulty"
-          label="難易度（★の数）"
-          hint="表示だけ。ポイントには影響しない"
-        >
-          <select
-            name="difficulty"
-            id="difficulty"
-            value={difficulty}
-            onChange={(e) => {
-              const next = Number(e.target.value);
-              setDifficulty(next);
-              // 新規作成のときだけ既定値を追従させる
-              if (!mission) setPoints(defaultPointsForDifficulty(next));
-            }}
-            className={inputClass}
-          >
-            {[1, 2, 3, 4, 5].map((value) => (
-              <option key={value} value={value}>
-                {"★".repeat(value)}
-              </option>
-            ))}
-          </select>
-        </Field>
+      <div className="grid gap-5 sm:grid-cols-2">
+        {/* 難易度は画面表示から廃止したが、DBカラムは残っているため固定値を送る */}
+        <input type="hidden" name="difficulty" value={difficulty} />
 
         <Field htmlFor="points" label="ポイント" hint="実際に付与されるXP">
           <input
@@ -498,7 +476,7 @@ export function MissionForm({
             name="is_featured"
             defaultChecked={mission?.is_featured ?? false}
           />
-          注目ミッション（ポイント2倍）
+          注目ミッション
         </label>
       </div>
 

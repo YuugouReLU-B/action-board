@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { OnboardingButton } from "@/features/onboarding/components/onboarding-button";
 import { getUser } from "@/features/user-profile/services/profile";
 
 export default async function Navbar() {
@@ -60,14 +59,6 @@ export default async function Navbar() {
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
                       <Link href="/">ホーム</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <OnboardingButton
-                        variant="link"
-                        className="w-full justify-start p-0 h-auto text-sm"
-                      >
-                        浜通りクエストとは？
-                      </OnboardingButton>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />

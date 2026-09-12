@@ -23,7 +23,7 @@ export async function LotteryAnnouncementBanner() {
         href={`/users/${user.id}`}
         className="flex w-full max-w-4xl items-center justify-center gap-2 px-4 py-3 text-sm font-bold hover:underline"
       >
-        🎉 累計{LOTTERY_THRESHOLD_POINTS.toLocaleString()}
+        累計{LOTTERY_THRESHOLD_POINTS.toLocaleString()}
         ポイント達成！プレゼント抽選に応募できます
       </Link>
     </div>

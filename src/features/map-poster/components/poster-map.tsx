@@ -323,7 +323,7 @@ export default function PosterMap({
         style={{ zIndex: 1000 }}
         aria-label="現在地を表示"
       >
-        📍 現在地
+        現在地
       </button>
     </div>
   );

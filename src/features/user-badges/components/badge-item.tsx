@@ -1,8 +1,9 @@
+import { Medal } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import {
-  getBadgeEmoji,
   getBadgeRankingUrl,
+  getBadgeTierColorClass,
   getBadgeTitle,
   type UserBadge,
 } from "@/features/user-badges/badge-types";
@@ -24,7 +25,6 @@ export function BadgeItem({
   className = "",
   clickable = true,
 }: BadgeDisplayProps) {
-  const emoji = getBadgeEmoji(badge.rank);
   const title = showTitle ? getBadgeTitle(badge) : null;
   const url = getBadgeRankingUrl(badge);
 
@@ -36,7 +36,7 @@ export function BadgeItem({
           : ""
       } ${className}`}
     >
-      <span className="text-base">{emoji}</span>
+      <Medal className={`h-4 w-4 ${getBadgeTierColorClass(badge.rank)}`} />
       {title && <span className="font-bold">{title}</span>}
     </Badge>
   );

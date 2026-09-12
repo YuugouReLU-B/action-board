@@ -1078,7 +1078,7 @@ export default function PostingPageClient({
         style={{ zIndex: 1000 }}
         aria-label="現在地を表示"
       >
-        📍 現在地
+        現在地
       </button>
 
       {/* Status Change Dialog */}

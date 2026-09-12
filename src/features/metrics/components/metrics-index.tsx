@@ -46,7 +46,7 @@ export async function Metrics() {
   const lastUpdated = formatUpdateTime(new Date().toISOString());
 
   return (
-    <MetricsLayout title="浜通りクエストの活動状況🚀" lastUpdated={lastUpdated}>
+    <MetricsLayout title="浜通りクエストの活動状況" lastUpdated={lastUpdated}>
       {/* 登録者数 */}
       <RegistrationMetric data={registrationData} />
 

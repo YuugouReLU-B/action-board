@@ -62,7 +62,7 @@ describe("UserMissionAchievements", () => {
         />,
       );
 
-      expect(screen.getByText("ミッション達成状況")).toBeInTheDocument();
+      expect(screen.getByText("クエスト達成状況")).toBeInTheDocument();
     });
 
     it("総達成数カードが表示される", () => {
@@ -134,7 +134,7 @@ describe("UserMissionAchievements", () => {
     it("タイトルは常に表示される", () => {
       render(<UserMissionAchievements achievements={[]} totalCount={0} />);
 
-      expect(screen.getByText("ミッション達成状況")).toBeInTheDocument();
+      expect(screen.getByText("クエスト達成状況")).toBeInTheDocument();
     });
   });
 

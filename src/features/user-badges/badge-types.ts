@@ -47,10 +47,13 @@ export const getBadgeTitle = (badge: UserBadge): string => {
   }
 };
 
-export const getBadgeEmoji = (rank: number): string => {
-  if (rank <= 10) return "🥇";
-  if (rank <= 50) return "🥈";
-  return "🥉";
+/**
+ * ランキング順位帯に応じたメダルアイコンの色クラス（金・銀・銅）を返す。
+ */
+export const getBadgeTierColorClass = (rank: number): string => {
+  if (rank <= 10) return "text-yellow-500";
+  if (rank <= 50) return "text-gray-400";
+  return "text-orange-500";
 };
 
 export const BadgeType = {

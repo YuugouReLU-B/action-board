@@ -4,7 +4,6 @@ import clsx from "clsx";
 import { motion } from "framer-motion";
 import { UsersRound } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { MissionIcon } from "@/features/missions/components/mission-icon";
@@ -33,6 +32,14 @@ export default function Mission({
     userAchievementCount >= (mission.max_achievement_count || 0);
 
   const iconUrl = mission.icon_url ?? "/img/mission_fallback.svg";
+
+  // ボタン文言に埋め込むポイント表示（以前はバッジで表示していたもの）
+  const pointsLabel =
+    mission.required_artifact_type === "POSTER"
+      ? `1枚あたり${POSTER_POINTS_PER_UNIT}P`
+      : mission.required_artifact_type === "POSTING"
+        ? `1枚あたり${POSTING_POINTS_PER_UNIT}P`
+        : `${calculateMissionXp({ points: mission.points })}P`;
 
   // 日付の整形
   const eventDate = mission.event_date ? new Date(mission.event_date) : null;
@@ -70,29 +77,13 @@ export default function Mission({
           </div>
         </CardHeader>
 
-        <CardFooter className="flex flex-col items-stretch gap-6">
-          <div className="flex flex-col items-start gap-1.5">
-            <div className="flex items-center">
-              <UsersRound className="size-4 mr-2" />
-              <span className="text-sm font-medium text-gray-700">
-                みんなで{achievementsCount.toLocaleString()}
-                {mission.required_artifact_type === "POSTING" ? "枚" : "回"}達成
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge
-                className={`${mission.is_featured ? "bg-yellow-300/90 text-black" : ""}`}
-              >
-                <span className="text-sm font-medium text-gray-700">
-                  {mission.required_artifact_type === "POSTER"
-                    ? `1枚あたり${POSTER_POINTS_PER_UNIT}`
-                    : mission.required_artifact_type === "POSTING"
-                      ? `1枚あたり${POSTING_POINTS_PER_UNIT}`
-                      : calculateMissionXp({ points: mission.points })}
-                  <span className="">P</span>
-                </span>
-              </Badge>
-            </div>
+        <CardFooter className="flex flex-col items-stretch gap-3">
+          <div className="flex items-center">
+            <UsersRound className="size-4 mr-2" />
+            <span className="text-sm font-medium text-gray-700">
+              みんなで{achievementsCount.toLocaleString()}
+              {mission.required_artifact_type === "POSTING" ? "枚" : "回"}達成
+            </span>
           </div>
           <Link
             href={`/missions/${mission.slug || mission.id}`}
@@ -106,17 +97,17 @@ export default function Mission({
                   // プライマリ色を変えたときに読めなくなる
                   "w-full rounded-full py-6 text-base font-bold text-primary-foreground border-none",
                   hasReachedMaxAchievements
-                    ? "bg-yellow-300 hover:bg-yellow-300/90 text-black"
+                    ? "bg-gray-300 hover:bg-gray-300/90 text-gray-700"
                     : userAchievementCount === 0
                       ? "bg-primary hover:bg-primary/90"
                       : "bg-yellow-300 hover:bg-yellow-300/90 text-black",
                 )}
               >
                 {hasReachedMaxAchievements
-                  ? "ミッションクリア🎉"
+                  ? "クリア済み"
                   : userAchievementCount === 0
-                    ? "ポイントを獲得🔥"
-                    : "もう一回チャレンジ🔥"}
+                    ? `${pointsLabel}獲得`
+                    : `もう一回${pointsLabel}獲得`}
               </Button>
             </motion.div>
           </Link>

@@ -19,6 +19,10 @@ category_links:
         sort_no: 600
       - mission_slug: visit-hotel-futabatei
         sort_no: 700
+      # (seed) ゴミ拾いをしよう: 旧「注目ミッション」経由でのみ表示されていたテスト用ミッション。
+      # 注目ミッション欄の廃止に伴い、表示経路を失わないようここに紐付ける
+      - mission_slug: seed-cleanup
+        sort_no: 9999
   - category_slug: attend-events
     missions:
       - mission_slug: event-kawauchi-hillclimb

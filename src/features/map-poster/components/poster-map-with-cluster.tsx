@@ -613,7 +613,7 @@ export default function PosterMapWithCluster({
         }}
         aria-label="現在地を表示"
       >
-        📍 現在地
+        現在地
       </button>
     </div>
   );

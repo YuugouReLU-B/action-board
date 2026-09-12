@@ -56,9 +56,7 @@ describe("Metrics", () => {
     it("メトリクスが正しくレンダリングされる", async () => {
       render(await Metrics());
 
-      expect(
-        screen.getByText("浜通りクエストの活動状況🚀"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("浜通りクエストの活動状況")).toBeInTheDocument();
       expect(screen.getByText("登録者数")).toBeInTheDocument();
       expect(screen.getByText("達成アクション数")).toBeInTheDocument();
     });

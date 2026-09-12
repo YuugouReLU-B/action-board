@@ -5,11 +5,8 @@ import {
 } from "@/features/missions/loaders/missions-loaders";
 import { getMissionDisplayCount } from "@/features/missions/utils/get-mission-display-count";
 import { groupMissionsByCategory } from "@/features/missions/utils/group-missions-by-category";
-import type { MapSpot } from "@/features/spot-map/services/spot-map";
 import { getUserMissionAchievements } from "@/features/user-achievements/loaders/achievements-loaders";
-import { calculateMissionXp } from "@/features/user-level/utils/level-calculator";
-import { HorizontalScrollContainer } from "./horizontal-scroll-container";
-import Mission from "./mission-card";
+import { toTaggedMission } from "./missions-tags";
 import { MissionsViewToggle } from "./missions-view-toggle";
 
 type MissionsByCategoryProps = {
@@ -61,65 +58,40 @@ export default async function MissionsByCategory({
     achievedMissionIds,
   });
 
-  // 地図モード用に、座標を持つミッションだけ抽出する
-  const mapSpots: MapSpot[] = categories.flatMap((category) =>
-    category.missions
-      .filter((m) => m.latitude !== null && m.longitude !== null)
-      .map((m) => ({
-        id: m.id,
-        slug: m.slug,
-        title: m.title,
-        points: calculateMissionXp(m),
-        latitude: m.latitude as number,
-        longitude: m.longitude as number,
-        achieved: (userAchievementCountMap.get(m.id) ?? 0) > 0,
-      })),
+  // カテゴリの区切りをやめて、全ミッションをタグ付きのフラットな一覧にする
+  // （常設/特設・イベント/プレイヤー/SNS・浜通り/東京で絞り込める）
+  const taggedMissions = categories.flatMap((category) =>
+    category.missions.map((mission) =>
+      toTaggedMission(
+        mission,
+        category,
+        getMissionDisplayCount(
+          mission.id,
+          achievementCountMap,
+          postingCountMap,
+        ),
+        userAchievementCountMap.get(mission.id) ?? 0,
+      ),
+    ),
   );
 
-  const listView = (
-    <div className="flex flex-col gap-11">
-      {categories.map((category) => (
-        <section
-          key={category.categoryId}
-          className="
-              relative               /* オーバーレイ配置のため */
-              w-screen
-              md:pl-10
-            "
-        >
-          {/* カテゴリ見出し */}
-          <h3 className="text-xl font-bold pl-4 md:pl-0">
-            {category.categoryTitle}
-          </h3>
+  // 地図モード用に、座標を持つミッションだけ抽出する
+  const mapMissions = taggedMissions.filter(
+    (m) => m.mission.latitude !== null && m.mission.longitude !== null,
+  );
 
-          {/* 横スクロール領域 */}
-          <HorizontalScrollContainer>
-            <div className="flex w-fit gap-4 pl-4 md:pl-0 pr-4 pb-2 pt-4">
-              {category.missions.map((mission) => (
-                <div key={mission.id} className="shrink-0 w-[300px]">
-                  <Mission
-                    mission={mission}
-                    achievementsCount={getMissionDisplayCount(
-                      mission.id,
-                      achievementCountMap,
-                      postingCountMap,
-                    )}
-                    userAchievementCount={
-                      userAchievementCountMap.get(mission.id) ?? 0
-                    }
-                  />
-                </div>
-              ))}
-            </div>
-          </HorizontalScrollContainer>
-        </section>
-      ))}
-    </div>
+  // カレンダーモード用に、特設クエストのうち開催日を持つミッションを抽出する
+  const calendarMissions = taggedMissions.filter(
+    (m) => m.questType === "特設クエスト" && m.mission.event_date,
   );
 
   return (
     <div className="flex flex-col gap-11">
-      <MissionsViewToggle mapSpots={mapSpots}>{listView}</MissionsViewToggle>
+      <MissionsViewToggle
+        listMissions={taggedMissions}
+        mapMissions={mapMissions}
+        calendarMissions={calendarMissions}
+      />
     </div>
   );
 }

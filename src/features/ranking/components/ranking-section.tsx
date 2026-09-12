@@ -13,7 +13,7 @@ export default async function RankingSection() {
   return (
     <div className="max-w-6xl mx-auto">
       <h2 className="text-2xl md:text-3xl text-gray-900 mb-6 text-center">
-        🏅アクションリーダー
+        ランキング
       </h2>
       <Carousel className="max-w-[100vw] px-4">
         <CarouselContent className="mb-4 lg:-ml-6">

@@ -532,14 +532,14 @@ export default function DetailedPosterMapClient({
       {/* ミッション「選挙区ポスターを貼ろう」への誘導 */}
       <div className="max-w-xl mx-auto mt-4 mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded text-gray-800 text-sm">
         <p>
-          「ポスターマップ上に掲示板が見当たらない」「ポスターを貼ったがポイントに反映されなかった」などの問題がある場合は、下記のミッションにて報告をお願いいたします👇
+          「ポスターマップ上に掲示板が見当たらない」「ポスターを貼ったがポイントに反映されなかった」などの問題がある場合は、下記のミッションにて報告をお願いいたします
         </p>
         <p className="mt-2">
           <a
             href={`/missions/${POSTER_MISSION_SLUG}`}
             className="text-blue-700 underline font-bold"
           >
-            🔗 ミッション「選挙区ポスターを貼ろう」
+            ミッション「選挙区ポスターを貼ろう」
           </a>
         </p>
         <p className="mt-2">ご協力ありがとうございます！</p>

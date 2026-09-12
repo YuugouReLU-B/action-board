@@ -136,7 +136,7 @@ export function XpProgressToastContent({
           <div className="text-xs text-gray-500">
             レベル {currentLevel}
             {showFinalState && (
-              <span> • 次のレベルまで{pointsToNextLevel}ポイント🔥</span>
+              <span> • 次のレベルまで{pointsToNextLevel}ポイント</span>
             )}
           </div>
         </div>

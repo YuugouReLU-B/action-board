@@ -22,30 +22,6 @@ describe("ミッション経験値計算", () => {
     it("ポイント0のミッションは0XP", () => {
       expect(calculateMissionXp({ points: 0 })).toBe(0);
     });
-
-    describe("注目ミッション（2倍ボーナス）", () => {
-      it("is_featured が true なら2倍", () => {
-        expect(calculateMissionXp({ points: 300, is_featured: true })).toBe(
-          600,
-        );
-      });
-
-      it("is_featured が false なら等倍", () => {
-        expect(calculateMissionXp({ points: 300, is_featured: false })).toBe(
-          300,
-        );
-      });
-
-      it("is_featured が省略されていれば等倍", () => {
-        expect(calculateMissionXp({ points: 300 })).toBe(300);
-      });
-
-      it("is_featured が null でも等倍（DBのnullをそのまま渡せる）", () => {
-        expect(calculateMissionXp({ points: 300, is_featured: null })).toBe(
-          300,
-        );
-      });
-    });
   });
 
   describe("defaultPointsForDifficulty", () => {

@@ -80,12 +80,6 @@ export default function Mission({
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Badge>
-                <span className="text-sm font-medium text-gray-700">
-                  難易度
-                </span>
-                <span className="ml-1">{"⭐".repeat(mission.difficulty)}</span>
-              </Badge>
               <Badge
                 className={`${mission.is_featured ? "bg-yellow-300/90 text-black" : ""}`}
               >
@@ -96,7 +90,6 @@ export default function Mission({
                       ? `1枚あたり${POSTING_POINTS_PER_UNIT}`
                       : calculateMissionXp({ points: mission.points })}
                   <span className="">P</span>
-                  {mission.is_featured && <span className="ml-1">x 2</span>}
                 </span>
               </Badge>
             </div>
@@ -122,7 +115,7 @@ export default function Mission({
                 {hasReachedMaxAchievements
                   ? "ミッションクリア🎉"
                   : userAchievementCount === 0
-                    ? "今すぐチャレンジ🔥"
+                    ? "ポイントを獲得🔥"
                     : "もう一回チャレンジ🔥"}
               </Button>
             </motion.div>

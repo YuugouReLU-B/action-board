@@ -148,27 +148,19 @@ export async function grantActivityBonusXp(params: {
   achievementId: string;
   count: number;
   pointsPerUnit: number;
-  isFeatured: boolean;
   descriptionLabel: string;
 }): Promise<number> {
-  const {
-    userId,
-    achievementId,
-    count,
-    pointsPerUnit,
-    isFeatured,
-    descriptionLabel,
-  } = params;
+  const { userId, achievementId, count, pointsPerUnit, descriptionLabel } =
+    params;
 
-  const basePoints = count * pointsPerUnit;
-  const totalPoints = isFeatured ? basePoints * 2 : basePoints;
+  const totalPoints = count * pointsPerUnit;
 
   const bonusXpResult = await grantXp(
     userId,
     totalPoints,
     "BONUS",
     achievementId,
-    `${descriptionLabel}（${count}枚=${totalPoints}ポイント${isFeatured ? "【2倍】" : ""}）`,
+    `${descriptionLabel}（${count}枚=${totalPoints}ポイント）`,
   );
 
   if (!bonusXpResult.success) {

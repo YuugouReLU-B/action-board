@@ -40,11 +40,8 @@ export function calculateLevel(xp: number): number {
  * 引数をミッション行そのものにしているのは、数値2つだと difficulty を
  * 渡しても型が通ってしまい、静かに誤ったXPが入るため。
  */
-export function calculateMissionXp(mission: {
-  points: number;
-  is_featured?: boolean | null;
-}): number {
-  return mission.is_featured ? mission.points * 2 : mission.points;
+export function calculateMissionXp(mission: { points: number }): number {
+  return mission.points;
 }
 
 /**

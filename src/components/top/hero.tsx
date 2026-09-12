@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { HeroBackdrop } from "@/components/top/hero-backdrop";
 import { Button } from "@/components/ui/button";
-import { OnboardingButton } from "@/features/onboarding/components/onboarding-button";
 import Levels from "@/features/user-level/components/levels";
 import { getUser } from "@/features/user-profile/services/profile";
 
@@ -63,13 +62,6 @@ export default async function Hero() {
                   浜通りクエストに登録する
                 </Button>
               </Link>
-
-              <OnboardingButton
-                variant="link"
-                className="text-sm hover:text-[var(--app-brand-link-hover)] underline font-medium transition-colors duration-200 [text-shadow:0_0_6px_rgb(255_255_255),0_0_12px_rgb(255_255_255)]"
-              >
-                浜通りクエストとは？
-              </OnboardingButton>
             </div>
           )}
         </div>

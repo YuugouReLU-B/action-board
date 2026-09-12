@@ -84,7 +84,6 @@ export default async function QrSheetsPage({ searchParams }: PageProps) {
             <QrSheet
               key={mission.id}
               title={mission.title}
-              // 注目ミッションの2倍を反映した、実際に入る値を載せる
               points={calculateMissionXp(mission)}
               qrUrl={buildQrUrl(mission.qrCode as string)}
               slug={mission.slug}

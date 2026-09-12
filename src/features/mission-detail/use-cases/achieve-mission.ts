@@ -173,21 +173,13 @@ async function grantBonusXp(
     achievementId: string;
     count: number;
     pointsPerUnit: number;
-    isFeatured: boolean;
     descriptionLabel: string;
   },
 ): Promise<number> {
-  const {
-    userId,
-    achievementId,
-    count,
-    pointsPerUnit,
-    isFeatured,
-    descriptionLabel,
-  } = params;
+  const { userId, achievementId, count, pointsPerUnit, descriptionLabel } =
+    params;
 
-  const basePoints = count * pointsPerUnit;
-  const totalPoints = isFeatured ? basePoints * 2 : basePoints;
+  const totalPoints = count * pointsPerUnit;
 
   const result = await processXpGrant(supabase, {
     userId,
@@ -195,7 +187,7 @@ async function grantBonusXp(
     xpAmount: totalPoints,
     sourceType: "BONUS",
     sourceId: achievementId,
-    description: `${descriptionLabel}（${count}枚=${totalPoints}ポイント${isFeatured ? "【2倍】" : ""}）`,
+    description: `${descriptionLabel}（${count}枚=${totalPoints}ポイント）`,
   });
 
   if (!result.success) {
@@ -413,7 +405,6 @@ export async function achieveMission(
         achievementId: achievement.id,
         count: artifactData.postingCount,
         pointsPerUnit: POSTING_POINTS_PER_UNIT,
-        isFeatured: missionData?.is_featured ?? false,
         descriptionLabel: "ポスティング活動ボーナス",
       });
     }
@@ -450,7 +441,6 @@ export async function achieveMission(
         achievementId: achievement.id,
         count: MAX_POSTER_COUNT,
         pointsPerUnit: POSTER_POINTS_PER_UNIT,
-        isFeatured: missionData?.is_featured ?? false,
         descriptionLabel: "ポスターボーナス",
       });
     }

@@ -70,9 +70,7 @@ describe("MissionsByCategory", () => {
   });
 
   it("カテゴリ別にミッションが表示される", async () => {
-    const component = await MissionsByCategory({
-      showAchievedMissions: true,
-    });
+    const component = await MissionsByCategory({});
 
     render(component);
 
@@ -82,7 +80,6 @@ describe("MissionsByCategory", () => {
   it("ユーザーIDが指定された場合は達成情報を取得する", async () => {
     const component = await MissionsByCategory({
       userId: "test-user-id",
-      showAchievedMissions: true,
     });
 
     render(component);
@@ -91,9 +88,7 @@ describe("MissionsByCategory", () => {
   });
 
   it("データがない場合は適切なメッセージが表示される", async () => {
-    const component = await MissionsByCategory({
-      showAchievedMissions: true,
-    });
+    const component = await MissionsByCategory({});
 
     render(component);
 

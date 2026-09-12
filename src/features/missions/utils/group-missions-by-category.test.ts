@@ -143,7 +143,7 @@ describe("groupMissionsByCategory", () => {
       expect(missionIds).toEqual(["m2", "m3", "m1"]);
     });
 
-    it("上限まで達成済みのミッションを後ろに移動する", () => {
+    it("達成済み（1回でも達成）のミッションを後ろに移動する", () => {
       const data: MissionCategoryView[] = [
         createMissionCategoryView({
           mission_id: "m1",
@@ -176,6 +176,34 @@ describe("groupMissionsByCategory", () => {
       const missionIds = result[0].missions.map((m) => m.id);
       // m1は上限到達なので後ろに移動
       expect(missionIds).toEqual(["m2", "m3", "m1"]);
+    });
+
+    it("何度でも挑戦できる（上限なし）ミッションでも、1回達成していれば後ろに移動する", () => {
+      const data: MissionCategoryView[] = [
+        createMissionCategoryView({
+          mission_id: "m1",
+          category_id: "c1",
+          max_achievement_count: null,
+          link_sort_no: 1,
+        }),
+        createMissionCategoryView({
+          mission_id: "m2",
+          category_id: "c1",
+          max_achievement_count: null,
+          link_sort_no: 2,
+        }),
+      ];
+
+      // m1は1回達成済みだが、上限がないので「上限到達」判定にはならない
+      const userAchievementCountMap = new Map([["m1", 1]]);
+
+      const result = groupMissionsByCategory(data, userAchievementCountMap, {
+        showAchievedMissions: true,
+        achievedMissionIds: ["m1"],
+      });
+
+      const missionIds = result[0].missions.map((m) => m.id);
+      expect(missionIds).toEqual(["m2", "m1"]);
     });
 
     it("mission_idがnullの場合はソート順を維持する", () => {

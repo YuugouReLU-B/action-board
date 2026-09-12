@@ -144,14 +144,15 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage.getByText("このミッションは何度でもチャレンジできます。"),
     ).toBeVisible();
-    await expect(signedInPage.getByText("800ポイント獲得しました")).toBeVisible(
+    // 注目ミッションのポイント2倍は廃止したので、pointsそのまま(400)が付与される
+    await expect(signedInPage.getByText("400ポイント獲得しました")).toBeVisible(
       { timeout: 10000 },
     );
 
     // ミッション完了後のポイントの変動を確認（レベル表示は廃止し、ポイント数のみ表示）
     await signedInPage.goto("/");
     await expect(
-      signedInPage.locator("section").getByText("現在 800 ポイント"),
+      signedInPage.locator("section").getByText("現在 400 ポイント"),
     ).toBeVisible({ timeout: 10000 });
 
     await signedInPage.goto("/ranking");
@@ -161,7 +162,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(
       signedInPage
         .getByRole("link", {
-          name: "テストユーザー Lv.9 800pt",
+          name: "テストユーザー Lv.6 400pt",
         })
         .first(),
     ).toBeVisible({ timeout: 10000 });

@@ -5,15 +5,20 @@ import {
 } from "@/features/missions/loaders/missions-loaders";
 import { getMissionDisplayCount } from "@/features/missions/utils/get-mission-display-count";
 import { groupMissionsByCategory } from "@/features/missions/utils/group-missions-by-category";
+import type { MapSpot } from "@/features/spot-map/services/spot-map";
 import { getUserMissionAchievements } from "@/features/user-achievements/loaders/achievements-loaders";
+import { calculateMissionXp } from "@/features/user-level/utils/level-calculator";
 import { HorizontalScrollContainer } from "./horizontal-scroll-container";
 import Mission from "./mission-card";
-import type { MissionsProps } from "./mission-list";
+import { MissionsViewToggle } from "./missions-view-toggle";
+
+type MissionsByCategoryProps = {
+  userId?: string;
+};
 
 export default async function MissionsByCategory({
   userId,
-  showAchievedMissions,
-}: MissionsProps) {
+}: MissionsByCategoryProps) {
   // ユーザーの各ミッションに対する達成回数のマップ
   const userAchievementCountMap = userId
     ? await getUserMissionAchievements(userId)
@@ -49,16 +54,30 @@ export default async function MissionsByCategory({
     );
   }
 
-  // カテゴリごとにグループ化・ソート・フィルタリング・変換
+  // カテゴリごとにグループ化・ソート・フィルタリング・変換（達成済みは常に含める。
+  // 一覧モードでは末尾に回り、地図モードでは達成状況の色分けに使う）
   const categories = groupMissionsByCategory(data, userAchievementCountMap, {
-    showAchievedMissions,
+    showAchievedMissions: true,
     achievedMissionIds,
   });
 
-  return (
-    <div className="flex flex-col gap-11">
-      <h2 className="text-center text-2xl md:text-3xl my-5">🎯 ミッション</h2>
+  // 地図モード用に、座標を持つミッションだけ抽出する
+  const mapSpots: MapSpot[] = categories.flatMap((category) =>
+    category.missions
+      .filter((m) => m.latitude !== null && m.longitude !== null)
+      .map((m) => ({
+        id: m.id,
+        slug: m.slug,
+        title: m.title,
+        points: calculateMissionXp(m),
+        latitude: m.latitude as number,
+        longitude: m.longitude as number,
+        achieved: (userAchievementCountMap.get(m.id) ?? 0) > 0,
+      })),
+  );
 
+  const listView = (
+    <div className="flex flex-col gap-11">
       {categories.map((category) => (
         <section
           key={category.categoryId}
@@ -95,6 +114,12 @@ export default async function MissionsByCategory({
           </HorizontalScrollContainer>
         </section>
       ))}
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col gap-11">
+      <MissionsViewToggle mapSpots={mapSpots}>{listView}</MissionsViewToggle>
     </div>
   );
 }

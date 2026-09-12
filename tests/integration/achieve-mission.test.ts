@@ -411,7 +411,7 @@ describe("achieveMission ユースケース", () => {
     expect(bonusXpTransactions![0].xp_amount).toBe(expectedBonusXp);
   });
 
-  test("is_featured=true のPOSTINGミッションでボーナスXPが2倍になる", async () => {
+  test("is_featured=true でもPOSTINGミッションのボーナスXPは2倍にならない（2倍ボーナスは廃止済み）", async () => {
     testMission = await createTestMission({
       requiredArtifactType: "POSTING",
       difficulty: 1,
@@ -428,14 +428,14 @@ describe("achieveMission ユースケース", () => {
         missionId: testMission.id,
         requiredArtifactType: "POSTING",
         postingCount,
-        locationText: "テスト場所（2倍）",
+        locationText: "テスト場所",
       } as any,
     });
 
     expect(result.success).toBe(true);
     if (!result.success) return;
 
-    // DB確認: ボーナスXPが2倍で付与されている
+    // DB確認: is_featuredでも等倍のまま付与されている
     const { data: bonusXpTransactions } = await adminClient
       .from("xp_transactions")
       .select("xp_amount, source_type, description")
@@ -443,10 +443,9 @@ describe("achieveMission ユースケース", () => {
       .eq("source_type", "BONUS");
 
     expect(bonusXpTransactions).toHaveLength(1);
-    const basePoints = postingCount * POSTING_POINTS_PER_UNIT;
-    const expectedBonusXp = basePoints * 2; // is_featured=true で2倍
+    const expectedBonusXp = postingCount * POSTING_POINTS_PER_UNIT;
     expect(bonusXpTransactions![0].xp_amount).toBe(expectedBonusXp);
-    expect(bonusXpTransactions![0].description).toContain("2倍");
+    expect(bonusXpTransactions![0].description).not.toContain("2倍");
 
     // 合計XP確認
     expect(result.xpGranted).toBe(expectedBonusXp);

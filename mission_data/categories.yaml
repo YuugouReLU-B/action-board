@@ -2,14 +2,14 @@ categories:
   # ── 1000pt到達までの3ステップ（浜通りクエスト運用の主要導線） ──
   # 運用計画に無いカテゴリはすべて削除済み（2026-09-11 削減）
   - slug: official-line-registration
-    title: 公式LINE登録をしよう
+    title: "📱 公式LINE登録をしよう"
     sort_no: 10
     category_kbn: DEFAULT
   - slug: visit-checkpoints
-    title: プレイヤーを訪問しよう
+    title: "📍 プレイヤーを訪問しよう"
     sort_no: 20
     category_kbn: DEFAULT
   - slug: attend-events
-    title: イベントに参加しよう
+    title: "🎉 イベントに参加しよう"
     sort_no: 30
     category_kbn: DEFAULT

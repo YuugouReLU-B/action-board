@@ -33,7 +33,7 @@ export default async function RankingMissionPage({ searchParams }: PageProps) {
   if (missions.length === 0) {
     return (
       <div className="p-4 text-gray-600">
-        現在利用可能なミッションがありません。
+        現在利用可能なクエストがありません。
       </div>
     );
   }
@@ -46,7 +46,7 @@ export default async function RankingMissionPage({ searchParams }: PageProps) {
   if (!selectedMission) {
     return (
       <div className="p-4 text-gray-600">
-        選択されたミッションが見つかりません。
+        選択されたクエストが見つかりません。
       </div>
     );
   }

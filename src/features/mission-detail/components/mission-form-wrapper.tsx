@@ -225,7 +225,7 @@ export function MissionFormWrapper({
 
           {!isCompleted && (
             <div className="text-sm text-muted-foreground">
-              リンクを開くとミッションクリアとなります
+              リンクを開くとクエストクリアとなります
             </div>
           )}
 
@@ -264,7 +264,7 @@ export function MissionFormWrapper({
         </SubmitButton>
         <p className="text-sm text-muted-foreground">
           ※
-          成果物の内容が認められない場合、ミッションの達成が取り消される場合があります。正確な内容をご記入ください。
+          成果物の内容が認められない場合、クエストの達成が取り消される場合があります。正確な内容をご記入ください。
         </p>
         {errorMessage && (
           <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg flex items-center">
@@ -299,8 +299,8 @@ export function MissionFormWrapper({
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
           <p className="text-sm font-medium text-gray-800">
             {mission.max_achievement_count === null
-              ? "このミッションは何度でもチャレンジできます。"
-              : "このミッションは達成済みです。"}
+              ? "このクエストは何度でもチャレンジできます。"
+              : "このクエストは達成済みです。"}
           </p>
           <div className="flex flex-col gap-2 mt-2">
             <Button
@@ -315,7 +315,7 @@ export function MissionFormWrapper({
             </Button>
             <Link href="/#featured-missions">
               <Button variant="outline" className="w-full">
-                ミッション一覧へ
+                クエスト一覧へ
               </Button>
             </Link>
           </div>

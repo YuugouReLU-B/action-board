@@ -251,7 +251,7 @@ export default function PosterMapPageClientOptimized({
       <div className="flex justify-center pt-4">
         <Button size="lg" asChild>
           <Link href="/#featured-missions">
-            ミッション一覧に戻る
+            クエスト一覧に戻る
             <ChevronRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>

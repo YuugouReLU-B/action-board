@@ -25,10 +25,10 @@ export function MissionAchievedPanel({
       />
       <p className="text-lg font-bold text-emerald-900">達成しました！</p>
       <p className="mt-1 text-sm text-emerald-800">
-        このミッションはクリア済みです。
+        このクエストはクリア済みです。
       </p>
       <Button asChild className="mt-4">
-        <Link href="/">ほかのミッションを見る</Link>
+        <Link href="/">ほかのクエストを見る</Link>
       </Button>
     </div>
   );

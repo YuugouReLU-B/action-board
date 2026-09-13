@@ -98,9 +98,7 @@ export default async function QrSpotPage({ params }: PageProps) {
       <Frame title="獲得できませんでした">
         <p className="text-sm text-gray-600">{result.message}</p>
         <Button asChild variant="outline" className="mt-4 w-full">
-          <Link href={`/missions/${result.mission.slug}`}>
-            ミッションを見る
-          </Link>
+          <Link href={`/missions/${result.mission.slug}`}>クエストを見る</Link>
         </Button>
       </Frame>
     );

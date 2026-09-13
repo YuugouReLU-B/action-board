@@ -155,7 +155,7 @@ export function HorizontalScrollContainer({
           type="button"
           onClick={scrollLeftButton}
           className={button_style("left")}
-          aria-label="前のミッションを表示"
+          aria-label="前のクエストを表示"
         >
           <ChevronLeft />
         </button>
@@ -163,7 +163,7 @@ export function HorizontalScrollContainer({
 
       <section
         ref={scrollRef}
-        aria-label="スクロール可能なミッションコンテナ"
+        aria-label="スクロール可能なクエストコンテナ"
         className={cn(
           "overflow-x-auto custom-scrollbar",
           isDesktop && isDragging
@@ -191,7 +191,7 @@ export function HorizontalScrollContainer({
           type="button"
           onClick={scrollRight}
           className={button_style("right")}
-          aria-label="次のミッションを表示"
+          aria-label="次のクエストを表示"
         >
           <ChevronRight />
         </button>

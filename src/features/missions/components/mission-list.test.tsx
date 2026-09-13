@@ -22,14 +22,14 @@ jest.mock("@/features/missions/components/mission-card", () => {
 const _mockMissions = [
   {
     id: "mission-1",
-    title: "ミッション1",
+    title: "クエスト1",
     difficulty: 1,
     is_hidden: false,
     created_at: "2025-06-22T00:00:00Z",
   },
   {
     id: "mission-2",
-    title: "ミッション2",
+    title: "クエスト2",
     difficulty: 2,
     is_hidden: false,
     created_at: "2025-06-21T00:00:00Z",
@@ -52,7 +52,7 @@ describe("Missions", () => {
     jest.clearAllMocks();
   });
 
-  it("ミッション一覧が正しく表示される", async () => {
+  it("クエスト一覧が正しく表示される", async () => {
     const component = await Missions({
       showAchievedMissions: true,
     });
@@ -78,7 +78,7 @@ describe("Missions", () => {
     );
   });
 
-  it("フィーチャードミッションのフィルタリングが機能する", async () => {
+  it("フィーチャードクエストのフィルタリングが機能する", async () => {
     const component = await Missions({
       showAchievedMissions: true,
       filterFeatured: true,
@@ -111,7 +111,7 @@ describe("Missions", () => {
     expect(component).toBeDefined();
   });
 
-  it("達成済みミッションを非表示にする設定が機能する", async () => {
+  it("達成済みクエストを非表示にする設定が機能する", async () => {
     const component = await Missions({
       userId: "test-user-id",
       showAchievedMissions: false,
@@ -122,7 +122,7 @@ describe("Missions", () => {
     expect(component).toBeDefined();
   });
 
-  it("ミッションがない場合は適切なメッセージが表示される", async () => {
+  it("クエストがない場合は適切なメッセージが表示される", async () => {
     const component = await Missions({
       showAchievedMissions: true,
     });
@@ -131,10 +131,10 @@ describe("Missions", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("未達成のミッションはありません"),
+        screen.getByText("未達成のクエストはありません"),
       ).toBeInTheDocument();
       expect(
-        screen.getByText("新しいミッションが追加されるまでお待ちください"),
+        screen.getByText("新しいクエストが追加されるまでお待ちください"),
       ).toBeInTheDocument();
     });
   });

@@ -51,7 +51,7 @@ export function RankingTabs({ children, seasonSlug }: RankingTabsProps) {
           <Link href={getTabHref("overall")}>全体</Link>
         </TabsTrigger>
         <TabsTrigger value="mission" asChild>
-          <Link href={getTabHref("mission")}>ミッション別</Link>
+          <Link href={getTabHref("mission")}>クエスト別</Link>
         </TabsTrigger>
       </TabsList>
       <section className="max-w-lg mx-auto">

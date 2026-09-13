@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${season.name} ミッション別ランキング - 浜通りクエスト`,
+    title: `${season.name} クエスト別ランキング - 浜通りクエスト`,
   };
 }
 
@@ -56,7 +56,7 @@ export default async function SeasonMissionRankingPage({
   if (missions.length === 0) {
     return (
       <div className="p-4 text-gray-600">
-        現在利用可能なミッションがありません。
+        現在利用可能なクエストがありません。
       </div>
     );
   }
@@ -69,7 +69,7 @@ export default async function SeasonMissionRankingPage({
   if (!selectedMission) {
     return (
       <div className="p-4 text-gray-600">
-        選択されたミッションが見つかりません。
+        選択されたクエストが見つかりません。
       </div>
     );
   }
@@ -103,13 +103,13 @@ export default async function SeasonMissionRankingPage({
             { label: "ホーム", href: "/" },
             { label: season.name },
             { label: "ランキング", href: `/seasons/${slug}/ranking` },
-            { label: "ミッション別" },
+            { label: "クエスト別" },
           ]}
         />
       </div>
 
       <h2 className="text-2xl font-bold text-center mb-4">
-        ミッション別ランキング
+        クエスト別ランキング
       </h2>
 
       {/* シーズン情報ヘッダー */}

@@ -36,10 +36,10 @@ describe("badge-types", () => {
         const badge = createBadge({
           badge_type: "MISSION",
           sub_type: "mission-slug",
-          mission_title: "SNS投稿ミッション",
+          mission_title: "SNS投稿クエスト",
           rank: 2,
         });
-        expect(getBadgeTitle(badge)).toBe("SNS投稿ミッション 2位");
+        expect(getBadgeTitle(badge)).toBe("SNS投稿クエスト 2位");
       });
 
       it("MISSION: mission_titleがない場合はsub_typeを使う", () => {
@@ -57,7 +57,7 @@ describe("badge-types", () => {
           sub_type: null,
           rank: 1,
         });
-        expect(getBadgeTitle(badge)).toBe("ミッションランキング 1位");
+        expect(getBadgeTitle(badge)).toBe("クエストランキング 1位");
       });
     });
 
@@ -117,7 +117,7 @@ describe("badge-types", () => {
         );
       });
 
-      it("MISSION: mission_idがない場合は汎用ミッションURLを返す", () => {
+      it("MISSION: mission_idがない場合は汎用クエストURLを返す", () => {
         const badge = createBadge({ badge_type: "MISSION" });
         expect(getBadgeRankingUrl(badge)).toBe("/ranking/ranking-mission");
       });

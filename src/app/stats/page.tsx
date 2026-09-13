@@ -19,7 +19,7 @@ import {
 export const metadata: Metadata = {
   title: "アクション数ダッシュボード | Action Board",
   description:
-    "アクション数の統計情報を表示します。総アクション数、アクティブユーザー数、ミッション別ランキングを確認できます。",
+    "アクション数の統計情報を表示します。総アクション数、アクティブユーザー数、クエスト別ランキングを確認できます。",
 };
 
 interface PageProps {

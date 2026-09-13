@@ -146,7 +146,7 @@ export const getQuizQuestionsAction = async (missionId: string) => {
     if (!questions || questions.length === 0) {
       return {
         success: false,
-        error: "このミッションにはクイズ問題が設定されていません",
+        error: "このクエストにはクイズ問題が設定されていません",
       };
     }
 

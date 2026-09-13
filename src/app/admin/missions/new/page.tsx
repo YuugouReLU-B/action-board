@@ -15,9 +15,9 @@ export default async function NewMissionPage() {
           href="/admin/missions"
           className="text-sm text-gray-500 underline underline-offset-2"
         >
-          ← ミッション一覧
+          ← クエスト一覧
         </Link>
-        <h2 className="mt-1 text-lg font-bold">ミッションを作る</h2>
+        <h2 className="mt-1 text-lg font-bold">クエストを作る</h2>
         <p className="mt-1 text-sm text-gray-600">
           作成直後は非公開です。内容を確認してから公開に切り替えてください。
           QRスポットの場合は、作成後の画面でQRコードを発行します。

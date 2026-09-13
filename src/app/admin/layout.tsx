@@ -37,7 +37,7 @@ export default async function AdminLayout({
             管理者のみ
           </span>
           <nav className="flex gap-3 text-sm underline underline-offset-2">
-            <Link href="/admin/missions">ミッション</Link>
+            <Link href="/admin/missions">クエスト</Link>
             <Link href="/admin/points">ポイント調整</Link>
           </nav>
         </header>

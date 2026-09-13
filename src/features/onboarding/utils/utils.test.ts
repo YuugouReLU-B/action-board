@@ -120,8 +120,8 @@ describe("getButtonText", () => {
     expect(getButtonText(0, true, false)).toBe("説明を聞く");
   });
 
-  test("isFinal=trueで「ミッションを探す」を返す", () => {
-    expect(getButtonText(3, false, true)).toBe("ミッションを探す");
+  test("isFinal=trueで「クエストを探す」を返す", () => {
+    expect(getButtonText(3, false, true)).toBe("クエストを探す");
   });
 
   test("currentDialogue=0かつisWelcome=trueかつisFinal=trueでSTARTが優先される", () => {

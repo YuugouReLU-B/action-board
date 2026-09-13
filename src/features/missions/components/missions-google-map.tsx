@@ -54,7 +54,7 @@ function createInfoWindowContent(spot: MapSpot): HTMLElement {
   detail.href = `/missions/${spot.slug}`;
   detail.className =
     "block rounded-md bg-gray-900 px-3 py-1.5 text-xs font-bold text-white no-underline";
-  detail.textContent = "ミッションを見る";
+  detail.textContent = "クエストを見る";
   root.appendChild(detail);
 
   const maps = document.createElement("a");

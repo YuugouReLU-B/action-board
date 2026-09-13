@@ -44,9 +44,7 @@ export default async function MissionsByCategory({
   if (data.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 text-lg">
-          ミッションが見つかりませんでした
-        </p>
+        <p className="text-gray-500 text-lg">クエストが見つかりませんでした</p>
       </div>
     );
   }

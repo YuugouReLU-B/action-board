@@ -30,7 +30,7 @@ export default async function DevMissionsPage() {
   return (
     <section>
       <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <h2 className="text-lg font-bold">ミッション一覧</h2>
+        <h2 className="text-lg font-bold">クエスト一覧</h2>
         <p className="text-sm text-gray-600">
           全 {missions.length} 件（非公開 {hiddenCount} / 注目 {featuredCount}）
         </p>

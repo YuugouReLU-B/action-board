@@ -64,7 +64,7 @@ describe("achieveMission ユースケース", () => {
 
     expect(result.success).toBe(true);
     if (!result.success) return;
-    expect(result.message).toBe("ミッションを達成しました！");
+    expect(result.message).toBe("クエストを達成しました！");
     expect(result.xpGranted).toBeGreaterThan(0);
 
     // DB確認: achievementが作成されている

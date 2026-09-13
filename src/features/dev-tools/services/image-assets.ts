@@ -186,7 +186,7 @@ export async function listImageAssets(): Promise<{
         status: missions.length ? "recolor" : "keep",
         usedIn: missions.length
           ? missions
-          : ["どのミッションからも参照されていない"],
+          : ["どのクエストからも参照されていない"],
         bytes: stat.size,
         dimensions,
       });

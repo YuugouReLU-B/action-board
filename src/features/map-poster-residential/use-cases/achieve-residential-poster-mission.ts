@@ -59,7 +59,7 @@ export async function achievePosterPlacementMission(
     console.error("Poster placement mission not found:", missionError);
     return {
       success: false,
-      error: "ポスター掲示ミッションが見つかりません",
+      error: "ポスター掲示クエストが見つかりません",
     };
   }
 
@@ -93,7 +93,7 @@ export async function achievePosterPlacementMission(
     console.error("Failed to create achievement:", achievementError);
     return {
       success: false,
-      error: `ミッション達成の記録に失敗しました: ${achievementError?.message ?? "unknown"}`,
+      error: `クエスト達成の記録に失敗しました: ${achievementError?.message ?? "unknown"}`,
     };
   }
 
@@ -126,7 +126,7 @@ export async function achievePosterPlacementMission(
 
   // 5. XP を付与
   const xpToGrant = calculateMissionXp(mission);
-  const xpDescription = `ミッション「${mission.title}」達成による経験値獲得`;
+  const xpDescription = `クエスト「${mission.title}」達成による経験値獲得`;
 
   const { error: xpTransactionError } = await adminSupabase
     .from("xp_transactions")

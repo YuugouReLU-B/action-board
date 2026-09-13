@@ -66,10 +66,10 @@ const MissionSubmissionButton: React.FC<{
   <Card className="mt-6">
     <CardHeader>
       <CardTitle className="text-lg text-center">
-        ミッションにチャレンジしよう
+        クエストにチャレンジしよう
       </CardTitle>
       <p className="text-sm text-muted-foreground">
-        下のボタンをクリックすると、自動的にミッションが完了します！
+        下のボタンをクリックすると、自動的にクエストが完了します！
       </p>
     </CardHeader>
     <CardContent>
@@ -84,7 +84,7 @@ const MissionSubmissionButton: React.FC<{
       </Button>
       {isSubmissionCompleted && (
         <div className="mt-4 text-center">
-          <p className="text-green-600 font-medium">ミッション完了！</p>
+          <p className="text-green-600 font-medium">クエスト完了！</p>
         </div>
       )}
     </CardContent>

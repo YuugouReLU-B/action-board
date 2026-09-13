@@ -69,7 +69,7 @@ describe("RankingTabs", () => {
 
       expect(screen.getByText("全体")).toBeInTheDocument();
       expect(screen.queryByText("都道府県別")).not.toBeInTheDocument();
-      expect(screen.getByText("ミッション別")).toBeInTheDocument();
+      expect(screen.getByText("クエスト別")).toBeInTheDocument();
     });
 
     it("リンクが正しく設定される", () => {
@@ -116,7 +116,7 @@ describe("RankingTabs", () => {
       expect(tabsContent).toHaveAttribute("data-value", "overall");
     });
 
-    it("ミッション別ランキングページの場合はmissionが選択される", () => {
+    it("クエスト別ランキングページの場合はmissionが選択される", () => {
       mockPathname.mockReturnValue("/ranking/ranking-mission");
 
       render(
@@ -132,7 +132,7 @@ describe("RankingTabs", () => {
       expect(tabsContent).toHaveAttribute("data-value", "mission");
     });
 
-    it("ミッション別ランキングページのサブパスでもmissionが選択される", () => {
+    it("クエスト別ランキングページのサブパスでもmissionが選択される", () => {
       mockPathname.mockReturnValue("/ranking/ranking-mission/some-mission");
 
       render(

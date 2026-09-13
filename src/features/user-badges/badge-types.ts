@@ -40,7 +40,7 @@ export const getBadgeTitle = (badge: UserBadge): string => {
       const title = badge.mission_title ?? badge.sub_type ?? "";
       return title
         ? `${title} ${badge.rank}位`
-        : `ミッションランキング ${badge.rank}位`;
+        : `クエストランキング ${badge.rank}位`;
     }
     default:
       return `ランキング ${badge.rank}位`;

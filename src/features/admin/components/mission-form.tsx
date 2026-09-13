@@ -161,7 +161,7 @@ export function MissionForm({
       <fieldset className="rounded-lg border border-gray-200 p-4">
         <legend className="px-2 text-sm font-bold">出すカテゴリ</legend>
         <p className="mb-3 text-xs text-gray-500">
-          トップページはカテゴリごとにミッションを並べています。
+          トップページはカテゴリごとにクエストを並べています。
           どれも選ばないと、公開にしてもトップページには出ません。
         </p>
 
@@ -358,7 +358,7 @@ export function MissionForm({
         <Field
           htmlFor="event_date"
           label={isSpecialQuest ? "開始日" : "イベント日"}
-          hint="イベント系ミッションのみ"
+          hint="イベント系クエストのみ"
         >
           <input
             name="event_date"

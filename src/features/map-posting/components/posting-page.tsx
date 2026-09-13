@@ -429,7 +429,7 @@ export default function PostingPageClient({
               const missionStatus = await getShapeMissionStatus(sid);
               if (missionStatus.isCompleted) {
                 toast.error(
-                  "ミッション達成済みの図形は削除できません。先にミッション提出を取り消してください。",
+                  "クエスト達成済みの図形は削除できません。先にクエスト提出を取り消してください。",
                   {
                     action: {
                       label: "取り消しページへ",
@@ -448,7 +448,7 @@ export default function PostingPageClient({
             } catch (error) {
               console.error("Failed to check mission status:", error);
               toast.error(
-                "ミッション状況の確認に失敗しました。削除を中止します。",
+                "クエスト状況の確認に失敗しました。削除を中止します。",
               );
               layer.addTo(mapInstance);
               return;

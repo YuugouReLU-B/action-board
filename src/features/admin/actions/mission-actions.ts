@@ -276,6 +276,40 @@ export async function issueMissionQrCode(
 }
 
 /**
+ * ミッションを削除する。
+ *
+ * 達成記録が1件でもあると外部キー制約に阻まれて削除できない（安全装置）。
+ * 過去に達成した人がいるミッションは、一覧に出したくないだけなら
+ * 編集フォームの「公開する」チェックを外して非公開にする運用にする。
+ */
+export async function deleteMission(
+  missionId: string,
+): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const supabase = await createAdminClient();
+  const { error } = await supabase
+    .from("missions")
+    .delete()
+    .eq("id", missionId);
+
+  if (error) {
+    console.error("ミッションの削除に失敗:", error);
+    if (error.code === "23503") {
+      return {
+        success: false,
+        error:
+          "すでに達成した人がいるため削除できません。一覧から消したいだけなら「公開する」のチェックを外してください",
+      };
+    }
+    return { success: false, error: `削除に失敗しました: ${error.message}` };
+  }
+
+  revalidatePath("/admin/missions");
+  return { success: true, missionId };
+}
+
+/**
  * ミッションを複製する。
  *
  * イベントごとにQRチェックインを作るとき、毎回フォームを埋め直すのは手間。
@@ -300,7 +334,7 @@ export async function duplicateMission(
     .single();
 
   if (fetchError || !source) {
-    return { success: false, error: "複製元のミッションが見つかりません" };
+    return { success: false, error: "複製元のクエストが見つかりません" };
   }
 
   const id = crypto.randomUUID();

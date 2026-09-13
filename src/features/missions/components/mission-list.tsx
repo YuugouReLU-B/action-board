@@ -24,7 +24,7 @@ export default async function Missions({
   showAchievedMissions,
   filterFeatured,
   filterSlugs,
-  title = "ミッション",
+  title = "クエスト",
   subTitle,
   id,
 }: MissionsProps) {
@@ -78,11 +78,9 @@ export default async function Missions({
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">
-            未達成のミッションはありません
-          </p>
+          <p className="text-gray-500 text-lg">未達成のクエストはありません</p>
           <p className="text-gray-400 text-sm mt-2">
-            新しいミッションが追加されるまでお待ちください
+            新しいクエストが追加されるまでお待ちください
           </p>
         </div>
       )}

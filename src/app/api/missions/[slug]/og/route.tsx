@@ -99,7 +99,7 @@ export async function GET(
     return new Response("Base image not found", { status: 500 });
   }
 
-  const title = pageData?.mission.title ?? "ミッションが見つかりません";
+  const title = pageData?.mission.title ?? "クエストが見つかりません";
   const titleWithLineBreak = formatTitleWithLineBreaks(title);
 
   const fontData = await loadGoogleFont(

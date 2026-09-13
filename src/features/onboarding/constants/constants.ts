@@ -43,7 +43,7 @@ export const BUTTON_TEXT = {
   NEXT: "次へ",
   RECORD: "記録する",
   MISSION_COMPLETE: "完了済み",
-  FINISH: "ミッションを探す",
+  FINISH: "クエストを探す",
 } as const;
 
 // スクロールテキスト

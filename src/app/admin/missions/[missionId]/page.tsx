@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { updateMission } from "@/features/admin/actions/mission-actions";
+import { DeleteMissionButton } from "@/features/admin/components/delete-mission-button";
 import { DuplicateMissionButton } from "@/features/admin/components/duplicate-mission-button";
 import { MissionForm } from "@/features/admin/components/mission-form";
 import { listCategoriesForAdmin } from "@/features/admin/services/admin-categories";
@@ -28,7 +29,7 @@ export default async function EditMissionPage({ params }: PageProps) {
           href="/admin/missions"
           className="text-sm text-gray-500 underline underline-offset-2"
         >
-          ← ミッション一覧
+          ← クエスト一覧
         </Link>
         <h2 className="mt-1 text-lg font-bold">{mission.title}</h2>
         <p className="mt-1 text-sm text-gray-600">
@@ -40,7 +41,14 @@ export default async function EditMissionPage({ params }: PageProps) {
       <div>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h3 className="text-base font-bold">内容</h3>
-          <DuplicateMissionButton missionId={mission.id} />
+          <div className="flex flex-wrap items-center gap-3">
+            <DuplicateMissionButton missionId={mission.id} />
+            <DeleteMissionButton
+              missionId={mission.id}
+              missionTitle={mission.title}
+              achievementCount={mission.achievementCount}
+            />
+          </div>
         </div>
         <MissionForm
           mission={mission}

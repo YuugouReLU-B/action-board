@@ -51,7 +51,7 @@ describe("FirstMissions", () => {
 
     const { getByTestId } = render(component);
 
-    expect(getByTestId("title")).toHaveTextContent("はじめのミッション");
+    expect(getByTestId("title")).toHaveTextContent("はじめのクエスト");
     expect(getByTestId("sub-title")).toHaveTextContent(
       FIRST_MISSIONS_SUB_TITLE,
     );
@@ -59,7 +59,7 @@ describe("FirstMissions", () => {
     expect(getByTestId("user-id")).toHaveTextContent("test-user-id");
   });
 
-  it("指定したミッションが指定の並び順で渡される", async () => {
+  it("指定したクエストが指定の並び順で渡される", async () => {
     const component = await FirstMissions({});
 
     const { getByTestId } = render(component);
@@ -69,7 +69,7 @@ describe("FirstMissions", () => {
     );
   });
 
-  it("達成済みのミッションは表示しない（showAchievedMissions=false）", async () => {
+  it("達成済みのクエストは表示しない（showAchievedMissions=false）", async () => {
     const component = await FirstMissions({ userId: "test-user-id" });
 
     const { getByTestId } = render(component);
@@ -77,7 +77,7 @@ describe("FirstMissions", () => {
     expect(getByTestId("show-achieved")).toHaveTextContent("false");
   });
 
-  it("未達成のミッションが残っていればセクションを描画する", async () => {
+  it("未達成のクエストが残っていればセクションを描画する", async () => {
     mockGetUserMissionAchievements.mockResolvedValue(
       new Map([["mission-1", 1]]),
     );
@@ -109,7 +109,7 @@ describe("FirstMissions", () => {
     expect(component).toBeNull();
   });
 
-  it("未ログイン時は達成済み判定なしで全ミッションを表示する", async () => {
+  it("未ログイン時は達成済み判定なしで全クエストを表示する", async () => {
     const component = await FirstMissions({});
 
     expect(component).not.toBeNull();

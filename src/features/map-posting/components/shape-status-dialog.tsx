@@ -99,7 +99,7 @@ export function ShapeStatusDialog({
         .catch((error) => {
           console.error("Failed to fetch mission status:", error);
           setIsMissionStatusError(true);
-          toast.error("ミッション状況の取得に失敗しました");
+          toast.error("クエスト状況の取得に失敗しました");
         })
         .finally(() => setIsLoading(false));
     }
@@ -134,11 +134,11 @@ export function ShapeStatusDialog({
         const result = await completePostingMission(shape.id, postingCount);
 
         if (result.success) {
-          toast.success(`ミッション達成! +${result.xpGranted}XP獲得`);
+          toast.success(`クエスト達成! +${result.xpGranted}XP獲得`);
           setIsMissionCompleted(true);
           setCompletedPostingCount(postingCount);
         } else {
-          toast.error(result.error || "ミッション達成に失敗しました");
+          toast.error(result.error || "クエスト達成に失敗しました");
           // ミッション達成失敗してもステータス更新は成功しているので続行
         }
       } else {
@@ -171,10 +171,10 @@ export function ShapeStatusDialog({
     // ミッション達成済み、またはミッション状況取得失敗時は削除をブロック
     if (isMissionCompleted || isMissionStatusError) {
       if (isMissionStatusError) {
-        toast.error("ミッション状況の確認に失敗しました。削除を中止します。");
+        toast.error("クエスト状況の確認に失敗しました。削除を中止します。");
       } else {
         toast.error(
-          "ミッション達成済みの図形は削除できません。先にミッション提出を取り消してください。",
+          "クエスト達成済みの図形は削除できません。先にクエスト提出を取り消してください。",
           {
             action: {
               label: "取り消しページへ",
@@ -222,7 +222,7 @@ export function ShapeStatusDialog({
                 : "この図形は他のユーザーが作成したため、変更できません"}
             {isOwner && isMissionCompleted && (
               <span className="mt-1 block text-green-600">
-                ミッション達成済み（
+                クエスト達成済み（
                 <Link
                   href="/missions/posting-activity-magazine"
                   className="underline"
@@ -310,7 +310,7 @@ export function ShapeStatusDialog({
                       </p>
                     )}
                   <p className="text-muted-foreground text-sm">
-                    配布完了を保存すると、ミッションが自動で達成されます
+                    配布完了を保存すると、クエストが自動で達成されます
                   </p>
                 </div>
               )}

@@ -69,7 +69,7 @@ export function DeleteAccountModal({
             </p>
             <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
               <li>プロフィール情報</li>
-              <li>ミッション達成記録</li>
+              <li>クエスト達成記録</li>
               <li>経験値とレベル情報</li>
               <li>バッジ情報</li>
               <li>その他のアカウントに関連するすべてのデータ</li>

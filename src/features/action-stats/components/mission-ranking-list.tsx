@@ -74,7 +74,7 @@ export function MissionRankingList({ rankings }: MissionRankingListProps) {
   if (rankings.length === 0) {
     return (
       <Card className="p-4">
-        <h3 className="text-sm font-medium mb-4">ミッション別ランキング</h3>
+        <h3 className="text-sm font-medium mb-4">クエスト別ランキング</h3>
         <div className="text-center text-gray-400 text-sm py-8">
           データがありません
         </div>
@@ -84,7 +84,7 @@ export function MissionRankingList({ rankings }: MissionRankingListProps) {
 
   return (
     <Card className="p-4">
-      <h3 className="text-sm font-medium mb-4">ミッション別ランキング</h3>
+      <h3 className="text-sm font-medium mb-4">クエスト別ランキング</h3>
       <div className="space-y-3">
         {rankings.map((mission, index) => (
           <MissionRankingItem

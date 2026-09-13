@@ -36,7 +36,7 @@ export function DuplicateMissionButton({ missionId }: { missionId: string }) {
         onClick={handleClick}
         disabled={isPending}
       >
-        {isPending ? "複製中..." : "このミッションを複製する"}
+        {isPending ? "複製中..." : "このクエストを複製する"}
       </Button>
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>

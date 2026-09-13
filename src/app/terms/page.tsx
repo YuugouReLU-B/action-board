@@ -121,11 +121,11 @@ export default function TermsOfService() {
 
         <section>
           <h2 className="text-lg-custom font-bold text-black mb-4 border-b-2 border-tm-teal pb-2">
-            7. ミッション成果物の取り扱い
+            7. クエスト成果物の取り扱い
           </h2>
           <div className="space-y-3 text-sm-custom font-normal text-black text-justify">
             <p>
-              ユーザーは、ミッション達成に関する成果物（写真、動画URL、SNS投稿リンク、位置情報等）を当団体に提出することがあります。
+              ユーザーは、クエスト達成に関する成果物（写真、動画URL、SNS投稿リンク、位置情報等）を当団体に提出することがあります。
             </p>
             <p>
               成果物は内部記録・不正防止・ポイント認定の目的に限定して使用され、ユーザーの同意なく外部に公開されることはありません。

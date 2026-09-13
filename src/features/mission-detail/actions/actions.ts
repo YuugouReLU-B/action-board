@@ -31,7 +31,7 @@ export {
 
 // 基本スキーマ（共通項目）
 const baseMissionFormSchema = z.object({
-  missionId: z.string().nonempty({ message: "ミッションIDが必要です" }),
+  missionId: z.string().nonempty({ message: "クエストIDが必要です" }),
   requiredArtifactType: z
     .string()
     .nonempty({ message: "提出タイプが必要です" }),
@@ -257,7 +257,7 @@ export type AchieveMissionFormData = z.infer<typeof achieveMissionFormSchema>;
 // 提出キャンセルアクションのバリデーションスキーマ
 const cancelSubmissionFormSchema = z.object({
   achievementId: z.string().nonempty({ message: "達成IDが必要です" }),
-  missionId: z.string().nonempty({ message: "ミッションIDが必要です" }),
+  missionId: z.string().nonempty({ message: "クエストIDが必要です" }),
 });
 
 export const achieveMissionAction = async (formData: FormData) => {
@@ -273,7 +273,7 @@ export const achieveMissionAction = async (formData: FormData) => {
     // 呼び出し側の success === true での絞り込みが効かなくなる
     return {
       success: false as const,
-      error: "このミッションは現地のQRコードを読み取ると達成になります",
+      error: "このクエストは現地のQRコードを読み取ると達成になります",
     };
   }
 
@@ -284,7 +284,7 @@ export const achieveMissionAction = async (formData: FormData) => {
     return {
       success: false as const,
       error:
-        "このミッションは現地で「イベントに来た」ボタンを押すと達成になります",
+        "このクエストは現地で「イベントに来た」ボタンを押すと達成になります",
     };
   }
 

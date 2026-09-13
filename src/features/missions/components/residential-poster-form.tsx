@@ -60,7 +60,7 @@ export function ResidentialPosterMissionForm({
       <div>
         <p>原則ポスター掲示マップ上での報告をお願いします。</p>
         <p>
-          ポスター掲示マップ上で報告をすることで、自動的にミッションクリアとなります。
+          ポスター掲示マップ上で報告をすることで、自動的にクエストクリアとなります。
         </p>
         <Button
           type="button"

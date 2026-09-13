@@ -32,8 +32,8 @@ export const ARTIFACT_TYPES = {
   },
   REFERRAL: {
     key: "REFERRAL",
-    displayName: "紹介ミッション",
-    prompt: "このミッションでは紹介が完了すると自動で達成されます。",
+    displayName: "紹介クエスト",
+    prompt: "このクエストでは紹介が完了すると自動で達成されます。",
   },
   POSTING: {
     key: "POSTING",
@@ -48,12 +48,12 @@ export const ARTIFACT_TYPES = {
   QUIZ: {
     key: "QUIZ",
     displayName: "クイズ",
-    prompt: "クイズに正解してミッションを達成しましょう。",
+    prompt: "クイズに正解してクエストを達成しましょう。",
   },
   LINK_ACCESS: {
     key: "LINK_ACCESS",
     displayName: "リンクアクセス",
-    prompt: "リンクをクリックするとミッションが達成されます。",
+    prompt: "リンクをクリックするとクエストが達成されます。",
   },
   LINE_FRIEND: {
     key: "LINE_FRIEND",
@@ -80,7 +80,7 @@ export const ARTIFACT_TYPES = {
   NONE: {
     key: "NONE",
     displayName: "添付データ不要",
-    prompt: "このミッションでは添付データの投稿は不要です。",
+    prompt: "このクエストでは添付データの投稿は不要です。",
   },
 } as const;
 

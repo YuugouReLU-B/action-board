@@ -15,8 +15,8 @@ export function getMissionSubmissionState(
 
   return {
     buttonLabel: hasReachedMax
-      ? "このミッションは完了済みです"
-      : "ミッション完了を記録する",
+      ? "このクエストは完了済みです"
+      : "クエスト完了を記録する",
     isButtonDisabled: hasReachedMax,
     hasReachedUserMaxAchievements: hasReachedMax,
   };

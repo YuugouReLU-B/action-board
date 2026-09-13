@@ -8,7 +8,7 @@ export default function FeaturedMissions(
     <Missions
       {...props}
       filterFeatured={true}
-      title="注目ミッション"
+      title="注目クエスト"
       id="featured-missions"
     />
   );

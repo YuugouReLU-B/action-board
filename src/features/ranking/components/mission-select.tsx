@@ -51,7 +51,7 @@ export function MissionSelect({ missions }: MissionSelectProps) {
           htmlFor="mission-select"
           className="block text-sm font-medium text-gray-700 mb-2"
         >
-          ミッションを選択
+          クエストを選択
         </label>
         <div className="relative">
           <select

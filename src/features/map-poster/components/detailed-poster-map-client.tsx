@@ -323,9 +323,9 @@ export default function DetailedPosterMapClient({
     const result = await achieveMissionAction(formData);
 
     if (result.success) {
-      toast.success(`ミッション達成！ +${result.xpGranted}XP獲得`);
+      toast.success(`クエスト達成！ +${result.xpGranted}XP獲得`);
     } else {
-      toast.error(result.error || "ミッション達成に失敗しました");
+      toast.error(result.error || "クエスト達成に失敗しました");
     }
   };
 
@@ -350,7 +350,7 @@ export default function DetailedPosterMapClient({
           if (!hasCompleted) {
             // ミッション達成処理を実行（失敗してもステータス更新は成功扱い）
             completePosterBoardMission(selectedBoard).catch(() => {
-              toast.error("ミッション達成に失敗しました");
+              toast.error("クエスト達成に失敗しました");
             });
           }
         }
@@ -532,14 +532,14 @@ export default function DetailedPosterMapClient({
       {/* ミッション「選挙区ポスターを貼ろう」への誘導 */}
       <div className="max-w-xl mx-auto mt-4 mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded text-gray-800 text-sm">
         <p>
-          「ポスターマップ上に掲示板が見当たらない」「ポスターを貼ったがポイントに反映されなかった」などの問題がある場合は、下記のミッションにて報告をお願いいたします
+          「ポスターマップ上に掲示板が見当たらない」「ポスターを貼ったがポイントに反映されなかった」などの問題がある場合は、下記のクエストにて報告をお願いいたします
         </p>
         <p className="mt-2">
           <a
             href={`/missions/${POSTER_MISSION_SLUG}`}
             className="text-blue-700 underline font-bold"
           >
-            ミッション「選挙区ポスターを貼ろう」
+            クエスト「選挙区ポスターを貼ろう」
           </a>
         </p>
         <p className="mt-2">ご協力ありがとうございます！</p>

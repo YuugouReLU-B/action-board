@@ -245,7 +245,7 @@ export async function achieveMission(
   if (missionFetchError) {
     return {
       success: false,
-      error: "ミッション情報の取得に失敗しました。",
+      error: "クエスト情報の取得に失敗しました。",
     };
   }
 
@@ -272,7 +272,7 @@ export async function achieveMission(
     ) {
       return {
         success: false,
-        error: "あなたはこのミッションの達成回数の上限に達しています。",
+        error: "あなたはこのクエストの達成回数の上限に達しています。",
       };
     }
   }
@@ -334,7 +334,7 @@ export async function achieveMission(
   if (achievementError || !achievement) {
     return {
       success: false,
-      error: `ミッション達成の記録に失敗しました: ${achievementError?.message ?? "unknown"}`,
+      error: `クエスト達成の記録に失敗しました: ${achievementError?.message ?? "unknown"}`,
     };
   }
 
@@ -456,7 +456,7 @@ export async function achieveMission(
   if (missionData?.required_artifact_type !== "POSTING") {
     // Inline grantMissionCompletionXp logic using adminSupabase
     const xpToGrant = calculateMissionXp(missionData);
-    const xpDescription = `ミッション「${missionData.title}」達成による経験値獲得`;
+    const xpDescription = `クエスト「${missionData.title}」達成による経験値獲得`;
 
     xpResult = await processXpGrant(adminSupabase, {
       userId,
@@ -488,7 +488,7 @@ export async function achieveMission(
 
   return {
     success: true,
-    message: "ミッションを達成しました！",
+    message: "クエストを達成しました！",
     xpGranted: totalXpGranted,
     userLevel: xpResult.userLevel,
     artifactId: createdArtifactId,

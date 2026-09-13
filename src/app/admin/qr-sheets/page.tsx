@@ -33,7 +33,7 @@ export default async function QrSheetsPage({ searchParams }: PageProps) {
           href="/admin/missions"
           className="text-sm text-gray-500 underline underline-offset-2"
         >
-          ← ミッション一覧
+          ← クエスト一覧
         </Link>
         <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -76,7 +76,7 @@ export default async function QrSheetsPage({ searchParams }: PageProps) {
       {printable.length === 0 ? (
         <p className="text-sm text-gray-600 print:hidden">
           印刷できるQRシートがありません。
-          ミッションの編集画面でQRコードを発行してください。
+          クエストの編集画面でQRコードを発行してください。
         </p>
       ) : (
         <div className="space-y-6 print:space-y-0">

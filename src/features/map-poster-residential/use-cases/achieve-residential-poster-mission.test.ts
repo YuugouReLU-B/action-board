@@ -30,7 +30,7 @@ function createMockSupabase(overrides: Record<string, MockResult> = {}) {
         id: "mission-1",
         difficulty: 2,
         is_featured: false,
-        title: "テストミッション",
+        title: "テストクエスト",
       },
       error: null,
     },
@@ -85,7 +85,7 @@ describe("achievePosterPlacementMission", () => {
     });
   });
 
-  it("ミッション未発見で失敗", async () => {
+  it("クエスト未発見で失敗", async () => {
     const supabase = createMockSupabase({
       missions: { data: null, error: { message: "not found" } },
     });
@@ -97,7 +97,7 @@ describe("achievePosterPlacementMission", () => {
 
     expect(result).toEqual({
       success: false,
-      error: "ポスター掲示ミッションが見つかりません",
+      error: "ポスター掲示クエストが見つかりません",
     });
   });
 
@@ -129,7 +129,7 @@ describe("achievePosterPlacementMission", () => {
 
     expect(result.success).toBe(false);
     expect(result.success === false && result.error).toContain(
-      "ミッション達成の記録に失敗しました",
+      "クエスト達成の記録に失敗しました",
     );
   });
 

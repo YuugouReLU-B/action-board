@@ -122,14 +122,14 @@ export default async function MissionPage({ params, searchParams }: Props) {
         searchParamsResolved.type === "complete" ? "?type=complete" : "";
       redirect(`/missions/${missionSlug}${queryString}`);
     }
-    return <div className="p-4">ミッションが見つかりません。</div>;
+    return <div className="p-4">クエストが見つかりません。</div>;
   }
 
   const user = await getUser();
   const pageData = await getMissionPageData(slug);
 
   if (!pageData) {
-    return <div className="p-4">ミッションが見つかりません。</div>;
+    return <div className="p-4">クエストが見つかりません。</div>;
   }
 
   const {
@@ -233,10 +233,10 @@ export default async function MissionPage({ params, searchParams }: Props) {
                 <Shield className="h-6 w-6 text-muted-foreground" />
               </div>
               <CardTitle className="text-xl">
-                ログインしてミッションを達成しよう
+                ログインしてクエストを達成しよう
               </CardTitle>
               <CardDescription>
-                ミッションを達成するには、アカウントにログインしてください。
+                クエストを達成するには、アカウントにログインしてください。
               </CardDescription>
             </CardHeader>
             <CardContent className="text-center">

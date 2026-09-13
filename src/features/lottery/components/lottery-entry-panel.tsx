@@ -1,17 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { CopyTokenButton } from "@/features/lottery/components/copy-token-button";
+import { getLotterySettings } from "@/features/lottery/services/lottery-settings";
 import { generateLotteryToken } from "@/features/lottery/services/lottery-token";
 import { getMyUserLevel } from "@/features/user-level/services/level";
 import { getUser } from "@/features/user-profile/services/profile";
-import {
-  LOTTERY_FORM_URL,
-  LOTTERY_THRESHOLD_POINTS,
-} from "@/lib/constants/lottery-config";
 
 /**
  * 抽選応募パネル。
  *
  * 累計ポイントがしきい値に達したユーザーにだけ応募トークンを表示する。
+ * しきい値・文言・応募先URLは /admin/lottery から編集する（lottery_settings）。
  * 応募の受付・当選確認・景品発送は外部フォーム（プレゼント事務局側の運用）
  * に委ねるため、ここではトークンの発行と案内だけを行う。
  */
@@ -19,19 +17,22 @@ export async function LotteryEntryPanel() {
   const user = await getUser();
   if (!user) return null;
 
+  const settings = await getLotterySettings();
+  if (!settings) return null;
+
   const userLevel = await getMyUserLevel();
   const points = userLevel?.xp ?? 0;
-  const isEligible = points >= LOTTERY_THRESHOLD_POINTS;
+  const isEligible = points >= settings.threshold_points;
   // シークレット未設定の環境では発行できないので、パネルごと出さない
   const token = isEligible ? generateLotteryToken(user.id) : null;
   if (isEligible && !token) return null;
 
   return (
     <div className="w-full rounded-xl border-2 bg-white p-6">
-      <p className="text-lg font-bold">プレゼント抽選応募</p>
-      <p className="mt-1 text-sm text-gray-600">
-        累計{LOTTERY_THRESHOLD_POINTS.toLocaleString()}
-        ポイント以上で応募できます（現在{points.toLocaleString()}ポイント）。
+      <p className="text-lg font-bold">{settings.title}</p>
+      <p className="mt-1 whitespace-pre-wrap text-sm text-gray-600">
+        {settings.description}
+        （現在{points.toLocaleString()}ポイント）
       </p>
 
       {token ? (
@@ -41,14 +42,14 @@ export async function LotteryEntryPanel() {
             {token}
           </p>
           <CopyTokenButton token={token} />
-          {LOTTERY_FORM_URL && (
+          {settings.form_url && (
             <Button asChild className="mt-2 w-full">
               <a
-                href={LOTTERY_FORM_URL}
+                href={settings.form_url}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                応募フォームを開く
+                {settings.button_label}
               </a>
             </Button>
           )}
@@ -58,7 +59,7 @@ export async function LotteryEntryPanel() {
         </div>
       ) : (
         <p className="mt-4 text-sm text-gray-600">
-          あと{(LOTTERY_THRESHOLD_POINTS - points).toLocaleString()}
+          あと{(settings.threshold_points - points).toLocaleString()}
           ポイントで応募できます。
         </p>
       )}

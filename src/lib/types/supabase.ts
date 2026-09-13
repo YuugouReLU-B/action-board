@@ -87,6 +87,36 @@ export type Database = {
           },
         ];
       };
+      lottery_settings: {
+        Row: {
+          button_label: string;
+          description: string;
+          form_url: string;
+          id: string;
+          threshold_points: number;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          button_label?: string;
+          description?: string;
+          form_url?: string;
+          id?: string;
+          threshold_points?: number;
+          title?: string;
+          updated_at?: string;
+        };
+        Update: {
+          button_label?: string;
+          description?: string;
+          form_url?: string;
+          id?: string;
+          threshold_points?: number;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       mission_artifacts: {
         Row: {
           achievement_id: string;

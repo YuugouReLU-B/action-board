@@ -378,6 +378,8 @@ export type Database = {
           created_at: string;
           difficulty: number;
           event_date: string | null;
+          event_end_date: string | null;
+          event_type: string | null;
           featured_importance: number | null;
           icon_url: string | null;
           id: string;
@@ -391,6 +393,10 @@ export type Database = {
           radius_meters: number | null;
           required_artifact_type: string;
           slug: string;
+          supplement: string | null;
+          tag1: string | null;
+          tag2: string | null;
+          tag3: string | null;
           title: string;
           updated_at: string;
         };
@@ -400,6 +406,8 @@ export type Database = {
           created_at?: string;
           difficulty: number;
           event_date?: string | null;
+          event_end_date?: string | null;
+          event_type?: string | null;
           featured_importance?: number | null;
           icon_url?: string | null;
           id: string;
@@ -413,6 +421,10 @@ export type Database = {
           radius_meters?: number | null;
           required_artifact_type?: string;
           slug: string;
+          supplement?: string | null;
+          tag1?: string | null;
+          tag2?: string | null;
+          tag3?: string | null;
           title: string;
           updated_at?: string;
         };
@@ -422,6 +434,8 @@ export type Database = {
           created_at?: string;
           difficulty?: number;
           event_date?: string | null;
+          event_end_date?: string | null;
+          event_type?: string | null;
           featured_importance?: number | null;
           icon_url?: string | null;
           id?: string;
@@ -435,6 +449,10 @@ export type Database = {
           radius_meters?: number | null;
           required_artifact_type?: string;
           slug?: string;
+          supplement?: string | null;
+          tag1?: string | null;
+          tag2?: string | null;
+          tag3?: string | null;
           title?: string;
           updated_at?: string;
         };
@@ -1877,6 +1895,8 @@ export type Database = {
           created_at: string | null;
           difficulty: number | null;
           event_date: string | null;
+          event_end_date: string | null;
+          event_type: string | null;
           icon_url: string | null;
           is_featured: boolean | null;
           is_hidden: boolean | null;
@@ -1890,6 +1910,10 @@ export type Database = {
           radius_meters: number | null;
           required_artifact_type: string | null;
           slug: string | null;
+          supplement: string | null;
+          tag1: string | null;
+          tag2: string | null;
+          tag3: string | null;
           title: string | null;
           updated_at: string | null;
         };

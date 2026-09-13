@@ -58,7 +58,13 @@ function parseMissionForm(formData: FormData) {
     is_featured: formData.get("is_featured") === "on",
     is_hidden: formData.get("is_hidden") === "on",
     event_date: emptyToNull(formData.get("event_date")),
+    event_end_date: emptyToNull(formData.get("event_end_date")),
+    event_type: emptyToNull(formData.get("event_type")),
     artifact_label: emptyToNull(formData.get("artifact_label")),
+    supplement: emptyToNull(formData.get("supplement")),
+    tag1: emptyToNull(formData.get("tag1")),
+    tag2: emptyToNull(formData.get("tag2")),
+    tag3: emptyToNull(formData.get("tag3")),
     latitude: emptyToNull(formData.get("latitude")),
     longitude: emptyToNull(formData.get("longitude")),
     radius_meters: emptyToNull(formData.get("radius_meters")),
@@ -74,7 +80,7 @@ async function uploadMissionAssetIfProvided(
   formData: FormData,
   fieldName: string,
   missionId: string,
-  folder: "icons" | "photos",
+  folder: "icons",
 ): Promise<{ url: string | null; error?: string }> {
   const file = formData.get(fieldName);
   if (!(file instanceof File) || file.size === 0) {
@@ -137,22 +143,11 @@ export async function createMission(
   if (icon.error) {
     return { success: false, error: icon.error };
   }
-  const photo = await uploadMissionAssetIfProvided(
-    supabase,
-    formData,
-    "photo_file",
-    id,
-    "photos",
-  );
-  if (photo.error) {
-    return { success: false, error: photo.error };
-  }
 
   const { error } = await supabase.from("missions").insert({
     id,
     ...parsed.data,
     icon_url: icon.url ?? parsed.data.icon_url,
-    ogp_image_url: photo.url ?? parsed.data.ogp_image_url,
   });
 
   if (error) {
@@ -204,23 +199,12 @@ export async function updateMission(
   if (icon.error) {
     return { success: false, error: icon.error };
   }
-  const photo = await uploadMissionAssetIfProvided(
-    supabase,
-    formData,
-    "photo_file",
-    missionId,
-    "photos",
-  );
-  if (photo.error) {
-    return { success: false, error: photo.error };
-  }
 
   const { error } = await supabase
     .from("missions")
     .update({
       ...parsed.data,
       icon_url: icon.url ?? parsed.data.icon_url,
-      ogp_image_url: photo.url ?? parsed.data.ogp_image_url,
     })
     .eq("id", missionId);
 

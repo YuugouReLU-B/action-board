@@ -12,6 +12,8 @@ export type AdminCategory = {
   id: string;
   title: string;
   sortNo: number;
+  /** PERMANENT（常設クエスト）/ SPECIAL（特設クエスト）など */
+  categoryKbn: string;
   /**
    * いまトップページに出ているミッションの数。
    *
@@ -28,7 +30,7 @@ export async function listCategoriesForAdmin(): Promise<AdminCategory[]> {
   const [{ data, error }, { data: visibleRows }] = await Promise.all([
     supabase
       .from("mission_category")
-      .select("id, category_title, sort_no")
+      .select("id, category_title, sort_no, category_kbn")
       .eq("del_flg", false)
       .order("sort_no", { ascending: true }),
     // ビューは非表示ミッションと削除済みカテゴリを既に除いている
@@ -55,6 +57,7 @@ export async function listCategoriesForAdmin(): Promise<AdminCategory[]> {
     id: row.id,
     title: row.category_title ?? "(名称未設定)",
     sortNo: row.sort_no,
+    categoryKbn: row.category_kbn,
     visibleMissionCount: visibleCounts.get(row.id) ?? 0,
   }));
 }

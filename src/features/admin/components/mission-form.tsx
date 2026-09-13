@@ -6,6 +6,7 @@ import { useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import type { AdminActionResult } from "@/features/admin/actions/mission-actions";
 import type { AdminCategory } from "@/features/admin/services/admin-categories";
+import { EVENT_TYPES } from "@/features/missions/constants/event-types";
 import { defaultPointsForDifficulty } from "@/features/user-level/utils/level-calculator";
 import { ARTIFACT_TYPES } from "@/lib/types/artifact-types";
 import type { Tables } from "@/lib/types/supabase";
@@ -74,11 +75,7 @@ export function MissionForm({
   const [iconUrl, setIconUrl] = useState<string | null>(
     mission?.icon_url ?? null,
   );
-  const [photoUrl, setPhotoUrl] = useState<string | null>(
-    mission?.ogp_image_url ?? null,
-  );
   const iconFileInputRef = useRef<HTMLInputElement>(null);
-  const photoFileInputRef = useRef<HTMLInputElement>(null);
 
   const handlePreview = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -96,6 +93,13 @@ export function MissionForm({
   const isQrSpot = artifactType === ARTIFACT_TYPES.QR.key;
   const isGeoCheckin = artifactType === ARTIFACT_TYPES.GEO_CHECKIN.key;
   const hasLocationFields = isQrSpot || isGeoCheckin;
+
+  // 特設クエストのカテゴリが選ばれているかどうかで、終了日の入力欄を出し分ける
+  const isSpecialQuest = categoryIds.some(
+    (id) =>
+      categories.find((category) => category.id === id)?.categoryKbn ===
+      "SPECIAL",
+  );
 
   const toggleCategory = (categoryId: string) => {
     setCategoryIds((current) =>
@@ -330,8 +334,30 @@ export function MissionForm({
         </Field>
 
         <Field
+          htmlFor="event_type"
+          label="イベント種別"
+          hint="アイコンの自動選択に使う"
+        >
+          <select
+            name="event_type"
+            id="event_type"
+            defaultValue={mission?.event_type ?? ""}
+            className={inputClass}
+          >
+            <option value="">選択しない</option>
+            {Object.values(EVENT_TYPES).map((type) => (
+              <option key={type.key} value={type.key}>
+                {type.displayName}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field
           htmlFor="event_date"
-          label="イベント日"
+          label={isSpecialQuest ? "開始日" : "イベント日"}
           hint="イベント系ミッションのみ"
         >
           <input
@@ -342,57 +368,74 @@ export function MissionForm({
             className={inputClass}
           />
         </Field>
+
+        {isSpecialQuest && (
+          <Field
+            htmlFor="event_end_date"
+            label="終了日"
+            hint="特設クエストのみ"
+          >
+            <input
+              name="event_end_date"
+              id="event_end_date"
+              type="date"
+              defaultValue={mission?.event_end_date ?? ""}
+              className={inputClass}
+            />
+          </Field>
+        )}
       </div>
 
       <Field
-        htmlFor="photo_file"
-        label="イベント写真"
-        hint="SVG/PNG/WebP・5MBまで。ミッション詳細ページに表示する写真。選び直さなければ既存のまま"
+        htmlFor="supplement"
+        label="補足"
+        hint="提出物のラベルとは別の自由記述欄"
       >
-        <div className="flex items-center gap-3">
-          {photoUrl && (
-            <div className="relative">
-              <img
-                src={photoUrl}
-                alt="イベント写真のプレビュー"
-                className="h-20 w-32 rounded border border-gray-200 object-cover bg-white"
-              />
-              <button
-                type="button"
-                className="absolute -right-2 -top-2 rounded-full bg-red-400 p-0.5 text-white hover:bg-red-600"
-                onClick={() => {
-                  setPhotoUrl(null);
-                  if (photoFileInputRef.current) {
-                    photoFileInputRef.current.value = "";
-                  }
-                }}
-                aria-label="イベント写真を削除"
-              >
-                <X size={12} />
-              </button>
-            </div>
-          )}
-          <input
-            type="file"
-            name="photo_file"
-            id="photo_file"
-            ref={photoFileInputRef}
-            accept="image/png,image/jpeg,image/webp,image/svg+xml"
-            onChange={(e) => handlePreview(e, setPhotoUrl)}
-            className="text-sm"
-          />
-        </div>
-        {/* 新しいファイルが選ばれなければこの既存値がそのまま使われる */}
-        <input
-          type="hidden"
-          name="ogp_image_url"
-          value={
-            photoUrl?.startsWith("data:")
-              ? (mission?.ogp_image_url ?? "")
-              : (photoUrl ?? "")
-          }
+        <textarea
+          name="supplement"
+          id="supplement"
+          defaultValue={mission?.supplement ?? ""}
+          rows={3}
+          className={inputClass}
         />
       </Field>
+
+      <div className="grid gap-5 sm:grid-cols-3">
+        <Field htmlFor="tag1" label="タグ1">
+          <input
+            name="tag1"
+            id="tag1"
+            defaultValue={mission?.tag1 ?? ""}
+            className={inputClass}
+          />
+        </Field>
+        <Field htmlFor="tag2" label="タグ2">
+          <input
+            name="tag2"
+            id="tag2"
+            defaultValue={mission?.tag2 ?? ""}
+            className={inputClass}
+          />
+        </Field>
+        <Field htmlFor="tag3" label="タグ3">
+          <input
+            name="tag3"
+            id="tag3"
+            defaultValue={mission?.tag3 ?? ""}
+            className={inputClass}
+          />
+        </Field>
+      </div>
+
+      {/* 写真・注目ミッションはフォームから外したが、既存値は変えずにそのまま送る */}
+      <input
+        type="hidden"
+        name="ogp_image_url"
+        value={mission?.ogp_image_url ?? ""}
+      />
+      {mission?.is_featured && (
+        <input type="hidden" name="is_featured" value="on" />
+      )}
 
       {hasLocationFields && (
         <fieldset className="rounded-lg border border-gray-200 p-4">
@@ -469,14 +512,6 @@ export function MissionForm({
             defaultChecked={mission?.is_hidden ?? true}
           />
           非表示にする
-        </label>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            name="is_featured"
-            defaultChecked={mission?.is_featured ?? false}
-          />
-          注目ミッション
         </label>
       </div>
 

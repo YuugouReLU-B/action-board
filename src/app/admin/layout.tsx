@@ -39,6 +39,7 @@ export default async function AdminLayout({
           <nav className="flex gap-3 text-sm underline underline-offset-2">
             <Link href="/admin/missions">クエスト</Link>
             <Link href="/admin/points">ポイント調整</Link>
+            <Link href="/admin/lottery">抽選応募設定</Link>
           </nav>
         </header>
 

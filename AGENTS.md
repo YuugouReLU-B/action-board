@@ -41,10 +41,19 @@ cp .env ../action-board-<branch-name>/
 - `mission_data/quiz_*.yaml` - クイズのカテゴリと設問
 - `posting_data/posting_events.yaml` - ポスティングイベント
 - `season_data/seasons.yaml` - シーズン定義（`name`, `is_active`, `start_date`, `end_date` の変更もここ）
-- CI/CDデプロイ時に `posting:sync` / `season:sync` で自動同期される
+- CI/CDデプロイ時に `posting:sync` / `season:sync` で自動同期される（`.github/workflows/deploy.yml`、`develop`/`main`へのpushで発火）
 
 > ⚠️ yamlに載っていないミッションは `mission:sync` が一切触れない。過去に初期マイグレーションで
 > 直接INSERTされたミッションが取りこぼされていた。DBのslug一覧とyamlを突き合わせて確認すること。
+
+> ⚠️ **このリポジトリ（フォーク）では上記のCI/CDデプロイが現状機能していない（2026-09-13時点で確認）。**
+> `deploy.yml`はupstreamから引き継いだものがそのまま存在し`develop`/`main`へのpushで実行はされるが、
+> `SUPABASE_ACCESS_TOKEN` / `SUPABASE_PROJECT_REF` / `SUPABASE_DB_PASSWORD` / `VERCEL_DEPLOY_HOOK_URL`
+> 等のSecrets・Variablesがrepoレベル・environment(`staging`/`production`)レベルのどちらにも一切設定されておらず、
+> 最初の「Link Supabase project」ステップで毎回失敗している（2026-08-08以降の全実行が失敗）。
+> つまり `develop`/`main` にマージしても、実際にはstaging/production環境へのデプロイもマイグレーション適用も
+> 走らない。この状態で「マージすれば自動デプロイされる」という前提で作業しないこと。実際にデプロイする場合は、
+> 対象のSupabase/Vercelプロジェクトを用意した上でこれらのSecrets/Variablesを設定するか、手動でデプロイする。
 
 ### Supabaseクライアントの使い分け
 - **`createClient()` / `getAuth()` / `getStorage()`**: 認証操作（`supabase.auth.*`）やStorage操作に使用

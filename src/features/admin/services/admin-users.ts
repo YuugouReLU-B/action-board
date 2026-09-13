@@ -11,6 +11,64 @@ export type AdminUserSearchResult = {
   level: number;
 };
 
+export type AdminUserListItem = {
+  id: string;
+  name: string | null;
+  email: string | null;
+  roles: string[];
+  isAdmin: boolean;
+  createdAt: string;
+};
+
+/** auth.users の app_metadata からロール配列を取り出す */
+export function extractRoles(appMetadata: unknown): string[] {
+  const roles = (appMetadata as { roles?: unknown } | null)?.roles;
+  if (!Array.isArray(roles)) return [];
+  return roles.filter((role): role is string => typeof role === "string");
+}
+
+/**
+ * 管理画面のユーザー一覧。
+ *
+ * 権限は auth.users の app_metadata.roles が正なので、プロフィールだけでなく
+ * Auth 側も引いて突き合わせる。1ページ200件までで、それ以上は表示しない。
+ */
+export async function listUsersForAdmin(): Promise<AdminUserListItem[]> {
+  const supabase = await createAdminClient();
+
+  const { data, error } = await supabase.auth.admin.listUsers({
+    page: 1,
+    perPage: 200,
+  });
+  if (error) {
+    console.error("ユーザー一覧の取得に失敗:", error);
+    return [];
+  }
+
+  const { data: profiles } = await supabase
+    .from("public_user_profiles")
+    .select("id, name");
+  const nameMap = new Map((profiles ?? []).map((p) => [p.id, p.name]));
+
+  return data.users
+    .map((user) => {
+      const roles = extractRoles(user.app_metadata);
+      return {
+        id: user.id,
+        name: nameMap.get(user.id) ?? null,
+        email: user.email ?? null,
+        roles,
+        isAdmin: roles.includes("admin"),
+        createdAt: user.created_at,
+      };
+    })
+    .sort((a, b) => {
+      // 管理者を先頭に固め、あとは新しい順。権限の確認がしやすい並びにする
+      if (a.isAdmin !== b.isAdmin) return a.isAdmin ? -1 : 1;
+      return b.createdAt.localeCompare(a.createdAt);
+    });
+}
+
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

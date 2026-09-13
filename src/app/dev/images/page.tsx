@@ -124,7 +124,7 @@ export default async function DevImagesPage() {
             外部ホストのOGP画像（{remoteOgp.length} 点）
           </h3>
           <p className="mb-3 text-sm text-gray-500">
-            ミッションの <code>ogp_image_url</code>{" "}
+            クエストの <code>ogp_image_url</code>{" "}
             が派生元のストレージを直リンクしています。
             <strong>先方が消せば壊れます。</strong>
             画像を作り直すだけでなく、置き場所も用意する必要があります。

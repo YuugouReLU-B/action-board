@@ -93,13 +93,13 @@ export function GeoCheckinButton({
         case "unavailable":
           setMessage({
             tone: "error",
-            text: "このミッションは現在受付を停止しています。",
+            text: "このクエストは現在受付を停止しています。",
           });
           return;
         case "not_configured":
           setMessage({
             tone: "error",
-            text: "このミッションはまだ位置情報の設定が完了していません。運営にお問い合わせください。",
+            text: "このクエストはまだ位置情報の設定が完了していません。運営にお問い合わせください。",
           });
           return;
         case "unauthenticated":
@@ -111,7 +111,7 @@ export function GeoCheckinButton({
         case "invalid":
           setMessage({
             tone: "error",
-            text: "このミッションは達成できませんでした。",
+            text: "このクエストは達成できませんでした。",
           });
           return;
         default:
@@ -129,7 +129,7 @@ export function GeoCheckinButton({
         <Navigation className="h-10 w-10 text-gray-700" aria-hidden="true" />
         <p className="text-lg font-bold">現地に着いたらボタンを押そう</p>
         <p className="text-sm text-gray-600">
-          その場で「イベントに来た」を押すと、位置情報を確認してミッション達成になります。
+          その場で「イベントに来た」を押すと、位置情報を確認してクエスト達成になります。
         </p>
 
         <Button

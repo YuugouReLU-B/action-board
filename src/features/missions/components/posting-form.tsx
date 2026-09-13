@@ -19,7 +19,7 @@ export function PostingForm({ disabled }: PostingFormProps) {
       <div>
         <p>原則ポスティングマップ上での報告をお願いします。</p>
         <p>
-          ポスティングマップ上で報告をすることで、自動的にミッションクリアとなります。
+          ポスティングマップ上で報告をすることで、自動的にクエストクリアとなります。
         </p>
         <Button
           size={"lg"}

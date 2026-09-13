@@ -98,7 +98,7 @@ export function useQuizMission({
         setQuizPassed(false);
         setQuizKey((prev) => prev + 1); // QuizComponentを再マウント
 
-        toast.success("クイズミッション達成！");
+        toast.success("クイズクエスト達成！");
         onDialogOpen?.();
 
         // XPアニメーション表示
@@ -117,7 +117,7 @@ export function useQuizMission({
         }
       } else {
         console.error("achieveMissionAction failed:", result.error);
-        onErrorMessage?.(result.error || "ミッションの達成に失敗しました");
+        onErrorMessage?.(result.error || "クエストの達成に失敗しました");
       }
     } catch (error) {
       console.error("Quiz submission error:", error);

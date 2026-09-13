@@ -9,8 +9,8 @@ jest.mock("lucide-react", () => ({
 
 const baseMission: Tables<"missions"> = {
   id: "test-mission-1",
-  title: "テストミッション",
-  content: "テストミッションの内容",
+  title: "テストクエスト",
+  content: "テストクエストの内容",
   difficulty: 1,
   points: 50,
   latitude: null,
@@ -23,6 +23,12 @@ const baseMission: Tables<"missions"> = {
   is_hidden: false,
   featured_importance: null,
   artifact_label: "テストラベル",
+  supplement: null,
+  tag1: null,
+  tag2: null,
+  tag3: null,
+  event_end_date: null,
+  event_type: null,
   ogp_image_url: null,
   created_at: "2025-06-22T00:00:00Z",
   updated_at: "2025-06-22T00:00:00Z",
@@ -46,7 +52,7 @@ describe("ArtifactForm", () => {
 
     render(<ArtifactForm mission={mission} disabled={false} />);
 
-    expect(screen.getByText("ミッション完了を記録しよう")).toBeInTheDocument();
+    expect(screen.getByText("クエスト完了を記録しよう")).toBeInTheDocument();
     expect(screen.getByLabelText(/テストラベル/)).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText("テストラベルを入力してください"),

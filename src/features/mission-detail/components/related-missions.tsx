@@ -25,9 +25,7 @@ export async function RelatedMissions({
   return (
     <section className="relative w-screen ml-[calc(50%-50vw)] md:pl-10 mt-10">
       <h2 className="text-xl font-bold mb-4 pl-4 md:pl-0 ">
-        {categoryTitle
-          ? `「${categoryTitle}」の他のミッション`
-          : "関連ミッション"}
+        {categoryTitle ? `「${categoryTitle}」の他のクエスト` : "関連クエスト"}
       </h2>
       <HorizontalScrollContainer centering={true}>
         <div className="flex w-fit gap-4 pl-4 md:pl-0 pr-4 pb-2 pt-4">

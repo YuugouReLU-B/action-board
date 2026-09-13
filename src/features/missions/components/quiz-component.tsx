@@ -69,13 +69,13 @@ export default function QuizComponent({
   const _getAchievementMessage = (categoryName?: string) => {
     switch (categoryName) {
       case "政策・マニフェスト":
-        return "ミッション達成！政策・マニフェストマスターですね！";
+        return "クエスト達成！政策・マニフェストマスターですね！";
       case "浜通りクエスト":
-        return "ミッション達成！浜通りクエストマスターですね！";
+        return "クエスト達成！浜通りクエストマスターですね！";
       case "公職選挙法":
-        return "ミッション達成！公職選挙法マスターですね！";
+        return "クエスト達成！公職選挙法マスターですね！";
       default:
-        return "ミッション達成！クイズマスターですね！";
+        return "クエスト達成！クイズマスターですね！";
     }
   };
 
@@ -372,7 +372,7 @@ export default function QuizComponent({
                 </div>
               </div>
               {result.passed ? (
-                <div>{`ミッション達成！${category}マスターですね！`}</div>
+                <div>{`クエスト達成！${category}マスターですね！`}</div>
               ) : (
                 <div className="text-red-600">
                   全問正解が必要です。再挑戦してください

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 const TABS = [
   { href: "/dev", label: "ページ一覧" },
-  { href: "/dev/missions", label: "ミッション一覧" },
+  { href: "/dev/missions", label: "クエスト一覧" },
   { href: "/dev/design", label: "デザインの差し替え" },
   { href: "/dev/images", label: "画像アセット" },
   { href: "/dev/login", label: "開発用ログイン" },

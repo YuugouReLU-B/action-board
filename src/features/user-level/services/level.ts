@@ -313,12 +313,12 @@ export async function grantMissionCompletionXp(
 
     if (missionError) {
       console.error("Failed to fetch mission:", missionError);
-      return { success: false, error: "ミッション情報の取得に失敗しました" };
+      return { success: false, error: "クエスト情報の取得に失敗しました" };
     }
 
     // ミッションに設定されたポイント（注目ミッションは2倍）
     const xpToGrant = calculateMissionXp(mission);
-    const description = `ミッション「${mission.title}」達成による経験値獲得`;
+    const description = `クエスト「${mission.title}」達成による経験値獲得`;
 
     // 共通のXP処理を実行
     const result = await processXpTransaction(

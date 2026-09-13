@@ -34,8 +34,8 @@ export const ASSET_GROUPS = [
   },
   {
     key: "mission-icon",
-    title: "ミッションアイコン",
-    note: "ミッション一覧・詳細に出るアイコン",
+    title: "クエストアイコン",
+    note: "クエスト一覧・詳細に出るアイコン",
   },
   { key: "ui", title: "UI・その他", note: "共有ボタンや演出" },
 ] as const;
@@ -97,26 +97,26 @@ export const IMAGE_ASSETS: ImageAssetEntry[] = [
   },
   {
     path: "/img/ogp_mission_base.png",
-    label: "OGP画像（ミッション用の下地）",
+    label: "OGP画像（クエスト用の下地）",
     group: "brand",
     status: "replace",
-    usedIn: ["ミッション詳細のOGPを動的生成するときの背景"],
-    note: "この上にミッション名を重ねて描画している。",
+    usedIn: ["クエスト詳細のOGPを動的生成するときの背景"],
+    note: "この上にクエスト名を重ねて描画している。",
   },
   {
     path: "/img/ogp_mission_complete_base.png",
     label: "OGP画像（達成報告の下地）",
     group: "brand",
     status: "replace",
-    usedIn: ["ミッション達成をシェアしたときのOGP"],
+    usedIn: ["クエスト達成をシェアしたときのOGP"],
   },
   {
     path: "/img/ogp_mission_vote.png",
-    label: "OGP画像（投票ミッション用）",
+    label: "OGP画像（投票クエスト用）",
     group: "brand",
     status: "undecided",
-    usedIn: ["投票系ミッションのOGP"],
-    note: "投票系ミッションは現在すべて非表示。使うかどうかから決める。",
+    usedIn: ["投票系クエストのOGP"],
+    note: "投票系クエストは現在すべて非表示。使うかどうかから決める。",
   },
 
   // ── トップページ ──────────────────────────────────────
@@ -180,10 +180,10 @@ export const IMAGE_ASSETS: ImageAssetEntry[] = [
   // ── UI・その他 ────────────────────────────────────────
   {
     path: "/img/mission_fallback.svg",
-    label: "ミッションアイコンの代替画像",
+    label: "クエストアイコンの代替画像",
     group: "ui",
     status: "recolor",
-    usedIn: ["アイコンが未設定のミッションカード"],
+    usedIn: ["アイコンが未設定のクエストカード"],
   },
   {
     path: "/img/level-up-particle.png",
@@ -197,21 +197,21 @@ export const IMAGE_ASSETS: ImageAssetEntry[] = [
     label: "共有アイコン",
     group: "ui",
     status: "keep",
-    usedIn: ["ミッション詳細の共有ボタン"],
+    usedIn: ["クエスト詳細の共有ボタン"],
   },
   {
     path: "/img/icon-Copy2x.png",
     label: "URLコピーアイコン",
     group: "ui",
     status: "keep",
-    usedIn: ["ミッション詳細の共有ボタン"],
+    usedIn: ["クエスト詳細の共有ボタン"],
   },
   {
     path: "/img/icon-X2x.png",
     label: "Xの共有アイコン",
     group: "ui",
     status: "keep",
-    usedIn: ["ミッション詳細の共有ボタン"],
+    usedIn: ["クエスト詳細の共有ボタン"],
     note: "他社ロゴなので差し替え不可。",
   },
   {
@@ -219,7 +219,7 @@ export const IMAGE_ASSETS: ImageAssetEntry[] = [
     label: "LINEの共有アイコン",
     group: "ui",
     status: "keep",
-    usedIn: ["ミッション詳細の共有ボタン"],
+    usedIn: ["クエスト詳細の共有ボタン"],
     note: "他社ロゴなので差し替え不可。",
   },
   {
@@ -227,7 +227,7 @@ export const IMAGE_ASSETS: ImageAssetEntry[] = [
     label: "Facebookの共有アイコン",
     group: "ui",
     status: "keep",
-    usedIn: ["ミッション詳細の共有ボタン"],
+    usedIn: ["クエスト詳細の共有ボタン"],
     note: "他社ロゴなので差し替え不可。",
   },
   {

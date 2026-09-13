@@ -31,14 +31,14 @@ export default async function MissionCsvImportPage() {
           href="/admin/missions"
           className="text-sm text-gray-500 underline underline-offset-2"
         >
-          ← ミッション一覧
+          ← クエスト一覧
         </Link>
         <h2 className="mt-1 text-lg font-bold">イベントをCSVで一括登録</h2>
         <p className="mt-1 text-sm text-gray-600">
-          対象は現地訪問系ミッション（QR / GEO_CHECKIN）のみ。
-          作成されたミッションは非公開のまま登録されるので、
+          対象は現地訪問系クエスト（QR / GEO_CHECKIN）のみ。
+          作成されたクエストは非公開のまま登録されるので、
           内容を確認してから一覧で公開に切り替えてください。
-          QRミッションは登録と同時にQRコードも発行されます。
+          QRクエストは登録と同時にQRコードも発行されます。
         </p>
       </div>
 

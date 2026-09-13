@@ -23,7 +23,7 @@ export async function completePostingMission(
   // 既に達成済みかチェック
   const isCompleted = await checkShapeMissionCompleted(shapeId);
   if (isCompleted) {
-    return { success: false, error: "この図形は既にミッション達成済みです" };
+    return { success: false, error: "この図形は既にクエスト達成済みです" };
   }
 
   // posting-activity-magazine ミッションを取得
@@ -34,7 +34,7 @@ export async function completePostingMission(
     .single();
 
   if (!mission) {
-    return { success: false, error: "ミッションが見つかりません" };
+    return { success: false, error: "クエストが見つかりません" };
   }
 
   // FormData を構築

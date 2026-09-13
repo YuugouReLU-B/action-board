@@ -26,7 +26,7 @@ export function QrSpotGuide({ latitude, longitude }: QrSpotGuideProps) {
         <QrCode className="h-10 w-10 text-gray-700" aria-hidden="true" />
         <p className="text-lg font-bold">現地のQRコードを読み取ろう</p>
         <p className="text-sm text-gray-600">
-          スポットに掲示されているQRコードを読み取ると、自動でミッション達成に
+          スポットに掲示されているQRコードを読み取ると、自動でクエスト達成に
           なります。この画面での提出は不要です。
         </p>
 

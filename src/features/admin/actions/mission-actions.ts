@@ -58,7 +58,13 @@ function parseMissionForm(formData: FormData) {
     is_featured: formData.get("is_featured") === "on",
     is_hidden: formData.get("is_hidden") === "on",
     event_date: emptyToNull(formData.get("event_date")),
+    event_end_date: emptyToNull(formData.get("event_end_date")),
+    event_type: emptyToNull(formData.get("event_type")),
     artifact_label: emptyToNull(formData.get("artifact_label")),
+    supplement: emptyToNull(formData.get("supplement")),
+    tag1: emptyToNull(formData.get("tag1")),
+    tag2: emptyToNull(formData.get("tag2")),
+    tag3: emptyToNull(formData.get("tag3")),
     latitude: emptyToNull(formData.get("latitude")),
     longitude: emptyToNull(formData.get("longitude")),
     radius_meters: emptyToNull(formData.get("radius_meters")),
@@ -74,7 +80,7 @@ async function uploadMissionAssetIfProvided(
   formData: FormData,
   fieldName: string,
   missionId: string,
-  folder: "icons" | "photos",
+  folder: "icons",
 ): Promise<{ url: string | null; error?: string }> {
   const file = formData.get(fieldName);
   if (!(file instanceof File) || file.size === 0) {
@@ -137,22 +143,11 @@ export async function createMission(
   if (icon.error) {
     return { success: false, error: icon.error };
   }
-  const photo = await uploadMissionAssetIfProvided(
-    supabase,
-    formData,
-    "photo_file",
-    id,
-    "photos",
-  );
-  if (photo.error) {
-    return { success: false, error: photo.error };
-  }
 
   const { error } = await supabase.from("missions").insert({
     id,
     ...parsed.data,
     icon_url: icon.url ?? parsed.data.icon_url,
-    ogp_image_url: photo.url ?? parsed.data.ogp_image_url,
   });
 
   if (error) {
@@ -204,23 +199,12 @@ export async function updateMission(
   if (icon.error) {
     return { success: false, error: icon.error };
   }
-  const photo = await uploadMissionAssetIfProvided(
-    supabase,
-    formData,
-    "photo_file",
-    missionId,
-    "photos",
-  );
-  if (photo.error) {
-    return { success: false, error: photo.error };
-  }
 
   const { error } = await supabase
     .from("missions")
     .update({
       ...parsed.data,
       icon_url: icon.url ?? parsed.data.icon_url,
-      ogp_image_url: photo.url ?? parsed.data.ogp_image_url,
     })
     .eq("id", missionId);
 
@@ -292,6 +276,40 @@ export async function issueMissionQrCode(
 }
 
 /**
+ * ミッションを削除する。
+ *
+ * 達成記録が1件でもあると外部キー制約に阻まれて削除できない（安全装置）。
+ * 過去に達成した人がいるミッションは、一覧に出したくないだけなら
+ * 編集フォームの「公開する」チェックを外して非公開にする運用にする。
+ */
+export async function deleteMission(
+  missionId: string,
+): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const supabase = await createAdminClient();
+  const { error } = await supabase
+    .from("missions")
+    .delete()
+    .eq("id", missionId);
+
+  if (error) {
+    console.error("ミッションの削除に失敗:", error);
+    if (error.code === "23503") {
+      return {
+        success: false,
+        error:
+          "すでに達成した人がいるため削除できません。一覧から消したいだけなら「公開する」のチェックを外してください",
+      };
+    }
+    return { success: false, error: `削除に失敗しました: ${error.message}` };
+  }
+
+  revalidatePath("/admin/missions");
+  return { success: true, missionId };
+}
+
+/**
  * ミッションを複製する。
  *
  * イベントごとにQRチェックインを作るとき、毎回フォームを埋め直すのは手間。
@@ -316,7 +334,7 @@ export async function duplicateMission(
     .single();
 
   if (fetchError || !source) {
-    return { success: false, error: "複製元のミッションが見つかりません" };
+    return { success: false, error: "複製元のクエストが見つかりません" };
   }
 
   const id = crypto.randomUUID();

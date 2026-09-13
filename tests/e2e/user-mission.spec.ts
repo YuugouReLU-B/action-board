@@ -106,7 +106,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await expect(signedInPage.getByText("佐藤太郎").first()).toBeVisible();
   });
 
-  test("ミッションページ遷移 → ミッション完了 → ミッション取消が正常に動作する", async ({
+  test("クエストページ遷移 → クエスト完了 → クエスト取消が正常に動作する", async ({
     signedInPage,
   }) => {
     await assertAuthState(signedInPage, true);
@@ -123,17 +123,17 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
 
     // ミッションページの表示内容を確認
     await expect(
-      signedInPage.getByRole("button", { name: "ミッション完了を記録する" }),
+      signedInPage.getByRole("button", { name: "クエスト完了を記録する" }),
     ).toBeVisible();
     await expect(
       signedInPage.getByText(
-        "※ 成果物の内容が認められない場合、ミッションの達成が取り消される場合があります。正確な内容をご記入ください。",
+        "※ 成果物の内容が認められない場合、クエストの達成が取り消される場合があります。正確な内容をご記入ください。",
       ),
     ).toBeVisible();
 
     // ミッション完了ページに遷移
     await signedInPage
-      .getByRole("button", { name: "ミッション完了を記録する" })
+      .getByRole("button", { name: "クエスト完了を記録する" })
       .click();
     await expect(signedInPage.getByText("おめでとうございます！")).toBeVisible({
       timeout: 10000,
@@ -141,7 +141,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     await signedInPage.getByRole("button", { name: "このまま閉じる" }).click();
 
     await expect(
-      signedInPage.getByText("このミッションは何度でもチャレンジできます。"),
+      signedInPage.getByText("このクエストは何度でもチャレンジできます。"),
     ).toBeVisible();
     // ポイント2倍の仕組みは廃止したので、pointsそのまま(400)が付与される
     await expect(signedInPage.getByText("400ポイント獲得しました")).toBeVisible(
@@ -216,7 +216,7 @@ test.describe("アクションボード（Web版）のe2eテスト", () => {
     ).toBeVisible();
 
     // 都道府県別ランキングは導線を外したため、タブは「全体」「ミッション別」のみ
-    await signedInPage.getByText("ミッション別").click();
+    await signedInPage.getByText("クエスト別").click();
     await expect(signedInPage).toHaveURL("/ranking/ranking-mission", {
       timeout: 10000,
     });

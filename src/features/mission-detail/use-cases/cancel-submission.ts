@@ -173,7 +173,7 @@ export async function cancelSubmission(
   if (!achievement.mission_id) {
     return {
       success: false,
-      error: "ミッションIDが見つかりません。",
+      error: "クエストIDが見つかりません。",
     };
   }
 
@@ -194,7 +194,7 @@ export async function cancelSubmission(
   if (missionFetchError || !missionData) {
     return {
       success: false,
-      error: "ミッション情報の取得に失敗しました。",
+      error: "クエスト情報の取得に失敗しました。",
     };
   }
 
@@ -224,7 +224,7 @@ export async function cancelSubmission(
     xpAmount: -totalXpToRevoke,
     sourceType: "MISSION_CANCELLATION",
     sourceId: achievementId,
-    description: `ミッション「${missionData.title}」の提出取り消しによる経験値減算`,
+    description: `クエスト「${missionData.title}」の提出取り消しによる経験値減算`,
   });
 
   if (!xpResult.success) {

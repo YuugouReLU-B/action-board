@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { EVENT_TYPES } from "@/features/missions/constants/event-types";
 import { ARTIFACT_TYPES } from "@/lib/types/artifact-types";
 
 /** slug はURLに出るので、扱いやすい文字だけに限る */
@@ -27,7 +28,16 @@ export const missionSchema = z
     is_featured: z.boolean(),
     is_hidden: z.boolean(),
     event_date: z.string().optional().nullable(),
+    event_end_date: z.string().optional().nullable(),
+    event_type: z
+      .enum(Object.keys(EVENT_TYPES) as [string, ...string[]])
+      .optional()
+      .nullable(),
     artifact_label: z.string().max(200).optional().nullable(),
+    supplement: z.string().max(2000).optional().nullable(),
+    tag1: z.string().max(50).optional().nullable(),
+    tag2: z.string().max(50).optional().nullable(),
+    tag3: z.string().max(50).optional().nullable(),
     latitude: z.coerce.number().min(-90).max(90).nullable(),
     longitude: z.coerce.number().min(-180).max(180).nullable(),
     radius_meters: z.coerce.number().int().min(1).max(20000).nullable(),
@@ -41,6 +51,17 @@ export const missionSchema = z
     {
       message: "位置情報チェックインには緯度・経度・判定半径がすべて必要です",
       path: ["radius_meters"],
+    },
+  )
+  .refine(
+    (data) =>
+      !data.event_end_date ||
+      (data.event_date !== null &&
+        data.event_date !== undefined &&
+        data.event_date <= data.event_end_date),
+    {
+      message: "終了日は開始日以降の日付にしてください",
+      path: ["event_end_date"],
     },
   );
 

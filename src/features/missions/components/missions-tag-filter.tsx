@@ -156,7 +156,7 @@ export function MissionsTagFilter({ missions }: { missions: TaggedMission[] }) {
 
       {filtered.length === 0 ? (
         <p className="py-12 text-center text-gray-500">
-          条件に合うミッションが見つかりませんでした
+          条件に合うクエストが見つかりませんでした
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-4 px-4 md:grid-cols-2 md:px-0 lg:grid-cols-3">

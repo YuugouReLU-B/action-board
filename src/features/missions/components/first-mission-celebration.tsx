@@ -25,12 +25,12 @@ function RecommendationList({
   if (missions.length === 0) return null;
 
   return (
-    <div className="relative w-screen ml-[calc(50%-50vw)] space-y-3">
-      <h3 className="pl-4 text-sm font-bold text-gray-700 md:pl-10">{title}</h3>
-      <HorizontalScrollContainer centering>
-        <div className="flex w-fit gap-4 pl-4 pb-2 pt-2 md:pl-10">
+    <div className="space-y-3">
+      <h3 className="text-sm font-bold text-gray-700">{title}</h3>
+      <HorizontalScrollContainer>
+        <div className="flex w-fit gap-4 pb-2 pt-2">
           {missions.map((mission) => (
-            <div key={mission.id} className="w-[300px] shrink-0">
+            <div key={mission.id} className="w-[260px] shrink-0">
               <Mission mission={mission} userAchievementCount={0} />
             </div>
           ))}

@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { FormMessage, type Message } from "@/components/common/form-message";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { signInWithLine } from "@/features/auth/client/line-auth";
+import { buildLineLoginHref } from "@/features/auth/client/line-auth";
+import { cn } from "@/lib/utils/utils";
 
 interface SignUpFormProps {
   searchParams: Message;
@@ -22,18 +23,6 @@ interface SignUpFormProps {
 export default function SignUpForm({ searchParams }: SignUpFormProps) {
   const [isTermsAgreed, setIsTermsAgreed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleLINELogin = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      await signInWithLine();
-    } catch (_error) {
-      setIsLoading(false);
-      setError("LINE連携に失敗しました。もう一度お試しください。");
-    }
-  };
 
   return (
     <div className="flex flex-col min-w-72 max-w-72 mx-auto">
@@ -51,12 +40,6 @@ export default function SignUpForm({ searchParams }: SignUpFormProps) {
       <FormMessage className="mt-8" message={searchParams} />
 
       <div className="flex flex-col gap-4 mt-8">
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-md p-3">
-            <p className="text-red-700 text-sm">{error}</p>
-          </div>
-        )}
-
         <div className="flex items-center space-x-2">
           <Checkbox
             id="terms"
@@ -83,14 +66,24 @@ export default function SignUpForm({ searchParams }: SignUpFormProps) {
           </Label>
         </div>
 
-        <Button
-          type="button"
-          onClick={handleLINELogin}
-          disabled={!isTermsAgreed || isLoading}
-          className="w-full h-12 bg-[var(--app-vendor-line-green)] hover:bg-[var(--app-vendor-line-green-hover)] text-white"
+        <a
+          href={buildLineLoginHref()}
+          aria-disabled={!isTermsAgreed || isLoading}
+          onClick={(e) => {
+            if (!isTermsAgreed) {
+              e.preventDefault();
+              return;
+            }
+            setIsLoading(true);
+          }}
+          className={cn(
+            buttonVariants(),
+            "w-full h-12 bg-[var(--app-vendor-line-green)] hover:bg-[var(--app-vendor-line-green-hover)] text-white",
+            (!isTermsAgreed || isLoading) && "pointer-events-none opacity-50",
+          )}
         >
           {isLoading ? "LINE連携中..." : "LINEでアカウント作成"}
-        </Button>
+        </a>
       </div>
     </div>
   );

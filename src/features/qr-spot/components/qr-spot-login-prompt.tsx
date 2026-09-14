@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { signInWithLine } from "@/features/auth/client/line-auth";
+import { buttonVariants } from "@/components/ui/button";
+import { buildLineLoginHref } from "@/features/auth/client/line-auth";
+import { cn } from "@/lib/utils/utils";
 
 type QrSpotLoginPromptProps = {
   /** ログイン後に戻ってくるパス（`/q/<code>`） */
@@ -17,18 +18,6 @@ type QrSpotLoginPromptProps = {
  */
 export function QrSpotLoginPrompt({ returnUrl }: QrSpotLoginPromptProps) {
   const [isRedirecting, setIsRedirecting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleLogin = async () => {
-    try {
-      setIsRedirecting(true);
-      setError(null);
-      await signInWithLine(returnUrl);
-    } catch (_error) {
-      setIsRedirecting(false);
-      setError("ログインに失敗しました。もう一度お試しください。");
-    }
-  };
 
   return (
     <div className="space-y-4">
@@ -37,21 +26,17 @@ export function QrSpotLoginPrompt({ returnUrl }: QrSpotLoginPromptProps) {
         LINEでログインすると、このスポットのポイントがそのまま入ります。
       </p>
 
-      {error && (
-        <div className="rounded-md border border-red-200 bg-red-50 p-3">
-          <p className="text-sm text-red-700">{error}</p>
-        </div>
-      )}
-
-      <Button
-        type="button"
-        onClick={handleLogin}
-        disabled={isRedirecting}
-        className="w-full"
-        size="lg"
+      <a
+        href={buildLineLoginHref(returnUrl)}
+        onClick={() => setIsRedirecting(true)}
+        className={cn(
+          buttonVariants({ size: "lg" }),
+          "w-full",
+          isRedirecting && "pointer-events-none opacity-50",
+        )}
       >
         {isRedirecting ? "LINEへ移動しています..." : "LINEではじめる"}
-      </Button>
+      </a>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import type { Enums } from "@/lib/types/supabase";
+
 export interface Category {
   slug: string;
   title: string | null;
@@ -6,6 +8,8 @@ export interface Category {
 }
 
 export interface Mission {
+  quest_category?: Enums<"quest_category">;
+  event_category?: Enums<"event_category"> | null;
   slug: string;
   title: string;
   icon_url: string | null;

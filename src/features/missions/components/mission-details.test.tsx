@@ -20,6 +20,8 @@ const mockMission: Tables<"missions"> = {
   longitude: null,
   radius_meters: null,
   icon_url: "/test-icon.svg",
+  quest_category: "PERMANENT",
+  event_category: null,
   event_date: "2025-06-22",
   max_achievement_count: null,
   is_featured: true,

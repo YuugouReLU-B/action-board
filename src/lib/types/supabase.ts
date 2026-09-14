@@ -413,6 +413,8 @@ export type Database = {
           event_date: string | null;
           event_end_date: string | null;
           event_type: string | null;
+          event_category: Database["public"]["Enums"]["event_category"] | null;
+          quest_category: Database["public"]["Enums"]["quest_category"];
           featured_importance: number | null;
           icon_url: string | null;
           id: string;
@@ -441,6 +443,8 @@ export type Database = {
           event_date?: string | null;
           event_end_date?: string | null;
           event_type?: string | null;
+          event_category?: Database["public"]["Enums"]["event_category"] | null;
+          quest_category?: Database["public"]["Enums"]["quest_category"];
           featured_importance?: number | null;
           icon_url?: string | null;
           id: string;
@@ -469,6 +473,8 @@ export type Database = {
           event_date?: string | null;
           event_end_date?: string | null;
           event_type?: string | null;
+          event_category?: Database["public"]["Enums"]["event_category"] | null;
+          quest_category?: Database["public"]["Enums"]["quest_category"];
           featured_importance?: number | null;
           icon_url?: string | null;
           id?: string;
@@ -1930,6 +1936,8 @@ export type Database = {
           event_date: string | null;
           event_end_date: string | null;
           event_type: string | null;
+          event_category: Database["public"]["Enums"]["event_category"] | null;
+          quest_category: Database["public"]["Enums"]["quest_category"] | null;
           icon_url: string | null;
           is_featured: boolean | null;
           is_hidden: boolean | null;
@@ -2457,6 +2465,12 @@ export type Database = {
       is_posting_admin: { Args: never; Returns: boolean };
     };
     Enums: {
+      event_category: "SPOT" | "SPORTS" | "ART" | "FOOD" | "MIXED";
+      quest_category:
+        | "PERMANENT"
+        | "SPECIAL_HAMADORI"
+        | "SPECIAL_TOKYO"
+        | "SNS";
       poster_board_status:
         | "not_yet"
         | "reserved"
@@ -2614,6 +2628,8 @@ export const Constants = {
   },
   public: {
     Enums: {
+      event_category: ["SPOT", "SPORTS", "ART", "FOOD", "MIXED"],
+      quest_category: ["PERMANENT", "SPECIAL_HAMADORI", "SPECIAL_TOKYO", "SNS"],
       poster_board_status: [
         "not_yet",
         "reserved",

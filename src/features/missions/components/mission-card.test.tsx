@@ -135,6 +135,8 @@ const mockMission: Tables<"missions"> = {
   longitude: null,
   radius_meters: null,
   icon_url: "/test-icon.svg",
+  quest_category: "PERMANENT",
+  event_category: null,
   event_date: "2025-06-22",
   max_achievement_count: 3,
   is_featured: false,
@@ -154,6 +156,24 @@ const mockMission: Tables<"missions"> = {
 };
 
 describe("Mission", () => {
+  it.each([
+    ["SPOT", "spot.png"],
+    ["SPORTS", "sports.png"],
+    ["ART", "art.png"],
+    ["FOOD", "food.png"],
+    ["MIXED", "mixed-event.png"],
+  ] as const)("%sの固定アイコンを表示する", (event_category, filename) => {
+    render(
+      <Mission
+        mission={{ ...mockMission, event_category }}
+        userAchievementCount={0}
+      />,
+    );
+    expect(screen.getByTestId("mission-icon")).toHaveAttribute(
+      "src",
+      `/img/quest-icons/${filename}`,
+    );
+  });
   it("ミッション情報が正しく表示される", () => {
     render(<Mission mission={mockMission} userAchievementCount={0} />);
 
@@ -181,8 +201,8 @@ describe("Mission", () => {
     expect(screen.getByText("もう一回50P獲得")).toBeInTheDocument();
   });
 
-  it("アイコンURLがnullの場合はフォールバック画像を使用", () => {
-    const missionWithoutIcon = { ...mockMission, icon_url: null };
+  it("イベントカテゴリ未設定なら既存icon_urlを無視してフォールバック画像を使用", () => {
+    const missionWithoutIcon = { ...mockMission, event_category: null };
 
     render(<Mission mission={missionWithoutIcon} userAchievementCount={0} />);
 

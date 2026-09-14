@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { MissionIcon } from "@/features/missions/components/mission-icon";
+import { getEventCategoryIcon } from "@/features/missions/constants/quest-categories";
 import { calculateMissionXp } from "@/features/user-level/utils/level-calculator";
 import {
   POSTER_POINTS_PER_UNIT,
@@ -30,7 +31,7 @@ export default function Mission({
     mission.max_achievement_count !== null &&
     userAchievementCount >= (mission.max_achievement_count || 0);
 
-  const iconUrl = mission.icon_url ?? "/img/mission_fallback.svg";
+  const iconUrl = getEventCategoryIcon(mission.event_category);
 
   // ボタン文言に埋め込むポイント表示（以前はバッジで表示していたもの）
   const pointsLabel =

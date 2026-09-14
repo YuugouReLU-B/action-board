@@ -2,10 +2,20 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import type { Database } from "@/lib/types/supabase";
 
+/** Server Component から現在のパスを知るためのヘッダー名 */
+export const PATHNAME_HEADER = "x-pathname";
+
 export const updateSession = async (request: NextRequest) => {
   // This `try/catch` block is only here for the interactive tutorial.
   // Feel free to remove once you have Supabase connected.
   try {
+    // Server Component は自分のURLを知らないので、ログイン後の戻り先を作れるように
+    // パスをヘッダーで渡す。レスポンス生成より先に入れる必要がある
+    request.headers.set(
+      PATHNAME_HEADER,
+      `${request.nextUrl.pathname}${request.nextUrl.search}`,
+    );
+
     // Create an unmodified response
     let response = NextResponse.next({
       request: {

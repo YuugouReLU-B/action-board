@@ -2,13 +2,14 @@ import { Button } from "@/components/ui/button";
 import { CopyTokenButton } from "@/features/lottery/components/copy-token-button";
 import { getLotterySettings } from "@/features/lottery/services/lottery-settings";
 import { generateLotteryToken } from "@/features/lottery/services/lottery-token";
+import { hasLotteryStarted } from "@/features/lottery/utils/eligibility";
 import { getMyUserLevel } from "@/features/user-level/services/level";
 import { getUser } from "@/features/user-profile/services/profile";
 
 /**
  * 抽選応募パネル。
  *
- * 累計ポイントがしきい値に達したユーザーにだけ応募トークンを表示する。
+ * 開始日以降、累計ポイントがしきい値に達したユーザーに応募トークンを表示する。
  * しきい値・文言・応募先URLは /admin/lottery から編集する（lottery_settings）。
  * 応募の受付・当選確認・景品発送は外部フォーム（プレゼント事務局側の運用）
  * に委ねるため、ここではトークンの発行と案内だけを行う。
@@ -22,7 +23,19 @@ export async function LotteryEntryPanel() {
 
   const userLevel = await getMyUserLevel();
   const points = userLevel?.xp ?? 0;
-  const isEligible = points >= settings.threshold_points;
+  const hasEnoughPoints = points >= settings.threshold_points;
+  const hasStarted = hasLotteryStarted(settings.eligible_display_from);
+  const isEligible = hasEnoughPoints && hasStarted;
+  const startDateLabel = settings.eligible_display_from
+    ? new Date(
+        `${settings.eligible_display_from}T00:00:00+09:00`,
+      ).toLocaleDateString("ja-JP", {
+        timeZone: "Asia/Tokyo",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : null;
   // シークレット未設定の環境では発行できないので、パネルごと出さない
   const token = isEligible ? generateLotteryToken(user.id) : null;
   if (isEligible && !token) return null;
@@ -58,10 +71,19 @@ export async function LotteryEntryPanel() {
           </p>
         </div>
       ) : (
-        <p className="mt-4 text-sm text-gray-600">
-          あと{(settings.threshold_points - points).toLocaleString()}
-          ポイントで応募できます。
-        </p>
+        <div className="mt-4 space-y-2 text-sm text-gray-600">
+          {!hasStarted && (
+            <p>まだ応募できません（応募開始: {startDateLabel}〜）</p>
+          )}
+          {!hasEnoughPoints && (
+            <p>
+              あと{(settings.threshold_points - points).toLocaleString()}
+              {hasStarted
+                ? "ポイントで応募できます。"
+                : "ポイントでポイント条件を満たします。"}
+            </p>
+          )}
+        </div>
       )}
     </div>
   );

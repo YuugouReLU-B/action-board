@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { getLotterySettings } from "@/features/lottery/services/lottery-settings";
+import { hasLotteryStarted } from "@/features/lottery/utils/eligibility";
 import { getMyUserLevel } from "@/features/user-level/services/level";
 import { getUser } from "@/features/user-profile/services/profile";
 
 /**
  * 抽選応募の対象になったことをページ上部で知らせるバナー。
  *
- * しきい値未到達のユーザーには何も表示しない。しきい値は /admin/lottery から
+ * 開始日前やしきい値未到達のユーザーには表示しない。条件は /admin/lottery から
  * 編集する（lottery_settings）。応募自体の操作（トークン表示・外部フォームへの
  * 導線）は `LotteryEntryPanel`（マイページ）に委ねる。
  */
@@ -19,7 +20,11 @@ export async function LotteryAnnouncementBanner() {
 
   const userLevel = await getMyUserLevel();
   const points = userLevel?.xp ?? 0;
-  if (points < settings.threshold_points) return null;
+  if (
+    points < settings.threshold_points ||
+    !hasLotteryStarted(settings.eligible_display_from)
+  )
+    return null;
 
   return (
     <div className="flex w-full justify-center bg-amber-100 text-amber-900">

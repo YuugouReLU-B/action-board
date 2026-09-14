@@ -133,7 +133,7 @@ describe("Mission", () => {
   ] as const)("%sの固定アイコンを表示する", (event_category, filename) => {
     render(
       <Mission
-        mission={{ ...mockMission, event_category }}
+        mission={{ ...mockMission, event_category, icon_url: null }}
         userAchievementCount={0}
       />,
     );
@@ -146,7 +146,7 @@ describe("Mission", () => {
     render(<Mission mission={mockMission} userAchievementCount={0} />);
 
     expect(screen.getByText("テストミッション")).toBeInTheDocument();
-    expect(screen.getByText("獲得ポイント 50P")).toBeInTheDocument();
+    expect(screen.getByText("50P")).toBeInTheDocument();
   });
 
   it.each([
@@ -157,7 +157,7 @@ describe("Mission", () => {
     const link = screen.getByRole("link", { name: "詳細を見る" });
     expect(screen.getAllByRole("link")).toHaveLength(1);
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
-    expect(link).not.toContainElement(screen.getByText("獲得ポイント 50P"));
+    expect(link).not.toContainElement(screen.getByText("50P"));
     if (count === 3) {
       expect(link).not.toContainElement(screen.getByText("クリア済み"));
     } else {
@@ -207,7 +207,7 @@ describe("Mission", () => {
         userAchievementCount={0}
       />,
     );
-    expect(screen.getByText(`獲得ポイント ${reward}`)).toBeInTheDocument();
+    expect(screen.getByText(reward)).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "詳細を見る" }),
     ).toBeInTheDocument();
@@ -230,11 +230,28 @@ describe("Mission", () => {
 
     render(<Mission mission={missionWithoutLimit} userAchievementCount={5} />);
 
-    expect(screen.getByText("獲得ポイント 50P")).toBeInTheDocument();
+    expect(screen.getByText("50P")).toBeInTheDocument();
   });
 
-  it("イベントカテゴリ未設定なら既存icon_urlを無視してフォールバック画像を使用", () => {
-    const missionWithoutIcon = { ...mockMission, event_category: null };
+  it("icon_urlが設定されていればイベントカテゴリより優先して使用", () => {
+    const missionWithIcon = {
+      ...mockMission,
+      event_category: null,
+      icon_url: "/test-icon.svg",
+    };
+
+    render(<Mission mission={missionWithIcon} userAchievementCount={0} />);
+
+    const missionIcon = document.querySelector("img");
+    expect(missionIcon?.getAttribute("src")).toBe("/test-icon.svg");
+  });
+
+  it("icon_urlもイベントカテゴリも未設定ならフォールバック画像を使用", () => {
+    const missionWithoutIcon = {
+      ...mockMission,
+      event_category: null,
+      icon_url: null,
+    };
 
     render(<Mission mission={missionWithoutIcon} userAchievementCount={0} />);
 
@@ -260,6 +277,7 @@ describe("Mission", () => {
       tag1: "いわき市",
       tag2: "地域交流",
       event_category: "FOOD" as const,
+      icon_url: null,
     };
 
     render(<Mission mission={missionWithTags} userAchievementCount={3} />);
@@ -271,7 +289,7 @@ describe("Mission", () => {
     const link = screen.getByRole("link", { name: "詳細を見る" });
     expect(screen.getAllByRole("link")).toHaveLength(1);
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
-    expect(link).not.toContainElement(screen.getByText("獲得ポイント 50P"));
+    expect(link).not.toContainElement(screen.getByText("50P"));
     expect(link).not.toContainElement(screen.getByText("クリア済み"));
 
     const tag1Badge = screen.getByText("いわき市").parentElement;
@@ -301,7 +319,7 @@ describe("Mission", () => {
     expect(screen.getByTestId("card-footer").children).toHaveLength(2);
     expect(
       screen.getByTestId("card-footer").firstElementChild,
-    ).toContainElement(screen.getByText("獲得ポイント 50P"));
+    ).toContainElement(screen.getByText("50P"));
     expect(screen.getByTestId("card-footer").lastElementChild).toBe(
       screen.getByRole("link"),
     );

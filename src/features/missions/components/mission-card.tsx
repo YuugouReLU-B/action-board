@@ -29,7 +29,8 @@ export default function Mission({
     mission.max_achievement_count !== null &&
     userAchievementCount >= (mission.max_achievement_count || 0);
 
-  const iconUrl = getEventCategoryIcon(mission.event_category);
+  const iconUrl =
+    mission.icon_url || getEventCategoryIcon(mission.event_category);
 
   // 遷移操作とは分けて表示する報酬
   const pointsLabel =
@@ -48,21 +49,21 @@ export default function Mission({
   return (
     <article>
       <Card className="@container/card">
-        <CardHeader className="relative">
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col items-center justify-center">
-              <div className="w-20 h-20 rounded-full p-[3px]">
+        <CardHeader className="relative pl-4">
+          <div className="flex items-center gap-3">
+            <div className="flex flex-col items-center justify-center shrink-0">
+              <div className="w-32 h-32 rounded-full p-1">
                 <div className="flex items-center justify-center w-full h-full rounded-full bg-white">
-                  <MissionIcon src={iconUrl} alt={mission.title} size="md" />
+                  <MissionIcon src={iconUrl} alt={mission.title} size="lg" />
                 </div>
               </div>
             </div>
-            <div className="flex-1">
-              <CardTitle className="text-lg leading-tight mb-2 text-gray-900">
-                {mission.title}
+            <div className="flex-1 min-w-0 flex flex-col justify-center">
+              <CardTitle className="text-lg leading-tight min-h-[4.25rem] flex items-center text-gray-900">
+                <span className="line-clamp-3">{mission.title}</span>
               </CardTitle>
               {dateStr && (
-                <div className="text-sm font-medium text-gray-600">
+                <div className="mt-2 text-sm font-medium text-gray-600">
                   {dateStr}
                 </div>
               )}
@@ -91,9 +92,12 @@ export default function Mission({
             </div>
           )}
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-sm font-medium text-gray-700">
-              獲得ポイント {pointsLabel}
-            </p>
+            <Badge
+              variant="outline"
+              className="px-3 py-1 text-sm font-bold text-gray-700"
+            >
+              {pointsLabel}
+            </Badge>
             {hasReachedMaxAchievements && (
               <Badge variant="outline" className="bg-gray-100 text-gray-700">
                 クリア済み

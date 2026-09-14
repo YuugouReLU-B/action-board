@@ -91,6 +91,7 @@ export type Database = {
         Row: {
           button_label: string;
           description: string;
+          eligible_display_from: string | null;
           form_url: string;
           id: string;
           threshold_points: number;
@@ -100,6 +101,7 @@ export type Database = {
         Insert: {
           button_label?: string;
           description?: string;
+          eligible_display_from?: string | null;
           form_url?: string;
           id?: string;
           threshold_points?: number;
@@ -109,6 +111,7 @@ export type Database = {
         Update: {
           button_label?: string;
           description?: string;
+          eligible_display_from?: string | null;
           form_url?: string;
           id?: string;
           threshold_points?: number;

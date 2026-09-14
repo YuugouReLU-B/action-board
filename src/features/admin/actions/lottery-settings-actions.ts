@@ -22,6 +22,9 @@ export async function updateLotterySettings(
   await requireAdmin();
 
   const parsed = lotterySettingsSchema.safeParse({
+    eligible_display_from: String(
+      formData.get("eligible_display_from") ?? "",
+    ).trim(),
     threshold_points: String(formData.get("threshold_points") ?? "").trim(),
     title: String(formData.get("title") ?? "").trim(),
     description: String(formData.get("description") ?? "").trim(),

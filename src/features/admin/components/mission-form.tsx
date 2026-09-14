@@ -1,12 +1,17 @@
 "use client";
 
-import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import type { AdminActionResult } from "@/features/admin/actions/mission-actions";
 import type { AdminCategory } from "@/features/admin/services/admin-categories";
 import { EVENT_TYPES } from "@/features/missions/constants/event-types";
+import {
+  EVENT_CATEGORIES,
+  EVENT_CATEGORY_LABELS,
+  QUEST_CATEGORIES,
+  QUEST_CATEGORY_LABELS,
+} from "@/features/missions/constants/quest-categories";
 import { defaultPointsForDifficulty } from "@/features/user-level/utils/level-calculator";
 import { ARTIFACT_TYPES } from "@/lib/types/artifact-types";
 import type { Tables } from "@/lib/types/supabase";
@@ -72,34 +77,16 @@ export function MissionForm({
     mission?.points ?? defaultPointsForDifficulty(1),
   );
 
-  const [iconUrl, setIconUrl] = useState<string | null>(
-    mission?.icon_url ?? null,
+  const [questCategory, setQuestCategory] = useState(
+    mission?.quest_category ?? "PERMANENT",
   );
-  const iconFileInputRef = useRef<HTMLInputElement>(null);
-
-  const handlePreview = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    setPreview: (url: string | null) => void,
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setPreview(event.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
 
   const isQrSpot = artifactType === ARTIFACT_TYPES.QR.key;
   const isGeoCheckin = artifactType === ARTIFACT_TYPES.GEO_CHECKIN.key;
   const hasLocationFields = isQrSpot || isGeoCheckin;
 
-  // 特設クエストのカテゴリが選ばれているかどうかで、終了日の入力欄を出し分ける
-  const isSpecialQuest = categoryIds.some(
-    (id) =>
-      categories.find((category) => category.id === id)?.categoryKbn ===
-      "SPECIAL",
-  );
+  const isSpecialQuest =
+    questCategory === "SPECIAL_HAMADORI" || questCategory === "SPECIAL_TOKYO";
 
   const toggleCategory = (categoryId: string) => {
     setCategoryIds((current) =>
@@ -158,10 +145,46 @@ export function MissionForm({
         </Field>
       </div>
 
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field htmlFor="quest_category" label="クエストカテゴリ">
+          <select
+            id="quest_category"
+            name="quest_category"
+            required
+            value={questCategory}
+            onChange={(e) =>
+              setQuestCategory(e.target.value as typeof questCategory)
+            }
+            className={inputClass}
+          >
+            {QUEST_CATEGORIES.map((value) => (
+              <option key={value} value={value}>
+                {QUEST_CATEGORY_LABELS[value]}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field htmlFor="event_category" label="イベントカテゴリ">
+          <select
+            id="event_category"
+            name="event_category"
+            defaultValue={mission?.event_category ?? ""}
+            className={inputClass}
+          >
+            <option value="">未設定</option>
+            {EVENT_CATEGORIES.map((value) => (
+              <option key={value} value={value}>
+                {EVENT_CATEGORY_LABELS[value]}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </div>
+
       <fieldset className="rounded-lg border border-gray-200 p-4">
         <legend className="px-2 text-sm font-bold">出すカテゴリ</legend>
         <p className="mb-3 text-xs text-gray-500">
-          トップページはカテゴリごとにクエストを並べています。
+          トップページにはクエストカテゴリごとに表示します。
           どれも選ばないと、公開にしてもトップページには出ません。
         </p>
 
@@ -219,56 +242,6 @@ export function MissionForm({
       </Field>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field
-          htmlFor="icon_file"
-          label="アイコン"
-          hint="SVG/PNG/WebP・5MBまで。選び直さなければ既存のまま"
-        >
-          <div className="flex items-center gap-3">
-            {iconUrl && (
-              <div className="relative">
-                <img
-                  src={iconUrl}
-                  alt="アイコンのプレビュー"
-                  className="h-12 w-12 rounded border border-gray-200 object-contain bg-white"
-                />
-                <button
-                  type="button"
-                  className="absolute -right-2 -top-2 rounded-full bg-red-400 p-0.5 text-white hover:bg-red-600"
-                  onClick={() => {
-                    setIconUrl(null);
-                    if (iconFileInputRef.current) {
-                      iconFileInputRef.current.value = "";
-                    }
-                  }}
-                  aria-label="アイコンを削除"
-                >
-                  <X size={12} />
-                </button>
-              </div>
-            )}
-            <input
-              type="file"
-              name="icon_file"
-              id="icon_file"
-              ref={iconFileInputRef}
-              accept="image/png,image/jpeg,image/webp,image/svg+xml"
-              onChange={(e) => handlePreview(e, setIconUrl)}
-              className="text-sm"
-            />
-          </div>
-          {/* 新しいファイルが選ばれなければこの既存値がそのまま使われる */}
-          <input
-            type="hidden"
-            name="icon_url"
-            value={
-              iconUrl?.startsWith("data:")
-                ? (mission?.icon_url ?? "")
-                : (iconUrl ?? "")
-            }
-          />
-        </Field>
-
         <Field htmlFor="required_artifact_type" label="達成の種類">
           <select
             name="required_artifact_type"

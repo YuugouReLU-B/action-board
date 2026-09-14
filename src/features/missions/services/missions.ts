@@ -151,6 +151,8 @@ export async function getMissionCategoryView(): Promise<
       slug,
       title,
       icon_url,
+      quest_category,
+      event_category,
       difficulty,
       points,
       latitude,

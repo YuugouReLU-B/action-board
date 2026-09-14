@@ -1,6 +1,12 @@
+import {
+  QUEST_CATEGORIES,
+  QUEST_CATEGORY_LABELS,
+} from "@/features/missions/constants/quest-categories";
 import { getMissionCategoryView } from "@/features/missions/loaders/missions-loaders";
 import { groupMissionsByCategory } from "@/features/missions/utils/group-missions-by-category";
 import { getUserMissionAchievements } from "@/features/user-achievements/loaders/achievements-loaders";
+import { HorizontalScrollContainer } from "./horizontal-scroll-container";
+import Mission from "./mission-card";
 import { toTaggedMission } from "./missions-tags";
 import { MissionsViewToggle } from "./missions-view-toggle";
 
@@ -37,16 +43,49 @@ export default async function MissionsByCategory({
     achievedMissionIds,
   });
 
-  // カテゴリの区切りをやめて、全ミッションをタグ付きのフラットな一覧にする
-  // （常設/特設・イベント/プレイヤー/SNS・浜通り/東京で絞り込める）
-  const taggedMissions = categories.flatMap((category) =>
-    category.missions.map((mission) =>
-      toTaggedMission(
-        mission,
-        category,
-        userAchievementCountMap.get(mission.id) ?? 0,
-      ),
-    ),
+  // 旧カテゴリに複数所属していても、各ミッションは1回だけ表示する。
+  const missions = Array.from(
+    new Map(
+      categories
+        .flatMap((category) => category.missions)
+        .map((mission) => [mission.id, mission]),
+    ).values(),
+  );
+  const taggedMissions = missions.map((mission) =>
+    toTaggedMission(mission, userAchievementCountMap.get(mission.id) ?? 0),
+  );
+  const questGroups = QUEST_CATEGORIES.map((questCategory) => ({
+    questCategory,
+    missions: taggedMissions
+      .filter(({ mission }) => mission.quest_category === questCategory)
+      .sort((a, b) => Number(a.achieved) - Number(b.achieved)),
+  })).filter((group) => group.missions.length > 0);
+
+  const listView = (
+    <div className="flex flex-col gap-11">
+      {questGroups.map((group) => (
+        <section
+          key={group.questCategory}
+          className="relative w-full min-w-0 md:pl-10"
+        >
+          <h3 className="text-xl font-bold pl-4 md:pl-0">
+            {QUEST_CATEGORY_LABELS[group.questCategory]}
+          </h3>
+          <HorizontalScrollContainer>
+            <div className="flex w-fit gap-4 pl-4 md:pl-0 pr-4 pb-2 pt-4">
+              {group.missions.map(({ mission, userAchievementCount }) => (
+                <div key={mission.id} className="shrink-0 w-[300px]">
+                  <Mission
+                    mission={mission}
+                    userAchievementCount={userAchievementCount}
+                  />
+                </div>
+              ))}
+            </div>
+          </HorizontalScrollContainer>
+        </section>
+      ))}
+    </div>
   );
 
   // 地図モード用に、座標を持つミッションだけ抽出する
@@ -62,10 +101,11 @@ export default async function MissionsByCategory({
   return (
     <div className="flex flex-col gap-11">
       <MissionsViewToggle
-        listMissions={taggedMissions}
         mapMissions={mapMissions}
         calendarMissions={calendarMissions}
-      />
+      >
+        {listView}
+      </MissionsViewToggle>
     </div>
   );
 }

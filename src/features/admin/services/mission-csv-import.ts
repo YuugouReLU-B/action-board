@@ -38,7 +38,7 @@ function emptyToNull(value: string | undefined): string | null {
  *
  * ヘッダー: slug, title, content, required_artifact_type, points, difficulty,
  * event_date, latitude, longitude, radius_meters, icon_url, category_slug,
- * is_featured, is_hidden
+ * is_featured, is_hidden, quest_category（省略時PERMANENT）, event_category（任意）
  */
 export function parseMissionCsv(csvText: string): MissionCsvRow[] {
   let records: Record<string, string>[];
@@ -83,6 +83,8 @@ export function parseMissionCsv(csvText: string): MissionCsvRow[] {
       title: emptyToNull(record.title) ?? "",
       content: emptyToNull(record.content),
       icon_url: emptyToNull(record.icon_url),
+      quest_category: emptyToNull(record.quest_category) ?? "PERMANENT",
+      event_category: emptyToNull(record.event_category),
       required_artifact_type: requiredArtifactType ?? "",
       difficulty: emptyToNull(record.difficulty) ?? "1",
       points: emptyToNull(record.points) ?? "0",

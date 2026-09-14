@@ -151,6 +151,8 @@ async function syncMissions(
       slug: mission.slug,
       title: mission.title,
       icon_url: mission.icon_url,
+      quest_category: mission.quest_category,
+      event_category: mission.event_category,
       content: mission.content,
       difficulty: mission.difficulty,
       points: mission.points ?? defaultPointsForDifficulty(mission.difficulty),

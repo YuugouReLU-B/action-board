@@ -1,20 +1,19 @@
 "use client";
 
-import clsx from "clsx";
-import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { MissionIcon } from "@/features/missions/components/mission-icon";
+import { getEventCategoryIcon } from "@/features/missions/constants/quest-categories";
 import { calculateMissionXp } from "@/features/user-level/utils/level-calculator";
 import {
   POSTER_POINTS_PER_UNIT,
   POSTING_POINTS_PER_UNIT,
 } from "@/lib/constants/mission-config";
 import type { Tables } from "@/lib/types/supabase";
-import MissionAchievementStatus from "./mission-achievement-status";
+import { cn } from "@/lib/utils/utils";
 
 interface MissionProps {
   mission: Tables<"missions">;
@@ -30,9 +29,9 @@ export default function Mission({
     mission.max_achievement_count !== null &&
     userAchievementCount >= (mission.max_achievement_count || 0);
 
-  const iconUrl = mission.icon_url ?? "/img/mission_fallback.svg";
+  const iconUrl = getEventCategoryIcon(mission.event_category);
 
-  // ボタン文言に埋め込むポイント表示（以前はバッジで表示していたもの）
+  // 遷移操作とは分けて表示する報酬
   const pointsLabel =
     mission.required_artifact_type === "POSTER"
       ? `1枚あたり${POSTER_POINTS_PER_UNIT}P`
@@ -57,9 +56,6 @@ export default function Mission({
                   <MissionIcon src={iconUrl} alt={mission.title} size="md" />
                 </div>
               </div>
-              <MissionAchievementStatus
-                hasReachedMaxAchievements={hasReachedMaxAchievements}
-              />
             </div>
             <div className="flex-1">
               <CardTitle className="text-lg leading-tight mb-2 text-gray-900">
@@ -75,41 +71,48 @@ export default function Mission({
         </CardHeader>
 
         <CardFooter className="flex flex-col items-stretch gap-3">
-          {mission.tag1 && (
-            <div className="flex items-center">
-              <Badge variant="outline" className="text-xs px-2">
-                <MapPin size={14} className="mr-1" />
-                <span className="text-sm font-medium text-gray-700">
-                  {mission.tag1}
-                </span>
-              </Badge>
+          {(mission.tag1 || mission.tag2) && (
+            <div className="flex flex-wrap items-center gap-2">
+              {mission.tag1 && (
+                <Badge variant="outline" className="text-xs px-2">
+                  <MapPin size={14} className="mr-1" />
+                  <span className="text-sm font-medium text-gray-700">
+                    {mission.tag1}
+                  </span>
+                </Badge>
+              )}
+              {mission.tag2 && (
+                <Badge variant="outline" className="text-xs px-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    {mission.tag2}
+                  </span>
+                </Badge>
+              )}
             </div>
           )}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-medium text-gray-700">
+              獲得ポイント {pointsLabel}
+            </p>
+            {hasReachedMaxAchievements && (
+              <Badge variant="outline" className="bg-gray-100 text-gray-700">
+                クリア済み
+              </Badge>
+            )}
+          </div>
           <Link
             href={`/missions/${mission.slug || mission.id}`}
-            className="block"
+            className={cn(
+              buttonVariants({ variant: "default" }),
+              "w-full rounded-full py-6 text-base font-bold text-primary-foreground border-none transition-[color,background-color,transform] active:scale-95 motion-reduce:transform-none motion-reduce:transition-none",
+              hasReachedMaxAchievements
+                ? "bg-gray-300 hover:bg-gray-300/90 text-gray-700"
+                : userAchievementCount === 0
+                  ? "bg-primary hover:bg-primary/90"
+                  : "bg-yellow-300 hover:bg-yellow-300/90 text-black",
+            )}
           >
-            <motion.div whileTap={{ scale: 0.95 }}>
-              <Button
-                variant="default"
-                className={clsx(
-                  // bg-primary と対になる前景色を使う。text-white を直書きすると
-                  // プライマリ色を変えたときに読めなくなる
-                  "w-full rounded-full py-6 text-base font-bold text-primary-foreground border-none",
-                  hasReachedMaxAchievements
-                    ? "bg-gray-300 hover:bg-gray-300/90 text-gray-700"
-                    : userAchievementCount === 0
-                      ? "bg-primary hover:bg-primary/90"
-                      : "bg-yellow-300 hover:bg-yellow-300/90 text-black",
-                )}
-              >
-                {hasReachedMaxAchievements
-                  ? "クリア済み"
-                  : userAchievementCount === 0
-                    ? `${pointsLabel}獲得`
-                    : `もう一回${pointsLabel}獲得`}
-              </Button>
-            </motion.div>
+            詳細を見る
           </Link>
         </CardFooter>
       </Card>

@@ -26,7 +26,9 @@ export default async function Navbar() {
               width={48}
               height={48}
             />
-            <div className="text-lg">浜通りクエスト</div>
+            <div className="text-sm leading-tight sm:text-lg">
+              浜通りクエスト（ベータ）
+            </div>
           </Link>
         </div>
         {user ? (
@@ -45,6 +47,7 @@ export default async function Navbar() {
             <div className="flex gap-6 items-center font-semibold sm:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger
+                  className="-m-2.5 p-2.5"
                   aria-label="ナビゲーションメニューを開く"
                   data-testid="navmenubutton"
                 >
@@ -54,7 +57,9 @@ export default async function Navbar() {
                   className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
                   side="bottom"
                   align="end"
-                  sideOffset={4}
+                  // Keep the menu aligned with the icon after adding 10px of trigger padding.
+                  alignOffset={10}
+                  sideOffset={-6}
                 >
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild>

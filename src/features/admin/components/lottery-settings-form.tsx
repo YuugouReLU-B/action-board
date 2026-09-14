@@ -71,7 +71,7 @@ export function LotterySettingsForm({ settings }: LotterySettingsFormProps) {
       <Field
         htmlFor="threshold_points"
         label="表示に必要なポイント（現在のシーズンの累計XP）"
-        hint="このポイント以上のユーザーに応募トークンとボタンを表示する"
+        hint="このポイント以上で、表示開始日を迎えたユーザーに応募トークンとボタンを表示する"
       >
         <input
           id="threshold_points"
@@ -80,6 +80,20 @@ export function LotterySettingsForm({ settings }: LotterySettingsFormProps) {
           min={0}
           required
           defaultValue={settings.threshold_points}
+          className={inputClass}
+        />
+      </Field>
+
+      <Field
+        htmlFor="eligible_display_from"
+        label="応募表示開始日"
+        hint="日本時間の指定日0時から応募可能と表示します。空欄の場合はポイント条件のみで判定します。"
+      >
+        <input
+          id="eligible_display_from"
+          name="eligible_display_from"
+          type="date"
+          defaultValue={settings.eligible_display_from ?? ""}
           className={inputClass}
         />
       </Field>

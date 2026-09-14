@@ -134,7 +134,7 @@ export function ShapeStatusDialog({
         const result = await completePostingMission(shape.id, postingCount);
 
         if (result.success) {
-          toast.success(`クエスト達成! +${result.xpGranted}XP獲得`);
+          toast.success(`クエスト達成! +${result.xpGranted}P獲得`);
           setIsMissionCompleted(true);
           setCompletedPostingCount(postingCount);
         } else {

@@ -1,13 +1,8 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import type React from "react";
 import type { Tables } from "@/lib/types/supabase";
 import Mission from "./mission-card";
-
-jest.mock("next/link", () => {
-  return ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
-  );
-});
 
 jest.mock("@/components/ui/avatar", () => ({
   Avatar: ({ children }: { children: React.ReactNode }) => (
@@ -84,39 +79,12 @@ jest.mock("@/features/missions/components/difficulty-badge", () => ({
   ),
 }));
 
-jest.mock("@/components/ui/button", () => ({
-  Button: ({
-    children,
-    className,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-  }) => (
-    <button type="button" className={className} data-testid="button">
-      {children}
-    </button>
-  ),
-}));
-
 jest.mock("@/features/missions/components/mission-icon", () => ({
   MissionIcon: ({ src, alt }: { src: string; alt: string }) => (
     // biome-ignore lint/performance/noImgElement: テスト用モックのため<img>を使用
     <img src={src} alt={alt} data-testid="mission-icon" />
   ),
 }));
-
-jest.mock("@/features/missions/components/mission-achievement-status", () => {
-  return function MockMissionAchievementStatus({
-    hasReachedMaxAchievements,
-  }: {
-    hasReachedMaxAchievements: boolean;
-  }) {
-    if (hasReachedMaxAchievements) {
-      return <div data-testid="achievement-status">達成済み</div>;
-    }
-    return null;
-  };
-});
 
 jest.mock("lucide-react", () => ({
   MapPin: ({ className }: { className?: string }) => (
@@ -135,6 +103,8 @@ const mockMission: Tables<"missions"> = {
   longitude: null,
   radius_meters: null,
   icon_url: "/test-icon.svg",
+  quest_category: "PERMANENT",
+  event_category: null,
   event_date: "2025-06-22",
   max_achievement_count: 3,
   is_featured: false,
@@ -154,11 +124,93 @@ const mockMission: Tables<"missions"> = {
 };
 
 describe("Mission", () => {
+  it.each([
+    ["SPOT", "spot.png"],
+    ["SPORTS", "sports.png"],
+    ["ART", "art.png"],
+    ["FOOD", "food.png"],
+    ["MIXED", "mixed-event.png"],
+  ] as const)("%sの固定アイコンを表示する", (event_category, filename) => {
+    render(
+      <Mission
+        mission={{ ...mockMission, event_category }}
+        userAchievementCount={0}
+      />,
+    );
+    expect(screen.getByTestId("mission-icon")).toHaveAttribute(
+      "src",
+      `/img/quest-icons/${filename}`,
+    );
+  });
   it("ミッション情報が正しく表示される", () => {
     render(<Mission mission={mockMission} userAchievementCount={0} />);
 
     expect(screen.getByText("テストミッション")).toBeInTheDocument();
-    expect(screen.getByText("50P獲得")).toBeInTheDocument();
+    expect(screen.getByText("獲得ポイント 50P")).toBeInTheDocument();
+  });
+
+  it.each([
+    0, 1, 3,
+  ])("達成回数%sでも報酬・状態と詳細リンクを分離する", (count) => {
+    render(<Mission mission={mockMission} userAchievementCount={count} />);
+
+    const link = screen.getByRole("link", { name: "詳細を見る" });
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(link).not.toContainElement(screen.getByText("獲得ポイント 50P"));
+    if (count === 3) {
+      expect(link).not.toContainElement(screen.getByText("クリア済み"));
+    } else {
+      expect(screen.queryByText("クリア済み")).not.toBeInTheDocument();
+    }
+  });
+
+  it.each([
+    0, 1, 3,
+  ])("達成回数%sでもTabは1回だけ停止しEnterで詳細リンクを起動する", async (count) => {
+    const user = userEvent.setup();
+    render(<Mission mission={mockMission} userAchievementCount={count} />);
+    const link = screen.getByRole("link");
+    const activate = jest.fn((event: Event) => event.preventDefault());
+    link.addEventListener("click", activate);
+
+    await user.tab();
+    expect(link).toHaveFocus();
+    expect(link).toHaveAttribute("href", "/missions/test-mission-1");
+    expect(link).not.toHaveAttribute("aria-disabled", "true");
+    await user.keyboard("{Enter}");
+    expect(activate).toHaveBeenCalledTimes(1);
+    await user.tab();
+    expect(document.body).toHaveFocus();
+  });
+
+  it("slugがなければIDで詳細に遷移する", () => {
+    render(
+      <Mission
+        mission={{ ...mockMission, slug: "" }}
+        userAchievementCount={0}
+      />,
+    );
+    expect(screen.getByRole("link")).toHaveAttribute(
+      "href",
+      `/missions/${mockMission.id}`,
+    );
+  });
+
+  it.each([
+    ["POSTER", "1枚あたり400P"],
+    ["POSTING", "1枚あたり50P"],
+  ] as const)("%sでは1枚あたりの報酬を表示する", (type, reward) => {
+    render(
+      <Mission
+        mission={{ ...mockMission, required_artifact_type: type }}
+        userAchievementCount={0}
+      />,
+    );
+    expect(screen.getByText(`獲得ポイント ${reward}`)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "詳細を見る" }),
+    ).toBeInTheDocument();
   });
 
   it("イベント日付が正しく表示される", () => {
@@ -178,11 +230,11 @@ describe("Mission", () => {
 
     render(<Mission mission={missionWithoutLimit} userAchievementCount={5} />);
 
-    expect(screen.getByText("もう一回50P獲得")).toBeInTheDocument();
+    expect(screen.getByText("獲得ポイント 50P")).toBeInTheDocument();
   });
 
-  it("アイコンURLがnullの場合はフォールバック画像を使用", () => {
-    const missionWithoutIcon = { ...mockMission, icon_url: null };
+  it("イベントカテゴリ未設定なら既存icon_urlを無視してフォールバック画像を使用", () => {
+    const missionWithoutIcon = { ...mockMission, event_category: null };
 
     render(<Mission mission={missionWithoutIcon} userAchievementCount={0} />);
 
@@ -196,12 +248,63 @@ describe("Mission", () => {
     render(<Mission mission={missionWithTag} userAchievementCount={0} />);
 
     expect(screen.getByText("いわき市")).toBeInTheDocument();
+    expect(screen.getByTestId("map-pin-icon")).toBeInTheDocument();
+    const tagBadge = screen.getByText("いわき市").parentElement;
+    expect(tagBadge).toHaveClass("rounded-full", "border");
+    expect(tagBadge?.parentElement?.children).toHaveLength(1);
   });
 
-  it("tag1が未設定の場合は地域チップが表示されない", () => {
+  it("両方のタグ・カテゴリのアイコン・報酬と状態・詳細リンクが共存する", () => {
+    const missionWithTags = {
+      ...mockMission,
+      tag1: "いわき市",
+      tag2: "地域交流",
+      event_category: "FOOD" as const,
+    };
+
+    render(<Mission mission={missionWithTags} userAchievementCount={3} />);
+
+    expect(screen.getByTestId("mission-icon")).toHaveAttribute(
+      "src",
+      "/img/quest-icons/food.png",
+    );
+    const link = screen.getByRole("link", { name: "詳細を見る" });
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(link).not.toContainElement(screen.getByText("獲得ポイント 50P"));
+    expect(link).not.toContainElement(screen.getByText("クリア済み"));
+
+    const tag1Badge = screen.getByText("いわき市").parentElement;
+    const tag2Badge = screen.getByText("地域交流").parentElement;
+    expect(tag1Badge).toHaveClass("rounded-full", "border");
+    expect(tag2Badge).toHaveClass("rounded-full", "border");
+    expect(tag1Badge?.parentElement).toBe(tag2Badge?.parentElement);
+    expect(screen.getByTestId("map-pin-icon").parentElement).toBe(tag1Badge);
+  });
+
+  it("tag1がnullでもtag2のチップは表示される", () => {
+    const missionWithTag2 = { ...mockMission, tag2: "地域交流" };
+
+    render(<Mission mission={missionWithTag2} userAchievementCount={0} />);
+
+    expect(screen.getByText("地域交流")).toBeInTheDocument();
+    expect(screen.queryByTestId("map-pin-icon")).not.toBeInTheDocument();
+    const tagBadge = screen.getByText("地域交流").parentElement;
+    expect(tagBadge).toHaveClass("rounded-full", "border");
+    expect(tagBadge?.parentElement?.children).toHaveLength(1);
+  });
+
+  it("tag1とtag2が両方nullの場合はチップ群が表示されない", () => {
     render(<Mission mission={mockMission} userAchievementCount={0} />);
 
     expect(screen.queryByTestId("map-pin-icon")).not.toBeInTheDocument();
+    expect(screen.getByTestId("card-footer").children).toHaveLength(2);
+    expect(
+      screen.getByTestId("card-footer").firstElementChild,
+    ).toContainElement(screen.getByText("獲得ポイント 50P"));
+    expect(screen.getByTestId("card-footer").lastElementChild).toBe(
+      screen.getByRole("link"),
+    );
   });
 
   it("イベント日付がnullの場合は日付表示なし", () => {

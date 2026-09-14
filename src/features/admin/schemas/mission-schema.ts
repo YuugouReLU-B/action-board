@@ -1,5 +1,9 @@
 import { z } from "zod";
 import { EVENT_TYPES } from "@/features/missions/constants/event-types";
+import {
+  EVENT_CATEGORIES,
+  QUEST_CATEGORIES,
+} from "@/features/missions/constants/quest-categories";
 import { ARTIFACT_TYPES } from "@/lib/types/artifact-types";
 
 /** slug はURLに出るので、扱いやすい文字だけに限る */
@@ -18,6 +22,8 @@ export const missionSchema = z
     title: z.string().min(1, "タイトルは必須です").max(200),
     content: z.string().max(20000).optional().nullable(),
     icon_url: z.string().max(500).optional().nullable(),
+    quest_category: z.enum(QUEST_CATEGORIES),
+    event_category: z.enum(EVENT_CATEGORIES).nullable(),
     ogp_image_url: z.string().max(500).optional().nullable(),
     required_artifact_type: z.enum(
       Object.keys(ARTIFACT_TYPES) as [string, ...string[]],

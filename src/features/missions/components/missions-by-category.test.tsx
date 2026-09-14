@@ -1,99 +1,124 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import { getMissionCategoryView } from "@/features/missions/loaders/missions-loaders";
+import { getUserMissionAchievements } from "@/features/user-achievements/loaders/achievements-loaders";
+import type { Tables } from "@/lib/types/supabase";
 import MissionsByCategory from "./missions-by-category";
 
-jest.mock("./mission-card", () => {
-  return function MockMission({
+jest.mock("@/features/missions/loaders/missions-loaders", () => ({
+  getMissionCategoryView: jest.fn(),
+}));
+jest.mock("@/features/user-achievements/loaders/achievements-loaders", () => ({
+  getUserMissionAchievements: jest.fn(),
+}));
+jest.mock("./mission-card", () => ({
+  __esModule: true,
+  default: ({
     mission,
-    achieved,
     userAchievementCount,
-  }: any) {
-    return (
-      <div data-testid={`mission-${mission.id}`}>
-        <div data-testid="mission-title">{mission.title}</div>
-        <div data-testid="achieved">{achieved.toString()}</div>
-        <div data-testid="user-achievement-count">{userAchievementCount}</div>
-      </div>
-    );
-  };
-});
+  }: {
+    mission: Tables<"missions">;
+    userAchievementCount: number;
+  }) => (
+    <div data-testid={`mission-${mission.id}`}>
+      {mission.title}:{userAchievementCount}
+    </div>
+  ),
+}));
+jest.mock("./horizontal-scroll-container", () => ({
+  HorizontalScrollContainer: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="horizontal-scroll">{children}</div>
+  ),
+}));
+jest.mock("./missions-view-toggle", () => ({
+  MissionsViewToggle: ({
+    children,
+    mapMissions,
+    calendarMissions,
+  }: {
+    children: React.ReactNode;
+    mapMissions: unknown[];
+    calendarMissions: unknown[];
+  }) => (
+    <div>
+      {children}
+      <span data-testid="map-count">{mapMissions.length}</span>
+      <span data-testid="calendar-count">{calendarMissions.length}</span>
+    </div>
+  ),
+}));
 
-const _mockMissionCategoryViewData = [
-  {
-    category_id: "category-1",
-    category_title: "カテゴリ1",
-    category_kbn: "A",
-    category_sort_no: 1,
-    mission_id: "mission-1",
-    title: "クエスト1",
-    icon_url: "/icon1.svg",
-    difficulty: 1,
-    content: "クエスト1の内容",
-    created_at: "2025-06-22T00:00:00Z",
-    artifact_label: null,
-    max_achievement_count: null,
+function row(
+  id: string,
+  quest_category: Tables<"missions">["quest_category"],
+  overrides = {},
+): Tables<"mission_category_view"> {
+  return {
+    mission_id: id,
+    category_id: "legacy",
+    category_title: "旧カテゴリ",
+    category_kbn: "PERMANENT",
+    title: id,
+    quest_category,
+    event_category: null,
+    latitude: null,
+    longitude: null,
     event_date: null,
-    is_featured: false,
-    updated_at: "2025-06-22T00:00:00Z",
-    is_hidden: false,
-    ogp_image_url: null,
-    required_artifact_type: "NONE",
-    link_sort_no: 1,
-  },
-  {
-    category_id: "category-2",
-    category_title: "カテゴリ2",
-    category_kbn: "B",
-    category_sort_no: 2,
-    mission_id: "mission-2",
-    title: "クエスト2",
-    icon_url: "/icon2.svg",
-    difficulty: 2,
-    content: "クエスト2の内容",
-    created_at: "2025-06-21T00:00:00Z",
-    artifact_label: null,
-    max_achievement_count: 3,
-    event_date: null,
-    is_featured: true,
-    updated_at: "2025-06-21T00:00:00Z",
-    is_hidden: false,
-    ogp_image_url: null,
-    required_artifact_type: "IMAGE",
-    link_sort_no: 1,
-  },
-];
+    ...overrides,
+  } as Tables<"mission_category_view">;
+}
 
 describe("MissionsByCategory", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest
+      .mocked(getUserMissionAchievements)
+      .mockResolvedValue(new Map([["p", 2]]));
   });
-
-  it("カテゴリ別にクエストが表示される", async () => {
-    const component = await MissionsByCategory({});
-
-    render(component);
-
-    expect(component).toBeDefined();
+  it("指定順に分類し重複を除き、達成済みを後ろに並べる", async () => {
+    jest.mocked(getMissionCategoryView).mockResolvedValue([
+      row("s", "SNS"),
+      row("t", "SPECIAL_TOKYO", { event_date: "2026-10-01" }),
+      row("h", "SPECIAL_HAMADORI", { latitude: 37, longitude: 140 }),
+      row("p", "PERMANENT"),
+      row("p2", "PERMANENT"),
+      row("h", "SPECIAL_HAMADORI", {
+        category_id: "another",
+        latitude: 37,
+        longitude: 140,
+      }),
+    ]);
+    render(await MissionsByCategory({ userId: "user" }));
+    expect(
+      screen.getAllByRole("heading", { level: 3 }).map((el) => el.textContent),
+    ).toEqual([
+      "常設クエスト",
+      "特設クエスト(浜通り)",
+      "特設クエスト(東京)",
+      "SNS登録",
+    ]);
+    expect(screen.getAllByTestId("mission-h")).toHaveLength(1);
+    expect(
+      screen.getAllByTestId(/^mission-/).map((el) => el.textContent),
+    ).toEqual(["p2:0", "p:2", "h:0", "t:0", "s:0"]);
+    expect(screen.getAllByTestId("horizontal-scroll")).toHaveLength(4);
+    expect(screen.getByTestId("map-count")).toHaveTextContent("1");
+    expect(screen.getByTestId("calendar-count")).toHaveTextContent("1");
+    expect(getUserMissionAchievements).toHaveBeenCalledWith("user");
   });
-
-  it("ユーザーIDが指定された場合は達成情報を取得する", async () => {
-    const component = await MissionsByCategory({
-      userId: "test-user-id",
-    });
-
-    render(component);
-
-    expect(component).toBeDefined();
+  it("空のグループは見出しごと表示しない", async () => {
+    jest
+      .mocked(getMissionCategoryView)
+      .mockResolvedValue([row("p", "PERMANENT")]);
+    render(await MissionsByCategory({}));
+    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(1);
+    expect(screen.queryByText("SNS登録")).not.toBeInTheDocument();
+    expect(getUserMissionAchievements).not.toHaveBeenCalled();
   });
-
-  it("データがない場合は適切なメッセージが表示される", async () => {
-    const component = await MissionsByCategory({});
-
-    render(component);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("クエストが見つかりませんでした"),
-      ).toBeInTheDocument();
-    });
+  it("データがない場合は空状態を表示する", async () => {
+    jest.mocked(getMissionCategoryView).mockResolvedValue([]);
+    render(await MissionsByCategory({}));
+    expect(
+      screen.getByText("クエストが見つかりませんでした"),
+    ).toBeInTheDocument();
   });
 });

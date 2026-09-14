@@ -91,6 +91,7 @@ export type Database = {
         Row: {
           button_label: string;
           description: string;
+          eligible_display_from: string | null;
           form_url: string;
           id: string;
           threshold_points: number;
@@ -100,6 +101,7 @@ export type Database = {
         Insert: {
           button_label?: string;
           description?: string;
+          eligible_display_from?: string | null;
           form_url?: string;
           id?: string;
           threshold_points?: number;
@@ -109,6 +111,7 @@ export type Database = {
         Update: {
           button_label?: string;
           description?: string;
+          eligible_display_from?: string | null;
           form_url?: string;
           id?: string;
           threshold_points?: number;
@@ -407,6 +410,7 @@ export type Database = {
           content: string | null;
           created_at: string;
           difficulty: number;
+          event_category: Database["public"]["Enums"]["event_category"] | null;
           event_date: string | null;
           event_end_date: string | null;
           event_type: string | null;
@@ -420,6 +424,7 @@ export type Database = {
           max_achievement_count: number | null;
           ogp_image_url: string | null;
           points: number;
+          quest_category: Database["public"]["Enums"]["quest_category"];
           radius_meters: number | null;
           required_artifact_type: string;
           slug: string;
@@ -435,6 +440,7 @@ export type Database = {
           content?: string | null;
           created_at?: string;
           difficulty: number;
+          event_category?: Database["public"]["Enums"]["event_category"] | null;
           event_date?: string | null;
           event_end_date?: string | null;
           event_type?: string | null;
@@ -448,6 +454,7 @@ export type Database = {
           max_achievement_count?: number | null;
           ogp_image_url?: string | null;
           points?: number;
+          quest_category?: Database["public"]["Enums"]["quest_category"];
           radius_meters?: number | null;
           required_artifact_type?: string;
           slug: string;
@@ -463,6 +470,7 @@ export type Database = {
           content?: string | null;
           created_at?: string;
           difficulty?: number;
+          event_category?: Database["public"]["Enums"]["event_category"] | null;
           event_date?: string | null;
           event_end_date?: string | null;
           event_type?: string | null;
@@ -476,6 +484,7 @@ export type Database = {
           max_achievement_count?: number | null;
           ogp_image_url?: string | null;
           points?: number;
+          quest_category?: Database["public"]["Enums"]["quest_category"];
           radius_meters?: number | null;
           required_artifact_type?: string;
           slug?: string;
@@ -1924,6 +1933,7 @@ export type Database = {
           content: string | null;
           created_at: string | null;
           difficulty: number | null;
+          event_category: Database["public"]["Enums"]["event_category"] | null;
           event_date: string | null;
           event_end_date: string | null;
           event_type: string | null;
@@ -1937,6 +1947,7 @@ export type Database = {
           mission_id: string | null;
           ogp_image_url: string | null;
           points: number | null;
+          quest_category: Database["public"]["Enums"]["quest_category"] | null;
           radius_meters: number | null;
           required_artifact_type: string | null;
           slug: string | null;
@@ -2454,6 +2465,7 @@ export type Database = {
       is_posting_admin: { Args: never; Returns: boolean };
     };
     Enums: {
+      event_category: "SPOT" | "SPORTS" | "ART" | "FOOD" | "MIXED";
       poster_board_status:
         | "not_yet"
         | "reserved"
@@ -2478,6 +2490,11 @@ export type Database = {
         | "福岡県"
         | "京都府";
       posting_shape_status: "planned" | "completed" | "unavailable" | "other";
+      quest_category:
+        | "PERMANENT"
+        | "SPECIAL_HAMADORI"
+        | "SPECIAL_TOKYO"
+        | "SNS";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -2611,6 +2628,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      event_category: ["SPOT", "SPORTS", "ART", "FOOD", "MIXED"],
       poster_board_status: [
         "not_yet",
         "reserved",
@@ -2637,6 +2655,7 @@ export const Constants = {
         "京都府",
       ],
       posting_shape_status: ["planned", "completed", "unavailable", "other"],
+      quest_category: ["PERMANENT", "SPECIAL_HAMADORI", "SPECIAL_TOKYO", "SNS"],
     },
   },
 } as const;

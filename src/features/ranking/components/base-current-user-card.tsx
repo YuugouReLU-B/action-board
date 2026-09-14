@@ -15,14 +15,12 @@ interface BaseCurrentUserCardProps {
     rank: number | null;
   } | null;
   title?: string;
-  level?: number;
   children: React.ReactNode;
 }
 
 export const BaseCurrentUserCard: React.FC<BaseCurrentUserCardProps> = ({
   currentUser,
   title = "あなたのランク",
-  level,
   children,
 }) => {
   if (!currentUser) {
@@ -57,13 +55,6 @@ export const BaseCurrentUserCard: React.FC<BaseCurrentUserCardProps> = ({
                   nameClassName="font-semibold text-gray-900"
                 />
                 {/* 都道府県は表示しない（ranking-item と同じ理由） */}
-                <div className="flex items-center gap-1 mt-0.5">
-                  {level != null && (
-                    <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
-                      Lv.{level}
-                    </span>
-                  )}
-                </div>
               </div>
             </div>
             <div className="text-right">{children}</div>

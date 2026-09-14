@@ -85,6 +85,8 @@ export function groupMissionsByCategory(
           slug,
           title: m.title || "",
           icon_url: m.icon_url,
+          quest_category: m.quest_category ?? "PERMANENT",
+          event_category: m.event_category,
           difficulty: m.difficulty || 1,
           points: m.points ?? 0,
           latitude: m.latitude,

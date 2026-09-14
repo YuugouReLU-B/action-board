@@ -34,11 +34,6 @@ export function RankingItem({
         <UserName name={user.name ?? ""} nameClassName="font-bold text-lg" />
         {/* 都道府県は表示しない。浜通り向けでは意味が薄いうえ、
             未選択の人が北海道として並んでしまっていた */}
-        <div className="flex items-center gap-1 mt-0.5">
-          <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
-            Lv.{user.level}
-          </span>
-        </div>
         {showDetailedInfo && (
           <div className="text-xs text-gray-500 mt-1">ID: {user.user_id}</div>
         )}
@@ -50,12 +45,12 @@ export function RankingItem({
             {badgeText}
           </span>
           <Badge className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full w-fit justify-self-end font-bold">
-            {(userWithMission?.total_points ?? 0).toLocaleString()}pt
+            {(userWithMission?.total_points ?? 0).toLocaleString()}P
           </Badge>
         </>
       ) : (
         <Badge className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full w-fit justify-self-end font-bold">
-          {formatNumberJa(user.xp ?? 0)}pt
+          {formatNumberJa(user.xp ?? 0)}P
         </Badge>
       )}
     </Link>

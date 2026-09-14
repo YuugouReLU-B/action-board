@@ -37,11 +37,16 @@ export default function ProfileForm({
   );
   const [state, formAction, isPending] = useActionState(updateProfile, null);
   const router = useRouter();
+  // 保存完了後、画面遷移が終わるまでボタンを「移動中」表示のままにする。
+  // isPendingはアクション完了と同時にfalseへ戻るため、それだけだと
+  // 遷移待ちの間だけボタンが一瞬「登録する」に戻って押せてしまう
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
     // 新規登録時は、プロフィール保存後にそのまま最初のミッションへ送る。
     // 以前はトップに戻していたが、次に何をすればよいか分からない導線だった
     if (state?.success && isNew && nextUrlAfterSignup) {
+      setIsNavigating(true);
       router.push(nextUrlAfterSignup);
     }
     if (state?.success) {
@@ -74,7 +79,7 @@ export default function ProfileForm({
               placeholder="あなたのニックネーム"
               maxLength={100}
               required
-              disabled={isPending}
+              disabled={isPending || isNavigating}
             />
             <p className="text-sm text-gray-500">
               このニックネームは他のユーザーに公開されます。
@@ -93,8 +98,12 @@ export default function ProfileForm({
           )}
         </CardContent>
         <CardFooter>
-          <SubmitButton className="w-full" disabled={isPending}>
-            {isNew ? "登録する" : "更新する"}
+          <SubmitButton
+            className="w-full"
+            disabled={isPending || isNavigating}
+            pendingText="登録中..."
+          >
+            {isNavigating ? "移動中..." : isNew ? "登録する" : "更新する"}
           </SubmitButton>
         </CardFooter>
       </form>

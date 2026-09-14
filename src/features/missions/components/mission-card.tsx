@@ -75,14 +75,23 @@ export default function Mission({
         </CardHeader>
 
         <CardFooter className="flex flex-col items-stretch gap-3">
-          {mission.tag1 && (
-            <div className="flex items-center">
-              <Badge variant="outline" className="text-xs px-2">
-                <MapPin size={14} className="mr-1" />
-                <span className="text-sm font-medium text-gray-700">
-                  {mission.tag1}
-                </span>
-              </Badge>
+          {(mission.tag1 || mission.tag2) && (
+            <div className="flex flex-wrap items-center gap-2">
+              {mission.tag1 && (
+                <Badge variant="outline" className="text-xs px-2">
+                  <MapPin size={14} className="mr-1" />
+                  <span className="text-sm font-medium text-gray-700">
+                    {mission.tag1}
+                  </span>
+                </Badge>
+              )}
+              {mission.tag2 && (
+                <Badge variant="outline" className="text-xs px-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    {mission.tag2}
+                  </span>
+                </Badge>
+              )}
             </div>
           )}
           <Link

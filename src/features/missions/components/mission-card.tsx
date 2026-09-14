@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { MissionIcon } from "@/features/missions/components/mission-icon";
+import { getMissionRegionLabel } from "@/features/missions/constants/mission-regions";
 import { getEventCategoryIcon } from "@/features/missions/constants/quest-categories";
 import { calculateMissionXp } from "@/features/user-level/utils/level-calculator";
 import {
@@ -31,6 +32,9 @@ export default function Mission({
 
   const iconUrl =
     mission.icon_url || getEventCategoryIcon(mission.event_category);
+
+  // regionが未設定の既存ミッションはtag1を地域チップとして流用する
+  const regionLabel = getMissionRegionLabel(mission.region) ?? mission.tag1;
 
   // 遷移操作とは分けて表示する報酬
   const pointsLabel =
@@ -72,13 +76,13 @@ export default function Mission({
         </CardHeader>
 
         <CardFooter className="flex flex-col items-stretch gap-3">
-          {(mission.tag1 || mission.tag2) && (
+          {(regionLabel || mission.tag2) && (
             <div className="flex flex-wrap items-center gap-2">
-              {mission.tag1 && (
+              {regionLabel && (
                 <Badge variant="outline" className="text-xs px-2">
                   <MapPin size={14} className="mr-1" />
                   <span className="text-sm font-medium text-gray-700">
-                    {mission.tag1}
+                    {regionLabel}
                   </span>
                 </Badge>
               )}

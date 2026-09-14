@@ -153,6 +153,7 @@ export async function getMissionCategoryView(): Promise<
       icon_url,
       quest_category,
       event_category,
+      region,
       difficulty,
       points,
       latitude,

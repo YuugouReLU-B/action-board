@@ -80,6 +80,11 @@ export function MissionForm({
   const [questCategory, setQuestCategory] = useState(
     mission?.quest_category ?? "PERMANENT",
   );
+  // 新規作成時は毎回考えず済むよう、ランダムなslugを初期値にしておく。
+  // 必要なら送信前に書き換えられる（変更すると既存リンクは切れる）
+  const [slug] = useState(
+    () => mission?.slug ?? `quest-${crypto.randomUUID().slice(0, 8)}`,
+  );
 
   const isQrSpot = artifactType === ARTIFACT_TYPES.QR.key;
   const isGeoCheckin = artifactType === ARTIFACT_TYPES.GEO_CHECKIN.key;
@@ -126,7 +131,7 @@ export function MissionForm({
           <input
             name="slug"
             id="slug"
-            defaultValue={mission?.slug}
+            defaultValue={slug}
             required
             pattern="[a-z0-9][a-z0-9\-]*"
             className={inputClass}

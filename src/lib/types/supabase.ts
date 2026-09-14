@@ -426,6 +426,7 @@ export type Database = {
           points: number;
           quest_category: Database["public"]["Enums"]["quest_category"];
           radius_meters: number | null;
+          region: Database["public"]["Enums"]["mission_region"] | null;
           required_artifact_type: string;
           slug: string;
           supplement: string | null;
@@ -456,6 +457,7 @@ export type Database = {
           points?: number;
           quest_category?: Database["public"]["Enums"]["quest_category"];
           radius_meters?: number | null;
+          region?: Database["public"]["Enums"]["mission_region"] | null;
           required_artifact_type?: string;
           slug: string;
           supplement?: string | null;
@@ -486,6 +488,7 @@ export type Database = {
           points?: number;
           quest_category?: Database["public"]["Enums"]["quest_category"];
           radius_meters?: number | null;
+          region?: Database["public"]["Enums"]["mission_region"] | null;
           required_artifact_type?: string;
           slug?: string;
           supplement?: string | null;
@@ -1949,6 +1952,7 @@ export type Database = {
           points: number | null;
           quest_category: Database["public"]["Enums"]["quest_category"] | null;
           radius_meters: number | null;
+          region: Database["public"]["Enums"]["mission_region"] | null;
           required_artifact_type: string | null;
           slug: string | null;
           supplement: string | null;
@@ -2495,6 +2499,22 @@ export type Database = {
         | "SPECIAL_HAMADORI"
         | "SPECIAL_TOKYO"
         | "SNS";
+      mission_region:
+        | "IWAKI"
+        | "HIRONO"
+        | "NARAHA"
+        | "TOMIOKA"
+        | "OKUMA"
+        | "FUTABA"
+        | "NAMIE"
+        | "KATSURAO"
+        | "KAWAUCHI"
+        | "MINAMISOMA"
+        | "IITATE"
+        | "SHINCHI"
+        | "SOMA"
+        | "TOKYO"
+        | "WIDE";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -2656,6 +2676,23 @@ export const Constants = {
       ],
       posting_shape_status: ["planned", "completed", "unavailable", "other"],
       quest_category: ["PERMANENT", "SPECIAL_HAMADORI", "SPECIAL_TOKYO", "SNS"],
+      mission_region: [
+        "IWAKI",
+        "HIRONO",
+        "NARAHA",
+        "TOMIOKA",
+        "OKUMA",
+        "FUTABA",
+        "NAMIE",
+        "KATSURAO",
+        "KAWAUCHI",
+        "MINAMISOMA",
+        "IITATE",
+        "SHINCHI",
+        "SOMA",
+        "TOKYO",
+        "WIDE",
+      ],
     },
   },
 } as const;

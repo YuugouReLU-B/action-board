@@ -16,6 +16,7 @@ function event(id: string, date: string | null): TaggedMission {
       event_type: null,
       quest_category: "SPECIAL_HAMADORI",
       event_category: null,
+      region: null,
       difficulty: 1,
       points: 50,
       latitude: null,

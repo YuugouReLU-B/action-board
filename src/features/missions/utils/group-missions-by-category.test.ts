@@ -25,6 +25,7 @@ function createMissionCategoryView(
     icon_url: null,
     quest_category: "PERMANENT",
     event_category: null,
+    region: null,
     artifact_label: null,
     supplement: null,
     tag1: null,

@@ -82,7 +82,10 @@ export default async function Home({
         <RankingSection />
       </section>
 
-      <section className="py-12 md:py-16 bg-background">
+      <section
+        id="quests"
+        className="scroll-mt-24 py-12 md:py-16 bg-background"
+      >
         <MissionsByCategory userId={user?.id} />
       </section>
     </div>

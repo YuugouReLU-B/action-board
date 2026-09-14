@@ -74,7 +74,7 @@ export default async function Hero() {
               </Link>
               <Link
                 href="/sign-in"
-                className="text-sm font-bold text-gray-700 underline underline-offset-2 hover:text-gray-900"
+                className="text-sm font-bold text-white underline underline-offset-2 [text-shadow:0_1px_3px_rgba(0,0,0,0.8)] hover:text-white"
               >
                 ログインはこちら
               </Link>

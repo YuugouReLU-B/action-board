@@ -53,15 +53,14 @@ describe("XpProgressToastContent", () => {
     it("XP獲得情報が正しく表示される", () => {
       render(<XpProgressToastContent {...mockProps} />);
 
-      expect(screen.getByText("50ポイント獲得しました！")).toBeInTheDocument();
+      expect(screen.getByText("50P獲得しました！")).toBeInTheDocument();
     });
 
     it("プログレスバーが表示される", () => {
       render(<XpProgressToastContent {...mockProps} />);
 
-      const progressContainer = screen.getByText(
-        "50ポイント獲得しました！",
-      ).parentElement;
+      const progressContainer =
+        screen.getByText("50P獲得しました！").parentElement;
       expect(progressContainer).toBeInTheDocument();
     });
   });
@@ -84,9 +83,8 @@ describe("XpProgressToastContent", () => {
     it("プログレスバーの値が正しく計算される", () => {
       render(<XpProgressToastContent {...mockProps} />);
 
-      const progressContainer = screen.getByText(
-        "50ポイント獲得しました！",
-      ).parentElement;
+      const progressContainer =
+        screen.getByText("50P獲得しました！").parentElement;
       expect(progressContainer).toBeInTheDocument();
     });
   });
@@ -96,16 +94,14 @@ describe("XpProgressToastContent", () => {
       const zeroProps = { ...mockProps, xpGained: 0 };
       render(<XpProgressToastContent {...zeroProps} />);
 
-      expect(screen.getByText("0ポイント獲得しました！")).toBeInTheDocument();
+      expect(screen.getByText("0P獲得しました！")).toBeInTheDocument();
     });
 
     it("大きなXPの場合", () => {
       const largeProps = { ...mockProps, xpGained: 1000 };
       render(<XpProgressToastContent {...largeProps} />);
 
-      expect(
-        screen.getByText("1000ポイント獲得しました！"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("1000P獲得しました！")).toBeInTheDocument();
     });
   });
 
@@ -220,9 +216,7 @@ describe("XpProgressToastContent", () => {
 
       await waitFor(
         () => {
-          expect(
-            screen.getByText("50ポイント獲得しました！"),
-          ).toBeInTheDocument();
+          expect(screen.getByText("50P獲得しました！")).toBeInTheDocument();
         },
         { timeout: 3000 },
       );

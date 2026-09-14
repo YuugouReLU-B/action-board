@@ -71,8 +71,8 @@ function createPopupContent(spot: MapSpot): HTMLElement {
   const points = document.createElement("p");
   points.className = "text-xs text-gray-600";
   points.textContent = spot.achieved
-    ? `獲得済み（${spot.points}ポイント）`
-    : `${spot.points}ポイント`;
+    ? `獲得済み（${spot.points}P）`
+    : `${spot.points}P`;
   root.appendChild(points);
 
   const detail = document.createElement("a");

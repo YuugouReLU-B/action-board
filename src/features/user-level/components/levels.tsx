@@ -44,8 +44,8 @@ export default async function Levels({
             style={{ WebkitTextStroke: "1.5px black" }}
           >
             {userLevel ? userLevel.xp.toLocaleString() : "0"}
-          </span>{" "}
-          ポイント
+          </span>
+          P
         </div>
       </div>
       {showName && (

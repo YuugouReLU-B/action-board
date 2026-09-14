@@ -32,7 +32,7 @@ export async function LotteryEntryPanel() {
       <p className="text-lg font-bold">{settings.title}</p>
       <p className="mt-1 whitespace-pre-wrap text-sm text-gray-600">
         {settings.description}
-        （現在{points.toLocaleString()}ポイント）
+        （現在{points.toLocaleString()}P）
       </p>
 
       {token ? (
@@ -60,7 +60,7 @@ export async function LotteryEntryPanel() {
       ) : (
         <p className="mt-4 text-sm text-gray-600">
           あと{(settings.threshold_points - points).toLocaleString()}
-          ポイントで応募できます。
+          Pで応募できます。
         </p>
       )}
     </div>

@@ -63,7 +63,7 @@ export function ProgressBarAnimated({
           <span>次のレベルまで</span>
           <span className="font-bold">
             {Math.round(animatedValue).toLocaleString()} /{" "}
-            {maxValue.toLocaleString()}ポイント
+            {maxValue.toLocaleString()}P
           </span>
         </div>
       )}

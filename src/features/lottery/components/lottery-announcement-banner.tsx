@@ -28,7 +28,7 @@ export async function LotteryAnnouncementBanner() {
         className="flex w-full max-w-4xl items-center justify-center gap-2 px-4 py-3 text-sm font-bold hover:underline"
       >
         累計{settings.threshold_points.toLocaleString()}
-        ポイント達成！プレゼント抽選に応募できます
+        P達成！プレゼント抽選に応募できます
       </Link>
     </div>
   );

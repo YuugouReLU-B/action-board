@@ -323,7 +323,7 @@ export default function DetailedPosterMapClient({
     const result = await achieveMissionAction(formData);
 
     if (result.success) {
-      toast.success(`クエスト達成！ +${result.xpGranted}XP獲得`);
+      toast.success(`クエスト達成！ +${result.xpGranted}P獲得`);
     } else {
       toast.error(result.error || "クエスト達成に失敗しました");
     }

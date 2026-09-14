@@ -45,7 +45,7 @@ export function PointsAdjustForm({ userId }: { userId: string }) {
         type="number"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
-        placeholder="±pt"
+        placeholder="±P"
         className="w-24"
         aria-label="増減するポイント"
       />

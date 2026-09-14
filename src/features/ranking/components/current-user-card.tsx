@@ -28,9 +28,7 @@ export const CurrentUserCard: React.FC<CurrentUserCardProps> = ({
 
   return (
     <BaseCurrentUserCard currentUser={userForCard} level={displayUser.level}>
-      <div className="text-lg font-bold">
-        {formatNumberJa(displayUser.xp)}pt
-      </div>
+      <div className="text-lg font-bold">{formatNumberJa(displayUser.xp)}P</div>
     </BaseCurrentUserCard>
   );
 };

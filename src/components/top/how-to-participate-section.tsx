@@ -42,14 +42,14 @@ export function HowToParticipateSection({
         <>
           <Image
             src="/img/how-to-participate-mobile.png"
-            alt="参加方法：1. 浜通りクエストを開く 2. イベント参加・プレイヤー訪問 3. その場でポイント獲得 4. 1000ポイントで景品応募"
+            alt="参加方法：1. 浜通りクエストを開く 2. イベント参加・プレイヤー訪問 3. その場でポイント獲得 4. 1000Pで景品応募"
             width={1135}
             height={1243}
             className="w-full h-auto rounded-lg md:hidden"
           />
           <Image
             src="/img/how-to-participate.png"
-            alt="参加方法：1. 浜通りクエストを開く 2. イベント参加・プレイヤー訪問 3. その場でポイント獲得 4. 1000ポイントで景品応募"
+            alt="参加方法：1. 浜通りクエストを開く 2. イベント参加・プレイヤー訪問 3. その場でポイント獲得 4. 1000Pで景品応募"
             width={1672}
             height={693}
             className="hidden md:block w-full h-auto rounded-lg"

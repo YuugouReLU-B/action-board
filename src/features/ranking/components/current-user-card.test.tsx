@@ -96,7 +96,7 @@ describe("CurrentUserCard", () => {
       // 都道府県は表示しなくなった
       expect(screen.queryByText("東京都")).not.toBeInTheDocument();
       expect(screen.getByText("Lv.25")).toBeInTheDocument();
-      expect(screen.getByText("2,500pt")).toBeInTheDocument();
+      expect(screen.getByText("2,500P")).toBeInTheDocument();
       expect(screen.getByText("5")).toBeInTheDocument();
       expect(mockUserName).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -145,7 +145,7 @@ describe("CurrentUserCard", () => {
       const user = { ...mockUser, xp: null };
       render(<CurrentUserCard currentUser={user} />);
 
-      expect(screen.getByText("0pt")).toBeInTheDocument();
+      expect(screen.getByText("0P")).toBeInTheDocument();
     });
   });
 
@@ -164,14 +164,14 @@ describe("CurrentUserCard", () => {
       const user = { ...mockUser, xp: 123456 };
       render(<CurrentUserCard currentUser={user} />);
 
-      expect(screen.getByText("12.3万pt")).toBeInTheDocument();
+      expect(screen.getByText("12.3万P")).toBeInTheDocument();
     });
 
     it("大きな数値も正しくフォーマットされる", () => {
       const user = { ...mockUser, xp: 1000000 };
       render(<CurrentUserCard currentUser={user} />);
 
-      expect(screen.getByText("100万pt")).toBeInTheDocument();
+      expect(screen.getByText("100万P")).toBeInTheDocument();
     });
   });
 

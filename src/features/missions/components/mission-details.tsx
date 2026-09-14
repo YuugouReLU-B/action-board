@@ -1,16 +1,35 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MissionIcon } from "@/features/missions/components/mission-icon";
+import {
+  ARTIFACT_TYPES,
+  type ArtifactTypeKey,
+} from "@/lib/types/artifact-types";
 import type { Tables } from "@/lib/types/supabase";
 import { dateFormatter } from "@/lib/utils/date-formatters";
+import { googleMapsSearchUrl } from "@/lib/utils/map-links";
 
 type MissionDetailsProps = {
   mission: Tables<"missions">;
 };
 
 export function MissionDetails({ mission }: MissionDetailsProps) {
+  const { latitude, longitude } = mission;
+  const hasLocation =
+    latitude !== null &&
+    longitude !== null &&
+    Number.isFinite(latitude) &&
+    Number.isFinite(longitude) &&
+    Math.abs(latitude) <= 90 &&
+    Math.abs(longitude) <= 180;
+  const achievementPrompt = Object.hasOwn(
+    ARTIFACT_TYPES,
+    mission.required_artifact_type,
+  )
+    ? ARTIFACT_TYPES[mission.required_artifact_type as ArtifactTypeKey].prompt
+    : null;
+
   return (
     <Card>
       <CardHeader>
@@ -18,27 +37,92 @@ export function MissionDetails({ mission }: MissionDetailsProps) {
           {mission.icon_url && (
             <MissionIcon src={mission.icon_url} alt={mission.title} size="lg" />
           )}
-          <div className="flex-1 space-y-2">
+          <div className="min-w-0 flex-1">
             <CardTitle className="text-xl">{mission.title}</CardTitle>
-            <div className="flex flex-wrap gap-2">
-              {mission.event_date && (
-                <Badge variant="outline">
-                  {dateFormatter(new Date(mission.event_date))}
-                </Badge>
-              )}
-            </div>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div
-          className="text-gray-700 leading-relaxed whitespace-pre-wrap mission-content"
-          ref={(el) => {
-            if (el && mission.content) {
-              el.innerHTML = mission.content;
-            }
-          }}
-        />
+        <section aria-label="クエスト概要" className="space-y-4">
+          <h2 className="font-semibold">クエスト概要</h2>
+          <dl className="space-y-4 text-sm leading-relaxed">
+            {hasLocation && (
+              <div className="space-y-1">
+                <dt className="font-semibold">場所</dt>
+                <dd>
+                  <a
+                    href={googleMapsSearchUrl(latitude, longitude)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center rounded-sm text-brand-ink underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2"
+                  >
+                    Googleマップで場所を開く（新しいタブ）
+                  </a>
+                </dd>
+              </div>
+            )}
+            {(mission.event_date || mission.event_end_date) && (
+              <div className="space-y-1">
+                <dt className="font-semibold">
+                  {mission.event_date
+                    ? mission.event_end_date
+                      ? "開催期間"
+                      : "開催日"
+                    : "開催終了日"}
+                </dt>
+                <dd>
+                  {mission.event_date && (
+                    <time dateTime={mission.event_date}>
+                      {dateFormatter(new Date(mission.event_date))}
+                    </time>
+                  )}
+                  {mission.event_date && mission.event_end_date && " 〜 "}
+                  {mission.event_end_date && (
+                    <time dateTime={mission.event_end_date}>
+                      {dateFormatter(new Date(mission.event_end_date))}
+                    </time>
+                  )}
+                </dd>
+              </div>
+            )}
+            {achievementPrompt && (
+              <div className="space-y-1">
+                <dt className="font-semibold">達成条件</dt>
+                <dd>{achievementPrompt}</dd>
+              </div>
+            )}
+            <div className="space-y-1">
+              <dt className="font-semibold">獲得ポイント</dt>
+              <dd className="font-bold text-brand-ink">
+                {mission.points.toLocaleString("ja-JP")} pt
+              </dd>
+            </div>
+            {mission.content?.trim() && (
+              <div className="space-y-1 border-t pt-4">
+                <dt className="font-semibold">参加・受付案内</dt>
+                <dd>
+                  {/* 営業時間や予約条件を含む本文を、推測・抽出せずそのまま表示する。 */}
+                  <div
+                    className="text-gray-700 leading-relaxed whitespace-pre-wrap break-words mission-content"
+                    ref={(el) => {
+                      if (el) {
+                        el.innerHTML = mission.content ?? "";
+                      }
+                    }}
+                  />
+                </dd>
+              </div>
+            )}
+            {mission.supplement?.trim() && (
+              <div className="space-y-1">
+                <dt className="font-semibold">補足</dt>
+                <dd className="whitespace-pre-wrap break-words">
+                  {mission.supplement}
+                </dd>
+              </div>
+            )}
+          </dl>
+        </section>
       </CardContent>
     </Card>
   );

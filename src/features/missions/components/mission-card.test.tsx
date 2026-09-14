@@ -249,21 +249,30 @@ describe("Mission", () => {
 
     expect(screen.getByText("いわき市")).toBeInTheDocument();
     expect(screen.getByTestId("map-pin-icon")).toBeInTheDocument();
-    expect(
-      screen
-        .getByTestId("card-footer")
-        .querySelectorAll(".rounded-full.border"),
-    ).toHaveLength(1);
+    const tagBadge = screen.getByText("いわき市").parentElement;
+    expect(tagBadge).toHaveClass("rounded-full", "border");
+    expect(tagBadge?.parentElement?.children).toHaveLength(1);
   });
 
-  it("tag1とtag2が設定されている場合は両方のチップが表示される", () => {
+  it("両方のタグ・カテゴリのアイコン・報酬と状態・詳細リンクが共存する", () => {
     const missionWithTags = {
       ...mockMission,
       tag1: "いわき市",
       tag2: "地域交流",
+      event_category: "FOOD" as const,
     };
 
-    render(<Mission mission={missionWithTags} userAchievementCount={0} />);
+    render(<Mission mission={missionWithTags} userAchievementCount={3} />);
+
+    expect(screen.getByTestId("mission-icon")).toHaveAttribute(
+      "src",
+      "/img/quest-icons/food.png",
+    );
+    const link = screen.getByRole("link", { name: "詳細を見る" });
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(link).not.toContainElement(screen.getByText("獲得ポイント 50P"));
+    expect(link).not.toContainElement(screen.getByText("クリア済み"));
 
     const tag1Badge = screen.getByText("いわき市").parentElement;
     const tag2Badge = screen.getByText("地域交流").parentElement;
@@ -280,19 +289,20 @@ describe("Mission", () => {
 
     expect(screen.getByText("地域交流")).toBeInTheDocument();
     expect(screen.queryByTestId("map-pin-icon")).not.toBeInTheDocument();
-    expect(
-      screen
-        .getByTestId("card-footer")
-        .querySelectorAll(".rounded-full.border"),
-    ).toHaveLength(1);
+    const tagBadge = screen.getByText("地域交流").parentElement;
+    expect(tagBadge).toHaveClass("rounded-full", "border");
+    expect(tagBadge?.parentElement?.children).toHaveLength(1);
   });
 
   it("tag1とtag2が両方nullの場合はチップ群が表示されない", () => {
     render(<Mission mission={mockMission} userAchievementCount={0} />);
 
     expect(screen.queryByTestId("map-pin-icon")).not.toBeInTheDocument();
-    expect(screen.getByTestId("card-footer").children).toHaveLength(1);
-    expect(screen.getByTestId("card-footer").firstElementChild).toBe(
+    expect(screen.getByTestId("card-footer").children).toHaveLength(2);
+    expect(
+      screen.getByTestId("card-footer").firstElementChild,
+    ).toContainElement(screen.getByText("獲得ポイント 50P"));
+    expect(screen.getByTestId("card-footer").lastElementChild).toBe(
       screen.getByRole("link"),
     );
   });

@@ -94,8 +94,6 @@ it.each([
   expect(await LotteryAnnouncementBanner()).toBeNull();
   if (startDate === "2026-09-14") {
     expect(screen.getByText(/まだ応募できません/)).toBeInTheDocument();
-    expect(
-      screen.queryByText(/Pで応募できます/),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/Pで応募できます/)).not.toBeInTheDocument();
   }
 });

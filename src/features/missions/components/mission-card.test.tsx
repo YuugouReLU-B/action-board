@@ -196,12 +196,53 @@ describe("Mission", () => {
     render(<Mission mission={missionWithTag} userAchievementCount={0} />);
 
     expect(screen.getByText("いわき市")).toBeInTheDocument();
+    expect(screen.getByTestId("map-pin-icon")).toBeInTheDocument();
+    expect(
+      screen
+        .getByTestId("card-footer")
+        .querySelectorAll(".rounded-full.border"),
+    ).toHaveLength(1);
   });
 
-  it("tag1が未設定の場合は地域チップが表示されない", () => {
+  it("tag1とtag2が設定されている場合は両方のチップが表示される", () => {
+    const missionWithTags = {
+      ...mockMission,
+      tag1: "いわき市",
+      tag2: "地域交流",
+    };
+
+    render(<Mission mission={missionWithTags} userAchievementCount={0} />);
+
+    const tag1Badge = screen.getByText("いわき市").parentElement;
+    const tag2Badge = screen.getByText("地域交流").parentElement;
+    expect(tag1Badge).toHaveClass("rounded-full", "border");
+    expect(tag2Badge).toHaveClass("rounded-full", "border");
+    expect(tag1Badge?.parentElement).toBe(tag2Badge?.parentElement);
+    expect(screen.getByTestId("map-pin-icon").parentElement).toBe(tag1Badge);
+  });
+
+  it("tag1がnullでもtag2のチップは表示される", () => {
+    const missionWithTag2 = { ...mockMission, tag2: "地域交流" };
+
+    render(<Mission mission={missionWithTag2} userAchievementCount={0} />);
+
+    expect(screen.getByText("地域交流")).toBeInTheDocument();
+    expect(screen.queryByTestId("map-pin-icon")).not.toBeInTheDocument();
+    expect(
+      screen
+        .getByTestId("card-footer")
+        .querySelectorAll(".rounded-full.border"),
+    ).toHaveLength(1);
+  });
+
+  it("tag1とtag2が両方nullの場合はチップ群が表示されない", () => {
     render(<Mission mission={mockMission} userAchievementCount={0} />);
 
     expect(screen.queryByTestId("map-pin-icon")).not.toBeInTheDocument();
+    expect(screen.getByTestId("card-footer").children).toHaveLength(1);
+    expect(screen.getByTestId("card-footer").firstElementChild).toBe(
+      screen.getByRole("link"),
+    );
   });
 
   it("イベント日付がnullの場合は日付表示なし", () => {

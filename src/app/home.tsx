@@ -72,13 +72,13 @@ export default async function Home({
           ログイン済みユーザーにはヒーロー内の「遊び方」モーダルで見せるので、
           ここでは未ログイン時のみ表示する */}
       {!user && (
-        <section className="pt-4 pb-12 md:pt-6 md:pb-16 bg-background">
+        <section className="pt-4 pb-12 md:pt-6 md:pb-8 bg-background">
           <HowToParticipateSection collapsible={false} />
         </section>
       )}
 
       {/* ランキングセクション */}
-      <section className="md:py-16 bg-background">
+      <section className="md:pt-8 md:pb-16 bg-background">
         <RankingSection />
       </section>
 

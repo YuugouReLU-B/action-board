@@ -18,12 +18,12 @@ export function HowToPlayModal() {
       <DialogTrigger asChild>
         <button
           type="button"
-          className="text-sm font-bold text-gray-700 underline underline-offset-2 hover:text-gray-900"
+          className="text-sm font-bold text-white underline underline-offset-2 [text-shadow:0_1px_3px_rgba(0,0,0,0.8)] hover:text-white"
         >
           遊び方
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-[95vw] sm:max-w-2xl">
+      <DialogContent className="max-w-[95vw] sm:max-w-[90vw] md:max-w-[85vw] lg:max-w-[80vw] xl:max-w-[1400px]">
         <DialogTitle className="text-center text-xl font-extrabold">
           参加方法
         </DialogTitle>

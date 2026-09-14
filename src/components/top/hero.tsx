@@ -78,12 +78,6 @@ export default async function Hero() {
               >
                 ログインはこちら
               </Link>
-              <a
-                href="#quests"
-                className="inline-flex min-h-11 items-center rounded-full bg-white px-6 py-2 text-sm font-bold text-gray-800 underline underline-offset-4 shadow-sm hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-800"
-              >
-                クエストを探す
-              </a>
             </div>
           )}
         </div>

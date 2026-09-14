@@ -425,6 +425,8 @@ export type Database = {
           ogp_image_url: string | null;
           points: number;
           quest_category: Database["public"]["Enums"]["quest_category"];
+          address: string | null;
+          google_map_url: string | null;
           radius_meters: number | null;
           region: Database["public"]["Enums"]["mission_region"] | null;
           required_artifact_type: string;
@@ -456,6 +458,8 @@ export type Database = {
           ogp_image_url?: string | null;
           points?: number;
           quest_category?: Database["public"]["Enums"]["quest_category"];
+          address?: string | null;
+          google_map_url?: string | null;
           radius_meters?: number | null;
           region?: Database["public"]["Enums"]["mission_region"] | null;
           required_artifact_type?: string;
@@ -487,6 +491,8 @@ export type Database = {
           ogp_image_url?: string | null;
           points?: number;
           quest_category?: Database["public"]["Enums"]["quest_category"];
+          address?: string | null;
+          google_map_url?: string | null;
           radius_meters?: number | null;
           region?: Database["public"]["Enums"]["mission_region"] | null;
           required_artifact_type?: string;
@@ -1951,6 +1957,8 @@ export type Database = {
           ogp_image_url: string | null;
           points: number | null;
           quest_category: Database["public"]["Enums"]["quest_category"] | null;
+          address: string | null;
+          google_map_url: string | null;
           radius_meters: number | null;
           region: Database["public"]["Enums"]["mission_region"] | null;
           required_artifact_type: string | null;

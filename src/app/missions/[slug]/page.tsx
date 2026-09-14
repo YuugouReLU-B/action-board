@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { LotteryProgressBar } from "@/features/lottery/components/lottery-progress-bar";
 import { getQuizQuestionsAction } from "@/features/mission-detail/actions/quiz-actions";
 import { MissionWithSubmissionHistory } from "@/features/mission-detail/components/mission-with-submission-history";
 import { RelatedMissions } from "@/features/mission-detail/components/related-missions";
@@ -27,6 +28,7 @@ import {
   getUserMissionRanking,
   getUserPostingCountByMission,
 } from "@/features/ranking/loaders/ranking-loaders";
+import { getMyUserLevel } from "@/features/user-level/services/level";
 import { getUser } from "@/features/user-profile/services/profile";
 import { ARTIFACT_TYPES } from "@/lib/types/artifact-types";
 import {
@@ -130,7 +132,6 @@ export default async function MissionPage({ params, searchParams }: Props) {
 
   const {
     mission,
-    submissions,
     userAchievementCount,
     userAchievementCountMap,
     referralCode,
@@ -154,12 +155,14 @@ export default async function MissionPage({ params, searchParams }: Props) {
   const isPostingMission = mission.required_artifact_type === "POSTING";
 
   // 追加クエリを並列実行
-  const [userWithMissionRanking, userPostingCount] = await Promise.all([
-    user ? getUserMissionRanking(mission.id) : Promise.resolve(null),
-    user && isPostingMission
-      ? getUserPostingCountByMission(mission.id)
-      : Promise.resolve(0),
-  ]);
+  const [userWithMissionRanking, userPostingCount, userLevel] =
+    await Promise.all([
+      user ? getUserMissionRanking(mission.id) : Promise.resolve(null),
+      user && isPostingMission
+        ? getUserPostingCountByMission(mission.id)
+        : Promise.resolve(0),
+      user ? getMyUserLevel() : Promise.resolve(null),
+    ]);
 
   let badgeText = "";
   if (userWithMissionRanking) {
@@ -185,7 +188,8 @@ export default async function MissionPage({ params, searchParams }: Props) {
                 authUser={user}
                 referralCode={referralCode}
                 initialUserAchievementCount={userAchievementCount}
-                initialSubmissions={submissions}
+                currentTotalPoints={userLevel?.xp ?? 0}
+                lotteryProgress={<LotteryProgressBar />}
                 missionId={mission.id}
                 preloadedQuizQuestions={quizQuestions}
                 mainLink={mainLink}

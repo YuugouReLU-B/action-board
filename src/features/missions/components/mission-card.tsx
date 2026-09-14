@@ -53,8 +53,8 @@ export default function Mission({
   return (
     <article>
       <Card className="@container/card">
-        <CardHeader className="relative pl-4">
-          <div className="flex items-center gap-3">
+        <CardHeader className="relative pl-1">
+          <div className="flex items-center gap-1">
             <div className="flex flex-col items-center justify-center shrink-0">
               <div className="w-32 h-32 rounded-full p-1">
                 <div className="flex items-center justify-center w-full h-full rounded-full bg-white">

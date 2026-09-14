@@ -62,6 +62,8 @@ function parseMissionForm(formData: FormData) {
     latitude: emptyToNull(formData.get("latitude")),
     longitude: emptyToNull(formData.get("longitude")),
     radius_meters: emptyToNull(formData.get("radius_meters")),
+    address: emptyToNull(formData.get("address")),
+    google_map_url: emptyToNull(formData.get("google_map_url")),
   });
 }
 

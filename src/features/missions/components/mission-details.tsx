@@ -2,10 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MissionIcon } from "@/features/missions/components/mission-icon";
-import {
-  ARTIFACT_TYPES,
-  type ArtifactTypeKey,
-} from "@/lib/types/artifact-types";
+import { getMissionRegionLabel } from "@/features/missions/constants/mission-regions";
 import type { Tables } from "@/lib/types/supabase";
 import { dateFormatter } from "@/lib/utils/date-formatters";
 import { googleMapsSearchUrl } from "@/lib/utils/map-links";
@@ -23,22 +20,39 @@ export function MissionDetails({ mission }: MissionDetailsProps) {
     Number.isFinite(longitude) &&
     Math.abs(latitude) <= 90 &&
     Math.abs(longitude) <= 180;
-  const achievementPrompt = Object.hasOwn(
-    ARTIFACT_TYPES,
-    mission.required_artifact_type,
-  )
-    ? ARTIFACT_TYPES[mission.required_artifact_type as ArtifactTypeKey].prompt
-    : null;
+
+  const regionLabel = getMissionRegionLabel(mission.region);
+  const tags = [regionLabel, mission.tag1, mission.tag2, mission.tag3].filter(
+    (tag): tag is string => Boolean(tag),
+  );
+
+  // 管理画面で入力されたGoogleマップURLを優先し、なければ座標から検索リンクを組み立てる
+  const mapHref =
+    mission.google_map_url ||
+    (hasLocation ? googleMapsSearchUrl(latitude, longitude) : null);
+  const hasPlaceInfo = Boolean(mission.address) || Boolean(mapHref);
 
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-start gap-4">
+        <div className="flex items-center gap-4">
           {mission.icon_url && (
             <MissionIcon src={mission.icon_url} alt={mission.title} size="lg" />
           )}
           <div className="min-w-0 flex-1">
             <CardTitle className="text-xl">{mission.title}</CardTitle>
+            {tags.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border px-2 py-0.5 text-xs font-medium text-gray-700"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </CardHeader>
@@ -46,30 +60,9 @@ export function MissionDetails({ mission }: MissionDetailsProps) {
         <section aria-label="クエスト概要" className="space-y-4">
           <h2 className="font-semibold">クエスト概要</h2>
           <dl className="space-y-4 text-sm leading-relaxed">
-            {hasLocation && (
-              <div className="space-y-1">
-                <dt className="font-semibold">場所</dt>
-                <dd>
-                  <a
-                    href={googleMapsSearchUrl(latitude, longitude)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-11 items-center rounded-sm text-brand-ink underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2"
-                  >
-                    Googleマップで場所を開く（新しいタブ）
-                  </a>
-                </dd>
-              </div>
-            )}
             {(mission.event_date || mission.event_end_date) && (
-              <div className="space-y-1">
-                <dt className="font-semibold">
-                  {mission.event_date
-                    ? mission.event_end_date
-                      ? "開催期間"
-                      : "開催日"
-                    : "開催終了日"}
-                </dt>
+              <div className="flex flex-wrap items-baseline gap-1">
+                <dt className="font-semibold">日程：</dt>
                 <dd>
                   {mission.event_date && (
                     <time dateTime={mission.event_date}>
@@ -85,21 +78,39 @@ export function MissionDetails({ mission }: MissionDetailsProps) {
                 </dd>
               </div>
             )}
-            {achievementPrompt && (
-              <div className="space-y-1">
-                <dt className="font-semibold">達成条件</dt>
-                <dd>{achievementPrompt}</dd>
+            {hasPlaceInfo && (
+              <div className="flex flex-wrap items-baseline gap-1">
+                <dt className="font-semibold">場所：</dt>
+                <dd>
+                  {mission.address && mapHref ? (
+                    <a
+                      href={mapHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-11 items-center rounded-sm text-brand-ink underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2"
+                    >
+                      {mission.address}
+                    </a>
+                  ) : mission.address ? (
+                    <p>{mission.address}</p>
+                  ) : (
+                    mapHref && (
+                      <a
+                        href={mapHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-11 items-center rounded-sm text-brand-ink underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2"
+                      >
+                        Googleマップで場所を開く（新しいタブ）
+                      </a>
+                    )
+                  )}
+                </dd>
               </div>
             )}
-            <div className="space-y-1">
-              <dt className="font-semibold">獲得ポイント</dt>
-              <dd className="font-bold text-brand-ink">
-                {mission.points.toLocaleString("ja-JP")} pt
-              </dd>
-            </div>
             {mission.content?.trim() && (
-              <div className="space-y-1 border-t pt-4">
-                <dt className="font-semibold">参加・受付案内</dt>
+              <div className="space-y-1">
+                <dt className="font-semibold">内容</dt>
                 <dd>
                   {/* 営業時間や予約条件を含む本文を、推測・抽出せずそのまま表示する。 */}
                   <div
@@ -121,6 +132,12 @@ export function MissionDetails({ mission }: MissionDetailsProps) {
                 </dd>
               </div>
             )}
+            <div className="space-y-1 border-t pt-4">
+              <dt className="font-semibold">獲得ポイント</dt>
+              <dd className="font-bold text-brand-ink">
+                {mission.points.toLocaleString("ja-JP")} pt
+              </dd>
+            </div>
           </dl>
         </section>
       </CardContent>

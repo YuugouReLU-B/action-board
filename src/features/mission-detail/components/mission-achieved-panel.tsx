@@ -1,10 +1,15 @@
-import { CheckCircle2 } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import type { ReactNode } from "react";
+import { QuestClearPanel } from "@/features/mission-detail/components/quest-clear-panel";
 
 type MissionAchievedPanelProps = {
   /** シェア導線などで使うためのslug。今は使わないが将来の拡張用に受ける */
   missionSlug?: string;
+  /** このクエストの獲得ポイント */
+  points: number;
+  /** 現在の合計ポイント */
+  totalPoints: number;
+  /** サーバーコンポーネントの<LotteryProgressBar />をそのまま渡す */
+  lotteryProgress: ReactNode;
 };
 
 /**
@@ -16,20 +21,18 @@ type MissionAchievedPanelProps = {
  */
 export function MissionAchievedPanel({
   missionSlug: _missionSlug,
+  points,
+  totalPoints,
+  lotteryProgress,
 }: MissionAchievedPanelProps) {
   return (
-    <div className="rounded-xl border-2 border-emerald-200 bg-emerald-50 p-6 text-center">
-      <CheckCircle2
-        className="mx-auto mb-2 h-10 w-10 text-emerald-600"
-        aria-hidden="true"
+    <div className="space-y-4">
+      <QuestClearPanel
+        earnedPoints={points}
+        totalPoints={totalPoints}
+        note="このクエストはクリア済みです。"
       />
-      <p className="text-lg font-bold text-emerald-900">達成しました！</p>
-      <p className="mt-1 text-sm text-emerald-800">
-        このクエストはクリア済みです。
-      </p>
-      <Button asChild className="mt-4">
-        <Link href="/">ほかのクエストを見る</Link>
-      </Button>
+      {lotteryProgress}
     </div>
   );
 }

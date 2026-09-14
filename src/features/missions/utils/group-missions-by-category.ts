@@ -88,6 +88,8 @@ export function groupMissionsByCategory(
           quest_category: m.quest_category ?? "PERMANENT",
           event_category: m.event_category,
           region: m.region,
+          address: m.address,
+          google_map_url: m.google_map_url,
           difficulty: m.difficulty || 1,
           points: m.points ?? 0,
           latitude: m.latitude,

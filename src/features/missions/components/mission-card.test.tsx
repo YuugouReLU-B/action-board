@@ -106,6 +106,8 @@ const mockMission: Tables<"missions"> = {
   quest_category: "PERMANENT",
   event_category: null,
   region: null,
+  address: null,
+  google_map_url: null,
   event_date: "2025-06-22",
   max_achievement_count: 3,
   is_featured: false,

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { HeroBackdrop } from "@/components/top/hero-backdrop";
 import { HowToPlayModal } from "@/components/top/how-to-play-modal";
 import { Button } from "@/components/ui/button";
+import { LotteryProgressBar } from "@/features/lottery/components/lottery-progress-bar";
 import Levels from "@/features/user-level/components/levels";
 import { getUser } from "@/features/user-profile/services/profile";
 
@@ -23,6 +24,9 @@ export default async function Hero() {
               showName={false}
               transparent={true}
             />
+            <div className="mx-auto max-w-md px-4 pb-4">
+              <LotteryProgressBar />
+            </div>
           </div>
           <div className="absolute bottom-3 right-4 z-10">
             <HowToPlayModal />

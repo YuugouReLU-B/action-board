@@ -23,6 +23,8 @@ const mockMission: Tables<"missions"> = {
   quest_category: "PERMANENT",
   event_category: null,
   region: null,
+  address: null,
+  google_map_url: null,
   event_date: "2025-06-22",
   max_achievement_count: null,
   is_featured: true,
@@ -62,15 +64,11 @@ describe("MissionDetails", () => {
     const summary = within(
       screen.getByRole("region", { name: "クエスト概要" }),
     );
-    expect(summary.getByText("開催期間")).toBeInTheDocument();
+    expect(summary.getByText("日程：")).toBeInTheDocument();
     expect(summary.getByText("2025年6月22日")).toBeInTheDocument();
     expect(summary.getByText("2025年6月24日")).toBeInTheDocument();
     expect(summary.getByText("1,500 pt")).toBeInTheDocument();
-    expect(
-      summary.getByText(
-        "現地に着いたら「イベントに来た」ボタンを押すと、位置情報を判定して達成になります。",
-      ),
-    ).toBeInTheDocument();
+    expect(screen.queryByText("達成条件")).not.toBeInTheDocument();
     expect(
       summary.getByText("営業時間: 10時-19時（水曜定休）"),
     ).toBeInTheDocument();
@@ -106,8 +104,8 @@ describe("MissionDetails", () => {
     render(<MissionDetails mission={missionWithoutDate} />);
 
     expect(screen.queryByText("2025年6月22日")).not.toBeInTheDocument();
-    expect(screen.queryByText("開催日")).not.toBeInTheDocument();
-    expect(screen.queryByText("場所")).not.toBeInTheDocument();
+    expect(screen.queryByText("日程：")).not.toBeInTheDocument();
+    expect(screen.queryByText("場所：")).not.toBeInTheDocument();
     expect(
       screen.queryByRole("link", { name: /Googleマップ/ }),
     ).not.toBeInTheDocument();
@@ -131,6 +129,46 @@ describe("MissionDetails", () => {
 
     const contentElement = document.querySelector(".mission-content");
     expect(contentElement).not.toBeInTheDocument();
-    expect(screen.queryByText("参加・受付案内")).not.toBeInTheDocument();
+    expect(screen.queryByText("内容")).not.toBeInTheDocument();
+  });
+
+  it("地域とタグがチップで表示される", () => {
+    render(
+      <MissionDetails
+        mission={{
+          ...mockMission,
+          region: "IWAKI",
+          tag1: "海沿い",
+          tag2: "家族向け",
+        }}
+      />,
+    );
+
+    expect(screen.getByText("いわき市")).toBeInTheDocument();
+    expect(screen.getByText("海沿い")).toBeInTheDocument();
+    expect(screen.getByText("家族向け")).toBeInTheDocument();
+  });
+
+  it("住所とgoogle_map_urlがあれば住所自体がGoogleマップへのリンクになる", () => {
+    render(
+      <MissionDetails
+        mission={{
+          ...mockMission,
+          address: "福島県いわき市平字田町１",
+          google_map_url: "https://maps.app.goo.gl/example",
+        }}
+      />,
+    );
+
+    const link = screen.getByRole("link", { name: "福島県いわき市平字田町１" });
+    expect(link).toHaveAttribute("href", "https://maps.app.goo.gl/example");
+    expect(link).toHaveAttribute("target", "_blank");
+  });
+
+  it("獲得ポイントが概要欄の一番下に表示される", () => {
+    render(<MissionDetails mission={mockMission} />);
+
+    const items = screen.getAllByRole("term");
+    expect(items.at(-1)).toHaveTextContent("獲得ポイント");
   });
 });

@@ -102,6 +102,8 @@ const baseMission: Tables<"missions"> = {
   quest_category: "PERMANENT",
   event_category: null,
   region: null,
+  address: null,
+  google_map_url: null,
   event_date: null,
   max_achievement_count: null,
   is_featured: false,

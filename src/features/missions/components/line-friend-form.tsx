@@ -1,39 +1,59 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { signInWithLine } from "@/features/auth/client/line-auth";
+import { verifyLineFriendship } from "@/features/auth/actions/verify-line-friendship";
 
 interface LineFriendFormProps {
   /** 友だち追加URL。未設定なら追加ボタンを出さない */
   addFriendUrl?: string;
-  /** 確認後に戻ってくるパス */
-  returnUrl?: string;
+  onSuccess?: () => void;
 }
 
 /**
  * 公式LINE友だち追加ミッションのフォーム。
  *
- * 提出物は無い。友だちかどうかは LINE の friendFlag で判定するため、
- * 「追加を確認する」でLINE認証を1往復させて最新の状態を取り直す。
- * 同意済みなら操作なしで戻ってくる。友だちなら
- * コールバック側でミッションが自動達成される。
+ * 提出物は無い。友だちかどうかは LINE の Messaging API
+ * （チャネルアクセストークンのみで呼べる、ユーザー側の操作は不要）で判定する。
+ * ログイン済みなのに「追加を確認する」でLINEログインをやり直させるのは
+ * UXが悪いため、この方式に切り替えている。
  */
 export function LineFriendForm({
   addFriendUrl,
-  returnUrl,
+  onSuccess,
 }: LineFriendFormProps) {
+  const router = useRouter();
   const [isChecking, setIsChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleVerify = async () => {
+    setIsChecking(true);
+    setError(null);
     try {
-      setIsChecking(true);
-      setError(null);
-      await signInWithLine(returnUrl);
-    } catch (_error) {
-      setIsChecking(false);
+      const result = await verifyLineFriendship();
+      switch (result.status) {
+        case "granted":
+          onSuccess?.();
+          router.refresh();
+          return;
+        case "not_friend":
+          setError(
+            "まだ友だち追加が確認できませんでした。追加後にもう一度お試しください。",
+          );
+          return;
+        case "unauthenticated":
+          setError("ログインし直してからもう一度お試しください。");
+          return;
+        default:
+          setError(
+            "確認に失敗しました。しばらくしてからもう一度お試しください。",
+          );
+      }
+    } catch {
       setError("確認に失敗しました。もう一度お試しください。");
+    } finally {
+      setIsChecking(false);
     }
   };
 

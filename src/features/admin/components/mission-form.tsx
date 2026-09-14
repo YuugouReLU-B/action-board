@@ -415,6 +415,31 @@ export function MissionForm({
         <input type="hidden" name="is_featured" value="on" />
       )}
 
+      <fieldset className="rounded-lg border border-gray-200 p-4">
+        <legend className="px-2 text-sm font-bold">住所・地図リンク</legend>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field htmlFor="address" label="住所">
+            <input
+              name="address"
+              id="address"
+              defaultValue={mission?.address ?? ""}
+              className={inputClass}
+              placeholder="福島県いわき市..."
+            />
+          </Field>
+          <Field htmlFor="google_map_url" label="Googleマップの共有URL">
+            <input
+              name="google_map_url"
+              id="google_map_url"
+              type="url"
+              defaultValue={mission?.google_map_url ?? ""}
+              className={inputClass}
+              placeholder="https://maps.app.goo.gl/..."
+            />
+          </Field>
+        </div>
+      </fieldset>
+
       {hasLocationFields && (
         <fieldset className="rounded-lg border border-gray-200 p-4">
           <legend className="px-2 text-sm font-bold">スポットの位置</legend>

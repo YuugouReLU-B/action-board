@@ -1,6 +1,7 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { CopyReferralButton } from "@/features/mission-detail/components/copy-referral-button";
 import { GeoCheckinButton } from "@/features/mission-detail/components/geo-checkin-button";
@@ -8,9 +9,6 @@ import { MissionAchievedPanel } from "@/features/mission-detail/components/missi
 import { MissionFormWrapper } from "@/features/mission-detail/components/mission-form-wrapper";
 import QRCodeDisplay from "@/features/mission-detail/components/qr-code-display";
 import { QrSpotGuide } from "@/features/mission-detail/components/qr-spot-guide";
-import { SubmissionHistoryWrapper } from "@/features/mission-detail/components/submission-history-wrapper";
-import { getSubmissionHistory } from "@/features/mission-detail/loaders/mission-detail-loaders";
-import type { SubmissionData } from "@/features/mission-detail/types/detail-types";
 import { LineFriendForm } from "@/features/missions/components/line-friend-form";
 import { MissionGuidanceArrow } from "@/features/missions/components/mission-guidance-arrow";
 import { useMissionSubmission } from "@/features/missions/hooks/use-mission-submission";
@@ -23,7 +21,10 @@ type Props = {
   authUser: User;
   referralCode: string | null;
   initialUserAchievementCount: number;
-  initialSubmissions: SubmissionData[];
+  /** 達成演出パネルの「今のポイント」に使う、このミッション達成前の合計ポイント */
+  currentTotalPoints: number;
+  /** サーバーコンポーネントの<LotteryProgressBar />をそのまま渡す */
+  lotteryProgress: ReactNode;
   missionId: string;
   preloadedQuizQuestions?:
     | {
@@ -41,13 +42,11 @@ export function MissionWithSubmissionHistory({
   authUser,
   referralCode,
   initialUserAchievementCount,
-  initialSubmissions,
-  missionId,
+  currentTotalPoints,
+  lotteryProgress,
   preloadedQuizQuestions,
   mainLink,
 }: Props) {
-  const [submissions, setSubmissions] =
-    useState<SubmissionData[]>(initialSubmissions);
   const [userAchievementCount, setUserAchievementCount] = useState(
     initialUserAchievementCount,
   );
@@ -58,15 +57,8 @@ export function MissionWithSubmissionHistory({
     userAchievementCount,
   );
 
-  const refreshSubmissions = async () => {
-    try {
-      // 新しい記録後は最新20件を再取得
-      const data = await getSubmissionHistory(missionId, 20);
-      setSubmissions(data);
-      setUserAchievementCount((prev) => prev + 1);
-    } catch (error) {
-      console.error("Failed to refresh submissions:", error);
-    }
+  const refreshSubmissions = () => {
+    setUserAchievementCount((prev) => prev + 1);
   };
 
   // クライアントサイドでのみwindow.location.originを使用
@@ -125,19 +117,29 @@ export function MissionWithSubmissionHistory({
         (hasReachedUserMaxAchievements ? (
           // 達成済みなのに「友だち追加する」を出し続けると、
           // 下の達成履歴と矛盾して何をすればいいのか分からなくなる
-          <MissionAchievedPanel missionSlug={mission.slug} />
+          <MissionAchievedPanel
+            missionSlug={mission.slug}
+            points={mission.points}
+            totalPoints={currentTotalPoints}
+            lotteryProgress={lotteryProgress}
+          />
         ) : (
           <div className="bg-white rounded-xl border-2 p-6">
             <LineFriendForm
               addFriendUrl={mainLink?.link}
-              returnUrl={`/missions/${mission.slug}`}
+              onSuccess={refreshSubmissions}
             />
           </div>
         ))}
 
       {mission.required_artifact_type === ARTIFACT_TYPES.QR.key &&
         (hasReachedUserMaxAchievements ? (
-          <MissionAchievedPanel missionSlug={mission.slug} />
+          <MissionAchievedPanel
+            missionSlug={mission.slug}
+            points={mission.points}
+            totalPoints={currentTotalPoints}
+            lotteryProgress={lotteryProgress}
+          />
         ) : (
           <QrSpotGuide
             latitude={mission.latitude}
@@ -147,12 +149,20 @@ export function MissionWithSubmissionHistory({
 
       {mission.required_artifact_type === ARTIFACT_TYPES.GEO_CHECKIN.key &&
         (hasReachedUserMaxAchievements ? (
-          <MissionAchievedPanel missionSlug={mission.slug} />
+          <MissionAchievedPanel
+            missionSlug={mission.slug}
+            points={mission.points}
+            totalPoints={currentTotalPoints}
+            lotteryProgress={lotteryProgress}
+          />
         ) : (
           <GeoCheckinButton
             missionId={mission.id}
             latitude={mission.latitude}
             longitude={mission.longitude}
+            eventDate={mission.event_date}
+            currentTotalPoints={currentTotalPoints}
+            lotteryProgress={lotteryProgress}
             onSuccess={refreshSubmissions}
           />
         ))}
@@ -170,14 +180,6 @@ export function MissionWithSubmissionHistory({
             mainLink={mainLink}
           />
         )}
-
-      {submissions.length > 0 && (
-        <SubmissionHistoryWrapper
-          submissions={submissions}
-          missionId={missionId}
-          userId={authUser.id}
-        />
-      )}
     </>
   );
 }

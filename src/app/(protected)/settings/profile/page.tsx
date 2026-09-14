@@ -1,9 +1,7 @@
 import { redirect } from "next/navigation";
 import type { Message } from "@/components/common/form-message";
-import { getFirstMissionPath } from "@/features/missions/services/first-mission";
 import { getProfile, getUser } from "@/features/user-profile/services/profile";
 import ProfileForm from "@/features/user-settings/components/profile-form";
-import { createAdminClient } from "@/lib/supabase/adminClient";
 
 type ProfileSettingsPageSearchParams = {
   new: string;
@@ -34,11 +32,8 @@ export default async function ProfileSettingsPage({
 
   const publicUser = await getProfile(user.id);
 
-  // 登録直後はトップではなく最初のミッションへ送る
-  const nextUrlAfterSignup = await getFirstMissionPath(
-    await createAdminClient(),
-    user.id,
-  );
+  // 登録直後はトップではなく初回クエストクリア画面へ送る
+  const nextUrlAfterSignup = "/welcome";
 
   return (
     <div className="flex flex-col items-center justify-center py-2">

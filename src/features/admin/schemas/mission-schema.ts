@@ -47,6 +47,8 @@ export const missionSchema = z
     latitude: z.coerce.number().min(-90).max(90).nullable(),
     longitude: z.coerce.number().min(-180).max(180).nullable(),
     radius_meters: z.coerce.number().int().min(1).max(20000).nullable(),
+    address: z.string().max(300).optional().nullable(),
+    google_map_url: z.string().max(500).optional().nullable(),
   })
   .refine(
     (data) =>

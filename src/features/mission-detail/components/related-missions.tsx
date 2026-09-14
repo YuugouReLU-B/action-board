@@ -1,22 +1,17 @@
 import { HorizontalScrollContainer } from "@/features/missions/components/horizontal-scroll-container";
 import Mission from "@/features/missions/components/mission-card";
-import { getMissionDisplayCount } from "@/features/missions/utils/get-mission-display-count";
 import type { MissionForComponent } from "@/features/missions/utils/group-missions-by-category";
 
 interface RelatedMissionsProps {
   missions: MissionForComponent[];
   categoryTitle: string;
   userAchievementCountMap: Map<string, number>;
-  achievementCountMap: Map<string, number>;
-  postingCountMap?: Map<string, number>;
 }
 
 export async function RelatedMissions({
   missions,
   categoryTitle,
   userAchievementCountMap,
-  achievementCountMap,
-  postingCountMap,
 }: RelatedMissionsProps) {
   if (missions.length === 0) {
     return null; // ミッションがない場合は何も表示しない
@@ -33,11 +28,6 @@ export async function RelatedMissions({
             <div key={mission.id} className="shrink-0 w-[300px]">
               <Mission
                 mission={mission}
-                achievementsCount={getMissionDisplayCount(
-                  mission.id,
-                  achievementCountMap,
-                  postingCountMap,
-                )}
                 userAchievementCount={
                   userAchievementCountMap.get(mission.id) ?? 0
                 }

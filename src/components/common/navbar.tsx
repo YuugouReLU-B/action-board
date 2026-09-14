@@ -26,7 +26,9 @@ export default async function Navbar() {
               width={48}
               height={48}
             />
-            <div className="text-lg">浜通りクエスト</div>
+            <div className="text-sm leading-tight sm:text-lg">
+              浜通りクエスト（ベータ）
+            </div>
           </Link>
         </div>
         {user ? (

@@ -21,10 +21,6 @@ import {
 } from "@/features/mission-detail/loaders/mission-detail-loaders";
 import { isUUID } from "@/features/mission-detail/services/mission-detail";
 import { MissionDetails } from "@/features/missions/components/mission-details";
-import {
-  getMissionAchievementCounts,
-  getPostingCountsForMissions,
-} from "@/features/missions/loaders/missions-loaders";
 import { CurrentUserCardMission } from "@/features/ranking/components/current-user-card-mission";
 import { RankingMission } from "@/features/ranking/components/ranking-mission";
 import {
@@ -158,21 +154,11 @@ export default async function MissionPage({ params, searchParams }: Props) {
   const isPostingMission = mission.required_artifact_type === "POSTING";
 
   // 追加クエリを並列実行
-  const [
-    userWithMissionRanking,
-    userPostingCount,
-    achievementCountMap,
-    postingCountMap,
-  ] = await Promise.all([
+  const [userWithMissionRanking, userPostingCount] = await Promise.all([
     user ? getUserMissionRanking(mission.id) : Promise.resolve(null),
     user && isPostingMission
       ? getUserPostingCountByMission(mission.id)
       : Promise.resolve(0),
-    getMissionAchievementCounts(),
-    getPostingCountsForMissions([
-      mission,
-      ...allCategoryMissions.flatMap((c) => c.missions),
-    ]),
   ]);
 
   let badgeText = "";
@@ -268,8 +254,6 @@ export default async function MissionPage({ params, searchParams }: Props) {
               missions={categoryData.missions}
               categoryTitle={categoryData.categoryTitle}
               userAchievementCountMap={userAchievementCountMap}
-              achievementCountMap={achievementCountMap}
-              postingCountMap={postingCountMap}
             />
           ))}
         </div>

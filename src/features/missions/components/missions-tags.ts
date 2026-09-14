@@ -3,7 +3,6 @@ import type { Tables } from "@/lib/types/supabase";
 
 export type TaggedMission = {
   mission: Tables<"missions">;
-  achievementsCount: number;
   userAchievementCount: number;
   achieved: boolean;
   /** 常設クエスト / 特設クエスト（category_kbn由来） */
@@ -44,12 +43,10 @@ export function getRegionLabel(missionTitle: string): string {
 export function toTaggedMission(
   mission: MissionForComponent,
   category: { categoryKbn: string; categoryTitle: string },
-  achievementsCount: number,
   userAchievementCount: number,
 ): TaggedMission {
   return {
     mission,
-    achievementsCount,
     userAchievementCount,
     achieved: userAchievementCount > 0,
     questType: getQuestTypeLabel(category.categoryKbn),

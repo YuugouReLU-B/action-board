@@ -160,16 +160,13 @@ export function MissionsTagFilter({ missions }: { missions: TaggedMission[] }) {
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-4 px-4 md:grid-cols-2 md:px-0 lg:grid-cols-3">
-          {filtered.map(
-            ({ mission, achievementsCount, userAchievementCount }) => (
-              <Mission
-                key={mission.id}
-                mission={mission}
-                achievementsCount={achievementsCount}
-                userAchievementCount={userAchievementCount}
-              />
-            ),
-          )}
+          {filtered.map(({ mission, userAchievementCount }) => (
+            <Mission
+              key={mission.id}
+              mission={mission}
+              userAchievementCount={userAchievementCount}
+            />
+          ))}
         </div>
       )}
     </div>

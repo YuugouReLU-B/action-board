@@ -5,14 +5,12 @@ jest.mock("@/features/missions/components/mission-card", () => {
   return function MockMission({
     mission,
     achieved,
-    achievementsCount,
     userAchievementCount,
   }: any) {
     return (
       <div data-testid={`mission-${mission.id}`}>
         <div data-testid="mission-title">{mission.title}</div>
         <div data-testid="achieved">{achieved.toString()}</div>
-        <div data-testid="achievements-count">{achievementsCount}</div>
         <div data-testid="user-achievement-count">{userAchievementCount}</div>
       </div>
     );

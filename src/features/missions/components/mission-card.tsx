@@ -2,8 +2,9 @@
 
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { UsersRound } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { MissionIcon } from "@/features/missions/components/mission-icon";
@@ -17,13 +18,11 @@ import MissionAchievementStatus from "./mission-achievement-status";
 
 interface MissionProps {
   mission: Tables<"missions">;
-  achievementsCount: number;
   userAchievementCount: number;
 }
 
 export default function Mission({
   mission,
-  achievementsCount,
   userAchievementCount,
 }: MissionProps) {
   // 最大達成回数が設定されている場合、ユーザーの達成回数が最大に達しているかどうかを確認
@@ -60,8 +59,6 @@ export default function Mission({
               </div>
               <MissionAchievementStatus
                 hasReachedMaxAchievements={hasReachedMaxAchievements}
-                userAchievementCount={userAchievementCount}
-                maxAchievementCount={mission.max_achievement_count}
               />
             </div>
             <div className="flex-1">
@@ -78,13 +75,16 @@ export default function Mission({
         </CardHeader>
 
         <CardFooter className="flex flex-col items-stretch gap-3">
-          <div className="flex items-center">
-            <UsersRound className="size-4 mr-2" />
-            <span className="text-sm font-medium text-gray-700">
-              みんなで{achievementsCount.toLocaleString()}
-              {mission.required_artifact_type === "POSTING" ? "枚" : "回"}達成
-            </span>
-          </div>
+          {mission.tag1 && (
+            <div className="flex items-center">
+              <Badge variant="outline" className="text-xs px-2">
+                <MapPin size={14} className="mr-1" />
+                <span className="text-sm font-medium text-gray-700">
+                  {mission.tag1}
+                </span>
+              </Badge>
+            </div>
+          )}
           <Link
             href={`/missions/${mission.slug || mission.id}`}
             className="block"

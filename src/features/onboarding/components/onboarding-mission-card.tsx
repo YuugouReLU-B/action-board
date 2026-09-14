@@ -2,7 +2,6 @@
 
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import MissionAchievementStatus from "@/features/missions/components/mission-achievement-status";
@@ -12,14 +11,12 @@ import type { Tables } from "@/lib/types/supabase";
 
 interface OnboardingMissionCardProps {
   mission: Omit<Tables<"missions">, "slug">;
-  achievementsCount?: number;
   userAchievementCount?: number;
   onCardClick?: () => void;
 }
 
 export default function OnboardingMissionCard({
   mission,
-  achievementsCount,
   userAchievementCount = 0,
   onCardClick,
 }: OnboardingMissionCardProps) {
@@ -48,8 +45,6 @@ export default function OnboardingMissionCard({
             </div>
             <MissionAchievementStatus
               hasReachedMaxAchievements={hasReachedMaxAchievements}
-              userAchievementCount={userAchievementCount}
-              maxAchievementCount={mission.max_achievement_count}
             />
           </div>
           <div className="flex-1">
@@ -65,14 +60,6 @@ export default function OnboardingMissionCard({
 
       <CardFooter className="flex flex-col items-stretch gap-6">
         <div className="flex flex-col items-start gap-1.5">
-          <div className="flex items-center">
-            <UsersRound className="size-4 mr-2" />
-            <span className="text-sm font-medium text-gray-700">
-              {achievementsCount !== undefined
-                ? `みんなで${achievementsCount.toLocaleString()}${mission.required_artifact_type === "POSTING" ? "枚" : "回"}達成`
-                : `みんなで0${mission.required_artifact_type === "POSTING" ? "枚" : "回"}達成`}
-            </span>
-          </div>
           <div className="flex items-center">
             <span className="text-sm font-medium text-gray-700">
               獲得ポイント：

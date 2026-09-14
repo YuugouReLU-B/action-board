@@ -209,16 +209,13 @@ export function MissionsCalendarView({ missions }: MissionsCalendarViewProps) {
       </p>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {sortedMissions.map(
-          ({ mission, achievementsCount, userAchievementCount }) => (
-            <Mission
-              key={mission.id}
-              mission={mission}
-              achievementsCount={achievementsCount}
-              userAchievementCount={userAchievementCount}
-            />
-          ),
-        )}
+        {sortedMissions.map(({ mission, userAchievementCount }) => (
+          <Mission
+            key={mission.id}
+            mission={mission}
+            userAchievementCount={userAchievementCount}
+          />
+        ))}
       </div>
     </div>
   );

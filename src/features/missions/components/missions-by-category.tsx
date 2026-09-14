@@ -1,9 +1,4 @@
-import {
-  getMissionAchievementCounts,
-  getMissionCategoryView,
-  getPostingCountsForMissions,
-} from "@/features/missions/loaders/missions-loaders";
-import { getMissionDisplayCount } from "@/features/missions/utils/get-mission-display-count";
+import { getMissionCategoryView } from "@/features/missions/loaders/missions-loaders";
 import { groupMissionsByCategory } from "@/features/missions/utils/group-missions-by-category";
 import { getUserMissionAchievements } from "@/features/user-achievements/loaders/achievements-loaders";
 import { toTaggedMission } from "./missions-tags";
@@ -24,22 +19,8 @@ export default async function MissionsByCategory({
   // ユーザーが達成したミッションIDのリスト
   const achievedMissionIds = Array.from(userAchievementCountMap.keys());
 
-  // 全体の達成数取得
-  const achievementCountMap = await getMissionAchievementCounts();
-
   // View からミッションデータ取得
   const data = await getMissionCategoryView();
-
-  // ポスティングミッションの合計枚数を取得
-  const missionsForPostingCount = data
-    .filter((m) => m.mission_id)
-    .map((m) => ({
-      id: m.mission_id as string,
-      required_artifact_type: m.required_artifact_type,
-    }));
-  const postingCountMap = await getPostingCountsForMissions(
-    missionsForPostingCount,
-  );
 
   if (data.length === 0) {
     return (
@@ -63,11 +44,6 @@ export default async function MissionsByCategory({
       toTaggedMission(
         mission,
         category,
-        getMissionDisplayCount(
-          mission.id,
-          achievementCountMap,
-          postingCountMap,
-        ),
         userAchievementCountMap.get(mission.id) ?? 0,
       ),
     ),

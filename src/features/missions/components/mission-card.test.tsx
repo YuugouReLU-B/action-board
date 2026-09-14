@@ -108,32 +108,19 @@ jest.mock("@/features/missions/components/mission-icon", () => ({
 jest.mock("@/features/missions/components/mission-achievement-status", () => {
   return function MockMissionAchievementStatus({
     hasReachedMaxAchievements,
-    userAchievementCount,
-    maxAchievementCount,
   }: {
     hasReachedMaxAchievements: boolean;
-    userAchievementCount: number;
-    maxAchievementCount: number | null;
   }) {
     if (hasReachedMaxAchievements) {
       return <div data-testid="achievement-status">達成済み</div>;
     }
-    if (maxAchievementCount !== null) {
-      return (
-        <div data-testid="achievement-status">
-          {userAchievementCount}/{maxAchievementCount}回達成
-        </div>
-      );
-    }
-    return (
-      <div data-testid="achievement-status">{userAchievementCount}回達成</div>
-    );
+    return null;
   };
 });
 
 jest.mock("lucide-react", () => ({
-  UsersRound: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="users-round-icon" />
+  MapPin: ({ className }: { className?: string }) => (
+    <div className={className} data-testid="map-pin-icon" />
   ),
 }));
 
@@ -168,39 +155,20 @@ const mockMission: Tables<"missions"> = {
 
 describe("Mission", () => {
   it("ミッション情報が正しく表示される", () => {
-    render(
-      <Mission
-        mission={mockMission}
-        achievementsCount={10}
-        userAchievementCount={0}
-      />,
-    );
+    render(<Mission mission={mockMission} userAchievementCount={0} />);
 
     expect(screen.getByText("テストミッション")).toBeInTheDocument();
-    expect(screen.getByText("みんなで10回達成")).toBeInTheDocument();
     expect(screen.getByText("50P獲得")).toBeInTheDocument();
   });
 
   it("イベント日付が正しく表示される", () => {
-    render(
-      <Mission
-        mission={mockMission}
-        achievementsCount={5}
-        userAchievementCount={0}
-      />,
-    );
+    render(<Mission mission={mockMission} userAchievementCount={0} />);
 
     expect(screen.getByText("6月22日（日）開催")).toBeInTheDocument();
   });
 
   it("最大達成回数に達した場合の表示が正しい", () => {
-    render(
-      <Mission
-        mission={mockMission}
-        achievementsCount={15}
-        userAchievementCount={3}
-      />,
-    );
+    render(<Mission mission={mockMission} userAchievementCount={3} />);
 
     expect(screen.getByText("クリア済み")).toBeInTheDocument();
   });
@@ -208,13 +176,7 @@ describe("Mission", () => {
   it("最大達成回数が設定されていない場合は制限なし", () => {
     const missionWithoutLimit = { ...mockMission, max_achievement_count: null };
 
-    render(
-      <Mission
-        mission={missionWithoutLimit}
-        achievementsCount={20}
-        userAchievementCount={5}
-      />,
-    );
+    render(<Mission mission={missionWithoutLimit} userAchievementCount={5} />);
 
     expect(screen.getByText("もう一回50P獲得")).toBeInTheDocument();
   });
@@ -222,60 +184,30 @@ describe("Mission", () => {
   it("アイコンURLがnullの場合はフォールバック画像を使用", () => {
     const missionWithoutIcon = { ...mockMission, icon_url: null };
 
-    render(
-      <Mission
-        mission={missionWithoutIcon}
-        achievementsCount={0}
-        userAchievementCount={0}
-      />,
-    );
+    render(<Mission mission={missionWithoutIcon} userAchievementCount={0} />);
 
     const missionIcon = document.querySelector("img");
     expect(missionIcon?.getAttribute("src")).toContain("mission_fallback.svg");
   });
 
-  it("達成回数が0の場合の表示", () => {
-    render(
-      <Mission
-        mission={mockMission}
-        achievementsCount={0}
-        userAchievementCount={0}
-      />,
-    );
+  it("tag1が設定されている場合は地域チップが表示される", () => {
+    const missionWithTag = { ...mockMission, tag1: "いわき市" };
 
-    expect(screen.getByText("みんなで0回達成")).toBeInTheDocument();
+    render(<Mission mission={missionWithTag} userAchievementCount={0} />);
+
+    expect(screen.getByText("いわき市")).toBeInTheDocument();
   });
 
-  it("ポスティングミッションでは枚数表示になる", () => {
-    const postingMission = {
-      ...mockMission,
-      required_artifact_type: "POSTING",
-    };
+  it("tag1が未設定の場合は地域チップが表示されない", () => {
+    render(<Mission mission={mockMission} userAchievementCount={0} />);
 
-    render(
-      <Mission
-        mission={postingMission}
-        achievementsCount={30000}
-        userAchievementCount={0}
-      />,
-    );
-
-    const formattedCount = (30000).toLocaleString();
-    expect(
-      screen.getByText(`みんなで${formattedCount}枚達成`),
-    ).toBeInTheDocument();
+    expect(screen.queryByTestId("map-pin-icon")).not.toBeInTheDocument();
   });
 
   it("イベント日付がnullの場合は日付表示なし", () => {
     const missionWithoutDate = { ...mockMission, event_date: null };
 
-    render(
-      <Mission
-        mission={missionWithoutDate}
-        achievementsCount={5}
-        userAchievementCount={0}
-      />,
-    );
+    render(<Mission mission={missionWithoutDate} userAchievementCount={0} />);
 
     expect(screen.queryByText(/開催/)).not.toBeInTheDocument();
   });

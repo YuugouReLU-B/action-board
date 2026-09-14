@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { after } from "next/server";
 import { z } from "zod";
 import { PREFECTURES } from "@/lib/constants/prefectures";
 import { formatZodErrors } from "@/lib/utils/validation-utils";
@@ -132,35 +133,38 @@ export async function updateProfile(
       };
     }
 
-    // ウェルカムメール送信
-    try {
-      if (input.email) {
-        await mail.sendWelcomeMail(input.email);
+    // ウェルカムメール送信・サインアップアクティビティ記録は本人の登録完了を
+    // 待たせる必要がない付帯処理。レスポンスを返したあとにバックグラウンドで行う
+    // （メール送信が失敗/遅延すると登録ボタンの反応がそのぶん遅く見えていた）
+    after(async () => {
+      try {
+        if (input.email) {
+          await mail.sendWelcomeMail(input.email);
+        }
+      } catch (e) {
+        console.error("案内メール送信失敗:", e);
       }
-    } catch (e) {
-      console.error("案内メール送信失敗:", e);
-    }
 
-    // サインアップアクティビティ記録
-    try {
-      // 既存のサインアップアクティビティをチェック
-      const { data: existingActivity } = await adminSupabase
-        .from("user_activities")
-        .select("id")
-        .eq("user_id", input.userId)
-        .eq("activity_type", "signup")
-        .maybeSingle();
+      try {
+        // 既存のサインアップアクティビティをチェック
+        const { data: existingActivity } = await adminSupabase
+          .from("user_activities")
+          .select("id")
+          .eq("user_id", input.userId)
+          .eq("activity_type", "signup")
+          .maybeSingle();
 
-      if (!existingActivity) {
-        await adminSupabase.from("user_activities").insert({
-          user_id: input.userId,
-          activity_type: "signup",
-          activity_title: `${validatedData.name}さんが仲間入りしました！`,
-        });
+        if (!existingActivity) {
+          await adminSupabase.from("user_activities").insert({
+            user_id: input.userId,
+            activity_type: "signup",
+            activity_title: `${validatedData.name}さんが仲間入りしました！`,
+          });
+        }
+      } catch (e) {
+        console.error("サインアップアクティビティ記録失敗:", e);
       }
-    } catch (e) {
-      console.error("サインアップアクティビティ記録失敗:", e);
-    }
+    });
   } else {
     const { error: privateUserError } = await adminSupabase
       .from("private_users")

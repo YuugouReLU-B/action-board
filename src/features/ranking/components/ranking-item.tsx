@@ -34,11 +34,6 @@ export function RankingItem({
         <UserName name={user.name ?? ""} nameClassName="font-bold text-lg" />
         {/* 都道府県は表示しない。浜通り向けでは意味が薄いうえ、
             未選択の人が北海道として並んでしまっていた */}
-        <div className="flex items-center gap-1 mt-0.5">
-          <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
-            Lv.{user.level}
-          </span>
-        </div>
         {showDetailedInfo && (
           <div className="text-xs text-gray-500 mt-1">ID: {user.user_id}</div>
         )}

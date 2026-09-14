@@ -47,12 +47,6 @@ jest.mock("@/components/ui/card", () => ({
   ),
 }));
 
-jest.mock("@/features/ranking/components/ranking-level-badge", () => ({
-  LevelBadge: ({ level }: { level: number }) => (
-    <span data-testid="level-badge">Lv.{level}</span>
-  ),
-}));
-
 jest.mock("@/features/ranking/utils/ranking-utils", () => ({
   formatUserDisplayName: (name: string) => name || "名前未設定",
   formatUserPrefecture: (prefecture: string) => prefecture || "未設定",
@@ -95,7 +89,7 @@ describe("CurrentUserCard", () => {
       expect(screen.getByText("テストユーザー")).toBeInTheDocument();
       // 都道府県は表示しなくなった
       expect(screen.queryByText("東京都")).not.toBeInTheDocument();
-      expect(screen.getByText("Lv.25")).toBeInTheDocument();
+      expect(screen.queryByText(/^Lv\./)).not.toBeInTheDocument();
       expect(screen.getByText("2,500pt")).toBeInTheDocument();
       expect(screen.getByText("5")).toBeInTheDocument();
       expect(mockUserName).toHaveBeenCalledWith(
@@ -112,10 +106,10 @@ describe("CurrentUserCard", () => {
       expect(screen.getByTestId("user-icon")).toBeInTheDocument();
     });
 
-    it("レベルが都道府県の横に表示される", () => {
+    it("レベルバッジを表示しない", () => {
       render(<CurrentUserCard currentUser={mockUser} />);
 
-      expect(screen.getByText("Lv.25")).toBeInTheDocument();
+      expect(screen.queryByText(/^Lv\./)).not.toBeInTheDocument();
     });
   });
 
@@ -134,11 +128,11 @@ describe("CurrentUserCard", () => {
       expect(rankElement).toBeInTheDocument();
     });
 
-    it("levelがnullの場合は0が表示される", () => {
+    it("levelがnullでもレベルバッジを表示しない", () => {
       const user = { ...mockUser, level: null };
       render(<CurrentUserCard currentUser={user} />);
 
-      expect(screen.getByText("Lv.0")).toBeInTheDocument();
+      expect(screen.queryByText(/^Lv\./)).not.toBeInTheDocument();
     });
 
     it("xpがnullの場合は0ptが表示される", () => {

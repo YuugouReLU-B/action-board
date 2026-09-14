@@ -23,7 +23,7 @@ export const MOCK_MISSION = {
   title: "浜通りクエストの公式LINEを友だち追加しよう",
   artifact_label: null,
   content:
-    "<p>イベントの案内や新しいスポットの情報は、公式LINEからお届けします。</p><p>友だち追加しておくと見逃しがありません！</p><br/><a href='https://line.me/R/ti/p/@374qbhlm' target='_blank' rel='noopener noreferrer' class='transition-colors inline-flex items-center gap-1'>浜通りクエスト公式LINE<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='inline-block'><path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'></path><polyline points='15 3 21 3 21 9'></polyline><line x1='10' y1='14' x2='21' y2='3'></line></svg></a>",
+    "<p>イベントの案内や新しいスポットの情報は、公式LINEからお届けします。</p><p>友だち追加しておくと見逃しがありません！</p><br/><a href='https://lin.ee/W1MqrJI' target='_blank' rel='noopener noreferrer' class='transition-colors inline-flex items-center gap-1'>浜通りクエスト公式LINE<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='inline-block'><path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'></path><polyline points='15 3 21 3 21 9'></polyline><line x1='10' y1='14' x2='21' y2='3'></line></svg></a>",
   icon_url:
     "/img/mission-icons/actionboard_icon_work_20250713_ol_add-line-friend.svg",
   difficulty: 5,

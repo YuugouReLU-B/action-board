@@ -1,18 +1,17 @@
 "use client";
 
 import { Calendar as CalendarIcon, List, Map as MapIcon } from "lucide-react";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MissionsCalendarView } from "@/features/missions/components/missions-calendar-view";
 import { MissionsMapView } from "@/features/missions/components/missions-map-view";
-import { MissionsTagFilter } from "@/features/missions/components/missions-tag-filter";
 import type { TaggedMission } from "@/features/missions/components/missions-tags";
 
 type ViewMode = "list" | "map" | "calendar";
 
 type MissionsViewToggleProps = {
-  /** 一覧モード（タグ絞り込み）で表示する全ミッション */
-  listMissions: TaggedMission[];
+  /** クエストカテゴリ別の横スクロール一覧 */
+  children: ReactNode;
   /** 地図モードで表示する、座標を持つミッションの一覧 */
   mapMissions: TaggedMission[];
   /** カレンダーモードで表示する、開催日を持つ特設クエストの一覧 */
@@ -20,7 +19,7 @@ type MissionsViewToggleProps = {
 };
 
 export function MissionsViewToggle({
-  listMissions,
+  children,
   mapMissions,
   calendarMissions,
 }: MissionsViewToggleProps) {
@@ -78,7 +77,7 @@ export function MissionsViewToggle({
         )}
       </div>
 
-      {view === "list" && <MissionsTagFilter missions={listMissions} />}
+      {view === "list" && children}
 
       {view === "map" && (
         <div className="w-full md:container md:mx-auto px-4">

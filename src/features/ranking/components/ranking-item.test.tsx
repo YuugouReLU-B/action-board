@@ -112,8 +112,8 @@ describe("RankingItem", () => {
       expect(screen.getByText("テストユーザー")).toBeInTheDocument();
       // 都道府県は表示しなくなった
       expect(screen.queryByText("東京都")).not.toBeInTheDocument();
-      expect(screen.getByText("Lv.15")).toBeInTheDocument();
-      expect(screen.getByText("1,500pt")).toBeInTheDocument();
+      expect(screen.queryByText(/^Lv\./)).not.toBeInTheDocument();
+      expect(screen.getByText("1,500P")).toBeInTheDocument();
       expect(mockUserName).toHaveBeenCalledWith(
         expect.objectContaining({
           name: "テストユーザー",
@@ -182,11 +182,11 @@ describe("RankingItem", () => {
         />,
       );
 
-      expect(screen.getByText("2,500pt")).toBeInTheDocument();
+      expect(screen.getByText("2,500P")).toBeInTheDocument();
       expect(screen.getByText("5回達成")).toBeInTheDocument();
     });
 
-    it("ミッション別ランキングの場合もレベルが表示される", () => {
+    it("ミッション別ランキングでもレベルバッジを表示しない", () => {
       render(
         <RankingItem
           user={mockUserRanking}
@@ -198,7 +198,7 @@ describe("RankingItem", () => {
 
       // 都道府県は表示しなくなった
       expect(screen.queryByText("東京都")).not.toBeInTheDocument();
-      expect(screen.getByText("Lv.15")).toBeInTheDocument();
+      expect(screen.queryByText(/^Lv\./)).not.toBeInTheDocument();
     });
 
     it("userWithMissionがnullの場合は0ptが表示される", () => {
@@ -211,7 +211,7 @@ describe("RankingItem", () => {
         />,
       );
 
-      expect(screen.getByText("0pt")).toBeInTheDocument();
+      expect(screen.getByText("0P")).toBeInTheDocument();
     });
   });
 
@@ -240,16 +240,16 @@ describe("RankingItem", () => {
       const user = { ...mockUserRanking, xp: null };
       render(<RankingItem user={user} />);
 
-      expect(screen.getByText("0pt")).toBeInTheDocument();
+      expect(screen.getByText("0P")).toBeInTheDocument();
     });
 
-    it("レベルがnullの場合はLv.が表示される", () => {
+    it("レベルがnullでもレベルバッジを表示しない", () => {
       const user = { ...mockUserRanking, level: null };
       render(<RankingItem user={user} />);
 
       // 都道府県は表示しなくなった
       expect(screen.queryByText("東京都")).not.toBeInTheDocument();
-      expect(screen.getByText("Lv.")).toBeInTheDocument();
+      expect(screen.queryByText(/^Lv\./)).not.toBeInTheDocument();
     });
   });
 
@@ -258,7 +258,7 @@ describe("RankingItem", () => {
       render(<RankingItem user={mockUserRanking} />);
       const badge = screen.getByTestId("badge");
       expect(badge).toHaveClass("bg-emerald-100 text-emerald-700");
-      expect(screen.getByText("1,500pt")).toBeInTheDocument();
+      expect(screen.getByText("1,500P")).toBeInTheDocument();
     });
 
     it("ミッションランキングではemeraldバッジでptが表示され回数はプレーンテキスト", () => {
@@ -272,7 +272,7 @@ describe("RankingItem", () => {
       );
       const badge = screen.getByTestId("badge");
       expect(badge).toHaveClass("bg-emerald-100 text-emerald-700");
-      expect(screen.getByText("2,500pt")).toBeInTheDocument();
+      expect(screen.getByText("2,500P")).toBeInTheDocument();
       expect(screen.getByText("5回")).toBeInTheDocument();
     });
   });

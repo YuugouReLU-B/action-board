@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import type { Tables } from "@/lib/types/supabase";
 import { MissionDetails } from "./mission-details";
 
@@ -20,6 +20,8 @@ const mockMission: Tables<"missions"> = {
   longitude: null,
   radius_meters: null,
   icon_url: "/test-icon.svg",
+  quest_category: "PERMANENT",
+  event_category: null,
   event_date: "2025-06-22",
   max_achievement_count: null,
   is_featured: true,
@@ -39,11 +41,46 @@ const mockMission: Tables<"missions"> = {
 };
 
 describe("MissionDetails", () => {
-  it("ミッション詳細が正しく表示される", () => {
-    render(<MissionDetails mission={mockMission} />);
+  it("来訪に必要な情報を同じ概要欄に表示する", () => {
+    render(
+      <MissionDetails
+        mission={{
+          ...mockMission,
+          latitude: 37.5,
+          longitude: 141,
+          required_artifact_type: "GEO_CHECKIN",
+          points: 1500,
+          event_end_date: "2025-06-24",
+          content: "営業時間: 10時-19時（水曜定休）",
+          supplement: "事前予約が必要です。",
+        }}
+      />,
+    );
 
     expect(screen.getByText("テストミッション")).toBeInTheDocument();
-    expect(screen.getByText("2025年6月22日")).toBeInTheDocument();
+    const summary = within(
+      screen.getByRole("region", { name: "クエスト概要" }),
+    );
+    expect(summary.getByText("開催期間")).toBeInTheDocument();
+    expect(summary.getByText("2025年6月22日")).toBeInTheDocument();
+    expect(summary.getByText("2025年6月24日")).toBeInTheDocument();
+    expect(summary.getByText("1,500 pt")).toBeInTheDocument();
+    expect(
+      summary.getByText(
+        "現地に着いたら「イベントに来た」ボタンを押すと、位置情報を判定して達成になります。",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      summary.getByText("営業時間: 10時-19時（水曜定休）"),
+    ).toBeInTheDocument();
+    expect(summary.getByText("事前予約が必要です。")).toBeInTheDocument();
+    const mapLink = summary.getByRole("link", { name: /Googleマップ/ });
+    expect(mapLink).toHaveAttribute(
+      "href",
+      "https://www.google.com/maps/search/?api=1&query=37.5,141",
+    );
+    expect(mapLink).toHaveAttribute("target", "_blank");
+    expect(mapLink).toHaveAttribute("rel", "noopener noreferrer");
   });
 
   it("アイコンが表示される", () => {
@@ -62,12 +99,18 @@ describe("MissionDetails", () => {
     expect(screen.queryByAltText("テストミッション")).not.toBeInTheDocument();
   });
 
-  it("イベント日付がない場合は日付バッジが表示されない", () => {
+  it("未設定の場所・開催日・補足は表示しない", () => {
     const missionWithoutDate = { ...mockMission, event_date: null };
 
     render(<MissionDetails mission={missionWithoutDate} />);
 
     expect(screen.queryByText("2025年6月22日")).not.toBeInTheDocument();
+    expect(screen.queryByText("開催日")).not.toBeInTheDocument();
+    expect(screen.queryByText("場所")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /Googleマップ/ }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("補足")).not.toBeInTheDocument();
   });
 
   it("ミッション内容がHTMLとして表示される", () => {
@@ -86,7 +129,7 @@ describe("MissionDetails", () => {
     render(<MissionDetails mission={missionWithoutContent} />);
 
     const contentElement = document.querySelector(".mission-content");
-    expect(contentElement).toBeInTheDocument();
-    expect(contentElement?.innerHTML).toBe("");
+    expect(contentElement).not.toBeInTheDocument();
+    expect(screen.queryByText("参加・受付案内")).not.toBeInTheDocument();
   });
 });

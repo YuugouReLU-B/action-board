@@ -23,6 +23,8 @@ function createMissionCategoryView(
     longitude: null,
     radius_meters: null,
     icon_url: null,
+    quest_category: "PERMANENT",
+    event_category: null,
     artifact_label: null,
     supplement: null,
     tag1: null,

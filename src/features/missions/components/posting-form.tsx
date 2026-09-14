@@ -55,7 +55,7 @@ export function PostingForm({ disabled }: PostingFormProps) {
         />
         <p className="text-xs text-gray-500">
           配布した枚数を入力してください（1枚＝{POSTING_POINTS_PER_UNIT}
-          ポイント）
+          P）
         </p>
       </div>
 

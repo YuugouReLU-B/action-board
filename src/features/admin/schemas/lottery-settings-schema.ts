@@ -2,6 +2,12 @@ import { z } from "zod";
 import { isValidUrl } from "@/lib/utils/url-validation";
 
 export const lotterySettingsSchema = z.object({
+  eligible_display_from: z
+    .union([
+      z.literal(""),
+      z.string().date("有効な日付をYYYY-MM-DD形式で入力してください"),
+    ])
+    .transform((value) => (value === "" ? null : value)),
   threshold_points: z
     .string()
     .min(1, "しきい値は必須です")

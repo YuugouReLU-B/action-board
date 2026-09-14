@@ -45,12 +45,12 @@ export function RankingItem({
             {badgeText}
           </span>
           <Badge className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full w-fit justify-self-end font-bold">
-            {(userWithMission?.total_points ?? 0).toLocaleString()}pt
+            {(userWithMission?.total_points ?? 0).toLocaleString()}P
           </Badge>
         </>
       ) : (
         <Badge className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full w-fit justify-self-end font-bold">
-          {formatNumberJa(user.xp ?? 0)}pt
+          {formatNumberJa(user.xp ?? 0)}P
         </Badge>
       )}
     </Link>

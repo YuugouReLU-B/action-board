@@ -52,7 +52,7 @@ export function UserSeasonHistory({
               </div>
               <div className="text-right">
                 <div className="text-sm text-gray-500">
-                  {userLevel?.xp?.toLocaleString() || 0} ポイント
+                  {userLevel?.xp?.toLocaleString() || 0}P
                 </div>
               </div>
             </div>

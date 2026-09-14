@@ -28,7 +28,7 @@ export function SpotList({ spots }: { spots: MapSpot[] }) {
                   獲得済み
                 </span>
               ) : (
-                `${spot.points}ポイント`
+                `${spot.points}P`
               )}
             </p>
           </div>

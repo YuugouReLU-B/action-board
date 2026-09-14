@@ -34,7 +34,7 @@ export const CurrentUserCardMission: React.FC<CurrentUserCardProps> = ({
           {badgeText}
         </Badge>
         <span className="font-bold text-lg">
-          {(currentUser.total_points ?? 0).toLocaleString()}pt
+          {(currentUser.total_points ?? 0).toLocaleString()}P
         </span>
       </div>
     </BaseCurrentUserCard>

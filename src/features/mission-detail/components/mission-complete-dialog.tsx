@@ -119,7 +119,7 @@ export function MissionCompleteDialog({ isOpen, onClose, mission }: Props) {
                   {suggestedEvent.title}
                 </p>
                 <p className="text-xs text-gray-500">
-                  {suggestedEvent.points}ポイント
+                  {suggestedEvent.points}P
                 </p>
               </div>
             </Link>

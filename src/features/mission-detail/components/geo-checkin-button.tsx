@@ -74,7 +74,7 @@ export function GeoCheckinButton({
         case "granted":
           setMessage({
             tone: "success",
-            text: `+${result.xpGranted}ポイント獲得しました！`,
+            text: `+${result.xpGranted}P獲得しました！`,
           });
           onSuccess?.();
           router.refresh();
